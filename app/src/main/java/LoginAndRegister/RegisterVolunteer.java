@@ -2,7 +2,7 @@ package LoginAndRegister;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Register  extends AppCompatActivity {
+public class RegisterVolunteer extends AppCompatActivity {
 
 
 }
