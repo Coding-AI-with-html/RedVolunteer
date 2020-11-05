@@ -254,6 +254,7 @@ private LinkedList<Fragment> stack = new LinkedList<>();
     }
     private void signOut(){
 
+
     }
 
     @Override
