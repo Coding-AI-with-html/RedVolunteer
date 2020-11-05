@@ -2,9 +2,9 @@ package com.redvolunteer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,11 +58,11 @@ private ProfileFragment profileFragment = new ProfileFragment();
 /**
  * Stack used to manage Fragment states(back button)
  */
-private LinkedList<Fragment> stack = new LinkedList<>();
+private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     /**
      * maps fragments
      */
-    private Map<String, Fragment> fragmentMap;
+    private Map<String, androidx.fragment.app.Fragment> fragmentMap;
 
 
     /**
