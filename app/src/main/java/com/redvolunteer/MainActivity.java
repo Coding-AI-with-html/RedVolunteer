@@ -26,7 +26,7 @@ import java.util.Map;
 
 import LoginAndRegister.Login;
 
-public class MainActivity extends AppCompatActivity implements FragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -92,6 +92,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         Log.d(TAG, "onCreate: Started main Activity");
 
         bindLayoutComponents();
+        setFragments();
         setupFirebaseAuth();
     }
 
