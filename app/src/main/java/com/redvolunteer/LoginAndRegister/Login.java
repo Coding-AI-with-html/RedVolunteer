@@ -1,4 +1,4 @@
-package LoginAndRegister;
+package com.redvolunteer.LoginAndRegister;
 
 import androidx.appcompat.app.AppCompatActivity;
 

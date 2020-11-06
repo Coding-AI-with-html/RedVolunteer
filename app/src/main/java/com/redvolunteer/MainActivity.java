@@ -3,7 +3,6 @@ package com.redvolunteer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +13,6 @@ import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
 import com.redvolunteer.fragments.UserMessageFragment;
@@ -24,7 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import LoginAndRegister.Login;
+import com.redvolunteer.LoginAndRegister.Login;
 
 public class MainActivity extends AppCompatActivity {
 
