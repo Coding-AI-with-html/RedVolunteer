@@ -1,12 +1,11 @@
 plugins {
-    id 'com.android.application'
+   id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
-
 
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.2"
-
 
     defaultConfig {
         applicationId "com.redvolunteer"
