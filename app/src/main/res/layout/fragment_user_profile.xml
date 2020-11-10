@@ -46,43 +46,162 @@
 
     </RelativeLayout>
 
-
-    <LinearLayout
-        android:id="@+id/user_description"
+    <ScrollView
+        android:id="@+id/p"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:layout_height="match_parent"
+        android:layout_below="@id/user_Profile_Top">
 
-    <LinearLayout
-        android:id="@+id/profile_modify_actions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <Button
-            android:id="@+id/profile_accept_modification_btn"
-            android:layout_width="wrap_content"
+        <!--Profile data -->
+        <LinearLayout
+            android:id="@+id/user_description"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/border_positive_event_button"
-            android:text="@string/confirm"
-            android:textColor="@color/positive_event_green" />
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-        <Button
-            android:id="@+id/profile_discard_modification_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/border_abandon_event_button"
-            android:text="@string/discard"
-            android:textColor="@color/alert_red" />
+            <LinearLayout
+                android:id="@+id/profile_modify_actions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/profile_accept_modification_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/border_positive_event_button"
+                    android:text="confirm"
+                    android:textColor="@color/positive_event_green"
+                    android:layout_marginEnd="10dp" />
+
+                <Button
+                    android:id="@+id/profile_discard_modification_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_abandon_event_button"
+                    android:text="@string/discard"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+
+                <com.mikhaellopez.circularimageview.CircularImageView
+                    android:id="@+id/profile_user_pic"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile_icon"
+                    app:civ_border_width="0dp" />
+
+                <ImageView
+                    android:id="@+id/image_modify_indicator"
+                    android:layout_width="50dp"
+                    android:layout_height="50sp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_camera_pick"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:weightSum="1">
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:text="Your name"
+                android:gravity="center"
+                android:layout_weight="0.5"
+                android:textColor="@color/black"
+                android:textSize="26sp" />
+            <TextView
+                android:id="@+id/user_nameSurname"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:text="Your Surname"
+                android:layout_marginTop="8dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="26sp" />
+        </LinearLayout>
+
+            <TextView
+                android:id="@+id/birth_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="30 APR 2004"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/grey"
+                android:textSize="17sp" />
+
+
+            <ImageView
+                android:id="@+id/modify_birthdate_btn"
+                android:layout_width="45dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@drawable/calendar_ico"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="About You"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/user_bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@null"
+                android:enabled="false"
+                android:focusable="true"
+                android:text="Description"
+                android:windowSoftInputMode="adjustResize" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </RelativeLayout>

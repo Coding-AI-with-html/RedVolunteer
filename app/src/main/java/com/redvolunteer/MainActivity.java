@@ -254,7 +254,9 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
     }
     private void signOut(){
-
+        mAuth.signOut();
+        Intent intent = new Intent(MainActivity.this, Login.class);
+        startActivity(intent);
 
     }
 
