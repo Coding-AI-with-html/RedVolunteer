@@ -1,5 +1,6 @@
 package com.redvolunteer.fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -7,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +25,8 @@ import com.redvolunteer.ViewModels.UserViewModel;
 import com.redvolunteer.pojo.User;
 
 import java.util.Calendar;
+
+import Utils.NetworkCheker;
 
 public class ProfileFragment extends Fragment {
 
@@ -159,18 +164,75 @@ public class ProfileFragment extends Fragment {
                 final long HEIGHTEEN_YEAR_AGO = 568025136000L;
 
                 Calendar cal = Calendar.getInstance();
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
 
-                cal.setCa;
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Calendar.YEAR, year);
+                        cal.set(Calendar.MONTH,month);
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                        mShowedUSer.setBirthDate(cal.getTime().getTime());
+
+                        fillFragments();
+                    }
+                },   cal
+                .get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - HEIGHTEEN_YEAR_AGO);
+                datePickerDialog.show();
+
+
+
             }
         });
 
+        mAcceptModify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(NetworkCheker.getInstance().isNetworkAvailable(getContext())) {
+                    resetInvisibleModificationComponents();
+
+                    if (userBio.getText().toString().length() > 0) {
 
 
+                        mShowedUSer.setBiography(userBio.getText().toString());
+                        mUserViewModel.UpdateUser(mShowedUSer);
+                    } else {
+                        Toast.makeText(getContext(), "You forgot your biography", Toast.LENGTH_LONG).show();
+                    }
+                }
+                    else {
+                        Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+                    }
 
-
-
-
+            }
+        });
 
     }
+
+    /**
+    it modifys the layout
+     */
+
+    private void resetInvisibleModificationComponents(){
+
+        mEditBirthDate.setVisibility(View.GONE);
+        mActionModifyButton.setVisibility(View.GONE);
+        mEditButton.setVisibility(View.VISIBLE);
+        mEditPhotoIndicator.setVisibility(View.GONE);
+        userBio.setEnabled(false);
+
+    }
+
+
+
+
+
+
 }
+

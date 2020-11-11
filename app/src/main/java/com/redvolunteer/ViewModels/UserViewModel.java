@@ -25,7 +25,7 @@ public class UserViewModel {
     public void signOut(){
          mUserModel.signOut();
     }
-    public void UpdateUse(User userToSave){
+    public void UpdateUser(User userToSave){
         mUserModel.updateUSer(userToSave);
     }
 
