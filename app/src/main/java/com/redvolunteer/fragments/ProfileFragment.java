@@ -42,7 +42,7 @@ public class ProfileFragment extends Fragment {
      * @param savedInstanceState
      */
 
-    private static final int REQUES_IMAGE_CAPTURE = 200;
+    private static final int REQUEST_IMAGE_CAPTURE = 200;
     private static final int RESULT_OK = -1;
 
     /**
@@ -138,7 +138,7 @@ public class ProfileFragment extends Fragment {
                     public void onClick(View view) {
                         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if(takePictureIntent.resolveActivity(getContext().getPackageManager()) != null){
-                            startActivityForResult(takePictureIntent, REQUES_IMAGE_CAPTURE);
+                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
                         }
 
                     }
@@ -326,7 +326,7 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         //result of image capture
-        if (requestCode == REQUES_IMAGE_CAPTURE && requestCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && requestCode == RESULT_OK) {
 
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -335,7 +335,6 @@ public class ProfileFragment extends Fragment {
             mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
 
         }
-
 
 
 
