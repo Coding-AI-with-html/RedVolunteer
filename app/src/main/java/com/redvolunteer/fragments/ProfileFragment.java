@@ -1,7 +1,9 @@
 package com.redvolunteer.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -26,7 +28,10 @@ import com.redvolunteer.pojo.User;
 
 import java.util.Calendar;
 
+import LoginAndRegister.Login;
 import Utils.NetworkCheker;
+import Utils.calendar.CalendarFormatter;
+import Utils.imagemarshalling.ImageBase64Marshaller;
 
 public class ProfileFragment extends Fragment {
 
@@ -67,6 +72,7 @@ public class ProfileFragment extends Fragment {
     private ImageView mUserPic;
     private TextView mUserName;
     private TextView mUserSurname;
+    private TextView mBirthDate;
     private EditText userBio;
     private ImageView mEditButton;
     private  ImageView mEditBirthDate;
@@ -100,6 +106,7 @@ public class ProfileFragment extends Fragment {
         mUserPic = (ImageView) view.findViewById(R.id.profile_user_pic);
         mUserName = (TextView) view.findViewById(R.id.user_name);
         mUserSurname = (TextView) view.findViewById(R.id.user_nameSurname);
+         mBirthDate = (TextView) view.findViewById(R.id.birth_date);
         userBio = (EditText) view.findViewById(R.id.user_bio);
         mEditButton = (ImageView) view.findViewById(R.id.edit_profile_button);
         mEditBirthDate = (ImageView) view.findViewById(R.id.modify_birthdate_btn);
@@ -144,7 +151,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                resetInvisibleMoficationComponents();
+                resetInvisibleModificationComponents();
 
                 mShowedUSer.setBiography(tpmOldBiogaraphy);
                 mShowedUSer.setPhoto(tmpOldPicture);
@@ -215,6 +222,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
+
     /**
     it modifys the layout
      */
@@ -226,6 +234,110 @@ public class ProfileFragment extends Fragment {
         mEditButton.setVisibility(View.VISIBLE);
         mEditPhotoIndicator.setVisibility(View.GONE);
         userBio.setEnabled(false);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.mUserViewModel = mFragListener.getUserViewModel();
+        //retrieve the user from the local store
+        mShowedUSer = mUserViewModel.retrieveCachedUser();
+
+
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
+    /**
+     * loads UI with selected user
+     */
+
+    private void fillFragments(){
+        if(mShowedUSer != null){
+            mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
+            mUserName.setText(mShowedUSer.getFullName());
+            mUserSurname.setText(mShowedUSer.getFullSurname());
+
+            //if the user has not his birth date
+
+            if(mShowedUSer.getBirthDate() == 0){
+                mBirthDate.setText(R.string.alert_no_age);
+
+            } else {
+                mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDate()));
+
+            }
+            userBio.setText(mShowedUSer.getBiography());
+        }
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_user_profile, container, false);
+
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof FragmentInteractionListener){
+            mFragListener = (FragmentInteractionListener) context;
+
+        } else {
+            throw new RuntimeException(context.toString()
+            +" must implement FragInteractionListener");
+
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    mFragListener = null;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    private void setupTolbar(View layout){
+
+        layout.findViewById(R.id.logout_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mUserViewModel.signOut();
+                startActivity( new Intent(getContext(), Login.class));
+                getActivity().finish();
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        //result of image capture
+        if (requestCode == REQUES_IMAGE_CAPTURE && requestCode == RESULT_OK) {
+
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mUserPic.setImageBitmap(imageBitmap);
+
+            mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
+
+        }
+
+
+
 
     }
 
@@ -234,5 +346,21 @@ public class ProfileFragment extends Fragment {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
 
