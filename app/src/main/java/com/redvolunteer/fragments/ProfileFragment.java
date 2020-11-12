@@ -93,7 +93,10 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        bind(view);
+        fillFragments();
         super.onViewCreated(view, savedInstanceState);
+
     }
 
     /**
