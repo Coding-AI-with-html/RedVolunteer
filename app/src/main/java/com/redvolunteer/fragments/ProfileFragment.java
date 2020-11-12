@@ -28,10 +28,10 @@ import com.redvolunteer.pojo.User;
 
 import java.util.Calendar;
 
-import LoginAndRegister.Login;
-import Utils.NetworkCheker;
-import Utils.calendar.CalendarFormatter;
-import Utils.imagemarshalling.ImageBase64Marshaller;
+import com.redvolunteer.LoginAndRegister.Login;
+import com.redvolunteer.Utils.NetworkCheker;
+import com.redvolunteer.Utils.calendar.CalendarFormatter;
+import com.redvolunteer.Utils.imagemarshalling.ImageBase64Marshaller;
 
 public class ProfileFragment extends Fragment {
 
@@ -244,7 +244,7 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.mUserViewModel = mFragListener.getUserViewModel();
         //retrieve the user from the local store
-        mShowedUSer = mUserViewModel.retrieveCachedUser();
+        //mShowedUSer = mUserViewModel.retrieveCachedUser();
 
 
     }

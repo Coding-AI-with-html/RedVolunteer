@@ -1,4 +1,4 @@
-package Utils.imagemarshalling;
+package com.redvolunteer.Utils.imagemarshalling;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

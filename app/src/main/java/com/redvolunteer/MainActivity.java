@@ -3,7 +3,6 @@ package com.redvolunteer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +13,7 @@ import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.redvolunteer.ViewModels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
 import com.redvolunteer.fragments.UserMessageFragment;
@@ -24,9 +22,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import LoginAndRegister.Login;
+import com.redvolunteer.LoginAndRegister.Login;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
 
@@ -39,7 +37,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private Context MainContext = MainActivity.this;
 
-
+    /**
+     * User View Model
+     */
+    private UserViewModel mUserViewModel;
 
     /**
      * Help request who created user fragment
@@ -88,12 +89,14 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mUserViewModel = getUserViewModel();
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started main Activity");
 
         bindLayoutComponents();
         setFragments();
-        setupFirebaseAuth();
+        //setupFirebaseAuth();
     }
 
     private void bindLayoutComponents(){
@@ -152,7 +155,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
     /**
      *change fragments
-     * @param fragmentID
+     * @param
      */
     public void fragmentTransaction(Fragment fragment){
 
@@ -224,7 +227,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
 
 
-    private void checkCurrentUser(FirebaseUser currentUser){
+    /*private void checkCurrentUser(FirebaseUser currentUser){
         Log.d(TAG, "checkCurrentUser: checking if user has already logged");
         if(currentUser == null){
             Intent intent = new Intent(MainContext, Login.class);
@@ -233,7 +236,11 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         }
         
     }
+    */
+
+   /*
     public void setupFirebaseAuth(){
+
         Log.d(TAG, "setupFirebaseAuth: starting authentication");
         mAuth = FirebaseAuth.getInstance();
         FAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -253,6 +260,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         };
 
     }
+    */
     private void signOut(){
         mAuth.signOut();
         Intent intent = new Intent(MainActivity.this, Login.class);
@@ -260,12 +268,15 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
     }
 
+    /*
     @Override
+
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(FAuthListener);
         checkCurrentUser(mAuth.getCurrentUser());
     }
+    */
 
     @Override
     protected void onStop() {
@@ -273,5 +284,13 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         if(FAuthListener != null){
             mAuth.removeAuthStateListener(FAuthListener);
         }
+    }
+
+    @Override
+    public UserViewModel getUserViewModel() {
+        if(this.mUserViewModel == null)
+            mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
+            return mUserViewModel;
+
     }
 }

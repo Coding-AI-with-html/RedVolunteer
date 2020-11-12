@@ -16,9 +16,11 @@ public class UserViewModel {
     public Flowable<User> retireveUSerFromRemoteStore() {
         return mUserModel.retrievedLoggedUSer();
     }
-    public User retrieveCachedUser(){
+    /*public User retrieveCachedUser(){
         return mUserModel.GetLocalUser();
     }
+
+     */
     public boolean isAuth(){
         return mUserModel.isAuth();
     }

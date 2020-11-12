@@ -27,7 +27,7 @@ public interface UserModel {
     /**
      * Get's stored user locally
      */
-    User GetLocalUser();
+    //User GetLocalUser();
 
     /**
      * Updates the current user
