@@ -13,53 +13,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <!--Toolbar -->
-    <RelativeLayout
-        android:id="@+id/helpRequestList_top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:gravity="top">
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="150dp"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:src="@drawable/redvolunteer" />
-        <ImageView
-            android:id="@+id/new_request_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_new_event_plus"
-            android:background="@color/mainlyColor"/>
 
-        <LinearLayout
-            android:id="@+id/no_help_request_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical"
-            android:visibility="gone"
-            >
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="You don't asked for help"
-                android:textAlignment="center" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Press + to ask for volunteer help"
-                android:textAlignment="center" />
-        </LinearLayout>
-
-    </RelativeLayout>
+<include layout="@layout/top_bar_main_activity"/>
 
     <!--Navbar-->
     <LinearLayout

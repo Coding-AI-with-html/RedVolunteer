@@ -14,11 +14,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.redvolunteer.FragmentInteractionListener;
@@ -78,6 +80,7 @@ public class ProfileFragment extends Fragment {
     private  ImageView mEditBirthDate;
     private LinearLayout mActionModifyButton;
     private ImageView mEditPhotoIndicator;
+    private RelativeLayout TopBarLayout;
 
     /**
      * Backup for old data
@@ -114,6 +117,8 @@ public class ProfileFragment extends Fragment {
         mEditButton = (ImageView) view.findViewById(R.id.edit_profile_button);
         mEditBirthDate = (ImageView) view.findViewById(R.id.modify_birthdate_btn);
         mEditPhotoIndicator = (ImageView) view.findViewById(R.id.image_modify_indicator);
+
+        TopBarLayout = (RelativeLayout) view.findViewById(R.id.helpRequestList_top_bar);
 
         mActionModifyButton = (LinearLayout) view.findViewById(R.id.profile_modify_actions);
         Button mAcceptModify = (Button) view.findViewById(R.id.profile_accept_modification_btn);
@@ -343,26 +348,16 @@ public class ProfileFragment extends Fragment {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+    }
 }
 
 
