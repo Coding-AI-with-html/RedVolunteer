@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,6 +85,10 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     private LinearLayout mMyRequestButton;
     private LinearLayout mMyRequestButtonPressed;
 
+    /**
+    *TopBar Layout
+     */
+    private RelativeLayout mTopBarLayout;
 
 
     @Override
@@ -106,11 +111,13 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         mProfileButtonPressed = (LinearLayout) findViewById(R.id.profile_button_pressed);
         mMyRequestButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
         mMyRequestButtonPressed = (LinearLayout) findViewById(R.id.myrequest_button_pressed);
+        mTopBarLayout = (RelativeLayout) findViewById(R.id.helpRequestList_top_bar);
 
         mWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragmentTransaction(WALL_FRAGMENT);
+                mTopBarLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -118,6 +125,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
             @Override
             public void onClick(View view) {
                 fragmentTransaction(PROFILE_FRAGMENT);
+                mTopBarLayout.setVisibility(View.GONE);
             }
         });
 
@@ -125,6 +133,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
             @Override
             public void onClick(View view) {
                 fragmentTransaction(MESSAGES_FRAGMENT);
+                mTopBarLayout.setVisibility(View.GONE);
             }
         });
 

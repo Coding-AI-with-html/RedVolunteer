@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/helpRequestList_top_bar"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="85dp"
     android:layout_alignParentTop="true"
-    android:gravity="top">
+    android:gravity="top"
+    android:background="@color/mainlyColor">
     <!--Toolbar -->
 
 
@@ -13,7 +14,7 @@
             android:layout_width="300dp"
             android:layout_height="150dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/redvolunteer"/>
+            android:src="@drawable/logo_topbar2"/>
         <ImageView
             android:id="@+id/new_request_button"
             android:layout_width="30dp"

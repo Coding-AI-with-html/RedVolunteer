@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/user_Profile_Top"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="85dp"
         android:layout_alignParentTop="true"
         android:gravity="top"
         android:background="@color/mainlyColor"
