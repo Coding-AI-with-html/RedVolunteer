@@ -2,7 +2,9 @@ package com.redvolunteer;
 
 import android.app.Application;
 
+import com.redvolunteer.ViewModels.HelpRequestViewModel;
 import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.dataModels.RequestHelpModel;
 import com.redvolunteer.dataModels.UserModel;
 
 public class RedVolunteerApplication extends Application {
@@ -11,6 +13,7 @@ public class RedVolunteerApplication extends Application {
      * Handlers of the low level
      */
     private UserModel mUserModel;
+    private RequestHelpModel mRequestHelpModel;
 
 
     @Override
@@ -34,5 +37,21 @@ public class RedVolunteerApplication extends Application {
 
     private UserModel getUserModel(){
         return mUserModel;
+    }
+
+    /**
+     * Retrieve Help Request ViewModel on the system
+     */
+
+    public HelpRequestViewModel getHelpRequestViewModel(){
+        return  new HelpRequestViewModel(getHelpRequestModel());
+    }
+
+
+    /**
+     * HelpRequest Model getter
+     */
+    private RequestHelpModel getHelpRequestModel(){
+        return mRequestHelpModel;
     }
 }
