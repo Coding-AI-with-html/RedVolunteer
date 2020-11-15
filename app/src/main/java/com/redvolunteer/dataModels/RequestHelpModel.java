@@ -12,12 +12,26 @@ public interface RequestHelpModel {
     /**
     *Returns created help request, its for
      */
-    Flowable<List<RequestHelp>> getHelpRequest();
+    Flowable<List<RequestHelp>> getUserHelpRequests();
 
     /**
      * set the location of the user
      */
     void setLocation(RequestLocation location);
+
+    /**
+     * Store new HelpRequest
+     */
+    void storeHelpRequest(RequestHelp requestHelp);
+
+    /**
+     * Retrieves the location of the user
+     */
+    RequestLocation getUserLocation();
+
+    /**
+     *
+     */
 
 
 
