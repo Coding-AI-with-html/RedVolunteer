@@ -1,27 +1,33 @@
 package com.redvolunteer.NewRequestHelp;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.redvolunteer.FragmentInteractionListener;
+import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
 import com.redvolunteer.ViewModels.HelpRequestViewModel;
 import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.pojo.RequestHelp;
+import com.redvolunteer.pojo.RequestLocation;
+import com.redvolunteer.pojo.User;
 
 import java.util.LinkedList;
 
-public class NewRequestHelpActivity extends AppCompatActivity implements FragmentInteractionListener {
+public class NewRequestHelpActivity extends AppCompatActivity  {
 
     /**
-     * Fragments
+     * Request being craited
      */
-    private NewHelpRequestFragmentFirstPage fragmentFirstPage = new NewHelpRequestFragmentFirstPage();
-    private  NewHelpRequestFragmentSecondPage fragmentSecondPage = new NewHelpRequestFragmentSecondPage();
-
+    private RequestHelp newHelpRequest;
     /**
      * User View Model
      */
@@ -32,9 +38,16 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Fragmen
     private HelpRequestViewModel MainViewModel;
 
     /**
-     * Stack that manages the back button
+     * PLACE PICKER CONSTANT
+     * @param savedInstanceState
      */
-    private LinkedList<Fragment> stack = new LinkedList<>();
+    private static final int PLACE_PICKER_REQUEST = 1;
+
+    /**
+     * Layout
+     */
+    private EditText mHelpRequestName;
+    private TextView mRetrievedPositionLabel;
 
 
     @Override
@@ -43,18 +56,39 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Fragmen
         setContentView(R.layout.activity_new_help_request);
         MainViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
         mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.new_request_fragment, fragmentFirstPage)
-                .add(R.id.new_request_fragment, fragmentSecondPage)
-                .hide(fragmentSecondPage)
-                .commit();
-        stack.push(fragmentFirstPage);
+    }
 
-
+    /**
+     * Binds UI to the layout
+     */
+    private void bind(final View view){
 
 
 
 
     }
+
+    public User getHelpRequestCreator(){
+
+        return mUserViewModel.retrieveCachedUser();
+    }
+
+    public RequestLocation getUserLocation(){
+        return MainViewModel.getUserLocation();
+    }
+
+
+
+
+    public void finish(RequestHelp newRequestHelp){
+        this.newHelpRequest = newRequestHelp;
+
+        MainViewModel.createNewHelpRequest(newRequestHelp);
+
+
+        startActivity(new Intent(this, MainActivity.class));
+
+    }
+
+
 }

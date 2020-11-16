@@ -1,7 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/new_request_fragment">
+    android:layout_height="match_parent">
 
-</FrameLayout>
+    <!---TopBar -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:id="@+id/new_request_top_bar"
+        android:layout_alignParentTop="true"
+        android:background="@color/mainlyColor"
+        android:gravity="top">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/new_request_back_button"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
+            android:src="@drawable/ic_cancel_button" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:text="New Help Request"
+            android:textStyle="italic"
+            android:textColor="@color/white"
+            android:textSize="25sp"/>
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/new_request_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/new_request_top_bar"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Create New Help Request"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/new_request_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:hint="Name of the new help request"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"/>
+            <LinearLayout
+                android:id="@+id/new_help_request_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/ic_landmark"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/new_help_request_position_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Select your position for the help request"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"/>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/black"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/new_help_request_position_label"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/description_input_label"
+                    android:textColor="@color/darkerGrey"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/new_event_third_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@null"
+                    android:hint="@string/type_here_hint"
+                    android:maxHeight="250dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/new_request_button_finish"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black"
+        android:padding="20dp"
+        android:text="@string/create_request_button_label"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+</RelativeLayout>

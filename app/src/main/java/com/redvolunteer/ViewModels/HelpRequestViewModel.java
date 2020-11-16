@@ -29,4 +29,9 @@ public class HelpRequestViewModel {
     public void updateHelpRequest(RequestHelp requestHelp){
         mRequestHelpModel.storeHelpRequest(requestHelp);
     }
+
+
+    public RequestLocation getUserLocation(){
+        return mRequestHelpModel.getUserLocation();
+    }
 }
