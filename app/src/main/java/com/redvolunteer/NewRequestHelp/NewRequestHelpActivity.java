@@ -2,8 +2,12 @@ package com.redvolunteer.NewRequestHelp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -48,6 +52,21 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
      */
     private EditText mHelpRequestName;
     private TextView mRetrievedPositionLabel;
+    private EditText mRequestDescription;
+
+
+    /**
+     * Location Retrieved
+     */
+    private RequestLocation mRetrievedLocation;
+
+
+    /**
+     * If Fields were be empty
+     */
+    private boolean nameSelected = false;
+    private boolean positionSelected = false;
+    private boolean mDescriptionWrited = false;
 
 
     @Override
@@ -56,13 +75,48 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_new_help_request);
         MainViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
         mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
+        bind();
     }
 
     /**
      * Binds UI to the layout
      */
-    private void bind(final View view){
+    private void bind(){
+        mHelpRequestName = (EditText) findViewById(R.id.new_request_name);
+        mRequestDescription = (EditText) findViewById(R.id.new_request_description);
+        LinearLayout choseMap = (LinearLayout) findViewById(R.id.new_help_request_map);
 
+        ImageView mBackButton = (ImageView) findViewById(R.id.new_request_cancel_button);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        mHelpRequestName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                nameSelected = mHelpRequestName.getText().length() > 0;
+            }
+        });
+
+        choseMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
 
 
