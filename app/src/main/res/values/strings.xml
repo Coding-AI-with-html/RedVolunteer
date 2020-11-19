@@ -9,4 +9,5 @@
     <string name="description_input_label">Type a description about what help you need!</string>
     <string name="type_here_hint">Type here!</string>
     <string name="create_request_button_label">Create Request!</string>
+    <string name="Api_KEy">AIzaSyAAxujBxhopVBhW9Eb3hh-3lSKLgtLaXk0</string>
 </resources>

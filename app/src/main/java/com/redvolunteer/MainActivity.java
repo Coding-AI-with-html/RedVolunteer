@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.redvolunteer.NewRequestHelp.NewRequestHelpActivity;
 import com.redvolunteer.ViewModels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
@@ -90,6 +92,8 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
      */
     private RelativeLayout mTopBarLayout;
 
+    private ImageView newHelpReq;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +116,8 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         mMyRequestButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
         mMyRequestButtonPressed = (LinearLayout) findViewById(R.id.myrequest_button_pressed);
         mTopBarLayout = (RelativeLayout) findViewById(R.id.helpRequestList_top_bar);
+
+        newHelpReq = (ImageView) findViewById(R.id.new_request_button);
 
         mWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +142,15 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
                 mTopBarLayout.setVisibility(View.GONE);
             }
         });
+
+        newHelpReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, NewRequestHelpActivity.class));
+            }
+        });
+
+
 
     }
 
@@ -302,4 +317,6 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
             return mUserViewModel;
 
     }
+
+
 }

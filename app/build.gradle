@@ -39,6 +39,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //firebase
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.firebase:firebase-database:17.0.0'
     //circular image
@@ -46,5 +47,11 @@ dependencies {
     //rxandroid for data
     implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
     //location
-    implementation 'com.google.android.gms:play-services-location:11.4.2'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+
+
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
+
+
+
 }
