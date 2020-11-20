@@ -151,7 +151,7 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
                 FindCurrentPlaceRequest requestLocation = FindCurrentPlaceRequest.builder(placeField).build();
 
                 if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions((Activity) mContext, new String[]
                             {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
