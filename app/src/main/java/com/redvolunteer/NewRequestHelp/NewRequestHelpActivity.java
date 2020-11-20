@@ -24,9 +24,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
@@ -40,6 +43,7 @@ import com.google.android.libraries.places.api.Places;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -47,6 +51,7 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
     private static final String TAG = "NewRequestHelpActivity";
 
     private Context mContext = NewRequestHelpActivity.this;
+
 
     /**
      * Request being craited
@@ -102,6 +107,9 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
      * Binds UI to the layout
      */
     private void bind(){
+        Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
+
+        PlacesClient ClientPlace = Places.createClient(mContext);
 
         mHelpRequestName = (EditText) findViewById(R.id.new_request_name);
         mRequestDescription = (EditText) findViewById(R.id.new_request_description);
@@ -137,43 +145,41 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
         choseMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-                Places.initialize(getApplicationContext(), "AIzaSyAAxujBxhopVBhW9Eb3hh-3lSKLgtLaXk0");
-                PlacesClient ClientPlace = Places.createClient(mContext);
-
-
-                /**
-                 * Takes User current location and makes it HelpRequestLocation
-                 */
+                Log.d(TAG, "onClick: Starting navigation acitivity");
                 List<Place.Field> placeField = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
 
                 FindCurrentPlaceRequest requestLocation = FindCurrentPlaceRequest.builder(placeField).build();
 
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                /**
+                 * Takes User current location and makes it HelpRequestLocation
+                 */
+
+                if (checkSelfPermission(ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions((Activity) mContext, new String[]
-                            {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-                }
-                    ClientPlace.findCurrentPlace(requestLocation).addOnSuccessListener(((response) -> {
-                        for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-                            Log.d(TAG, "onClick: Navigation working");
-                            mRetrievedLocation = new RequestLocation(placeLikelihood.getPlace().getLatLng().latitude, placeLikelihood.getPlace().getLatLng().longitude);
-                            mRetrievedLocation.setName(placeLikelihood.getPlace().getAddress().toString());
-                            mRetrievedPositionLabel.setText(placeLikelihood.getPlace().getAddress().toString());
+                            {ACCESS_FINE_LOCATION}, REQUEST_CODE);
+                } else {
 
-                            positionSelected = true;
-                            Log.d(TAG, "onClick: " + placeLikelihood.getPlace().getLatLng().latitude +  placeLikelihood.getPlace().getLatLng().longitude);
-
-                        }
-
-                    })).addOnFailureListener((exception) -> {
-                        if (exception instanceof ApiException) {
-                            ApiException apiException = (ApiException) exception;
-                            Log.e(TAG, "Place not found: " + apiException.getStatusCode());
+                    ClientPlace.findCurrentPlace(requestLocation).addOnSuccessListener(new OnSuccessListener<FindCurrentPlaceResponse>() {
+                        @Override
+                        public void onSuccess(FindCurrentPlaceResponse findCurrentPlaceResponse) {
+                           for(PlaceLikelihood placeLikelihood: findCurrentPlaceResponse.getPlaceLikelihoods()){
+                               Log.d(TAG, "onSuccess: something else" + placeLikelihood.getPlace().getLatLng().longitude + "Latitude" + placeLikelihood.getPlace().getLatLng().latitude);
+                           }
                         }
                     });
+
+
+
+
+
+
+
+
+                }
+
+
 
             }
         });

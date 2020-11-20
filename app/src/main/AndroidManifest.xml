@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_main_louncher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RedVolunteer"
-        android:name=".RedVolunteerApplication">
+        android:name=".RedVolunteerApplication"
+        android:usesCleartextTraffic="true">
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
@@ -28,9 +29,6 @@
         <activity android:name=".NewRequestHelp.NewRequestHelpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAAxujBxhopVBhW9Eb3hh-3lSKLgtLaXk0" />
     </application>
 
 </manifest>
