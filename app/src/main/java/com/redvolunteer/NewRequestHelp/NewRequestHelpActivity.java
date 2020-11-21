@@ -26,6 +26,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -34,7 +36,6 @@ import com.redvolunteer.ViewModels.UserViewModel;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;
-import com.google.android.libraries.places.api.Places;
 
 import java.util.List;
 import java.util.Locale;
@@ -75,11 +76,13 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Locatio
     private EditText mRequestDescription;
 
 
+
     /**
      * Location Retrieved
      */
     private RequestLocation mRetrievedLocation;
     LocationManager locationManager;
+
 
 
     /**
@@ -103,7 +106,7 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Locatio
      * Binds UI to the layout
      */
     private void bind(){
-        Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
+
 
 
         mHelpRequestName = (EditText) findViewById(R.id.new_request_name);
@@ -151,7 +154,6 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Locatio
                     ActivityCompat.requestPermissions((Activity) mContext, new String[]
                             {ACCESS_FINE_LOCATION}, REQUEST_CODE);
                 } else {
-
                     getLocation();
 
 
@@ -183,17 +185,8 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Locatio
         });
     }
 
-    @SuppressLint("MissingPermission")
-    private void getLocation() {
 
-        try {
-            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, NewRequestHelpActivity.this);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
 
-    }
 
     public User getHelpRequestCreator(){
 
@@ -245,15 +238,27 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Locatio
 
   }
 
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+
+        try {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, NewRequestHelpActivity.this);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
 
     @Override
     public void onLocationChanged(Location location) {
+
         Log.d(TAG, "onLocationChanged: Latitude and longitude is:   " + location.getLatitude() + " AND " + location.getLongitude());
 
         try {
-            Context context;
             Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
             List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
             String addres = addressList.get(0).getAddressLine(0);
 
             Log.d(TAG, "onLocationChanged: Address is:  " + addres);
@@ -278,3 +283,4 @@ public class NewRequestHelpActivity extends AppCompatActivity implements Locatio
 
     }
 }
+
