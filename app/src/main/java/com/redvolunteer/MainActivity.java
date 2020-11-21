@@ -92,8 +92,6 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
      */
     private RelativeLayout mTopBarLayout;
 
-    private ImageView newHelpReq;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +114,6 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         mMyRequestButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
         mMyRequestButtonPressed = (LinearLayout) findViewById(R.id.myrequest_button_pressed);
         mTopBarLayout = (RelativeLayout) findViewById(R.id.helpRequestList_top_bar);
-
-        newHelpReq = (ImageView) findViewById(R.id.new_request_button);
 
         mWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,14 +138,6 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
                 mTopBarLayout.setVisibility(View.GONE);
             }
         });
-
-        newHelpReq.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, NewRequestHelpActivity.class));
-            }
-        });
-
 
 
     }

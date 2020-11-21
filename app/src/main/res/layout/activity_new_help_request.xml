@@ -83,7 +83,7 @@
                     android:layout_marginStart="25dp"
                     android:orientation="vertical">
 
-                    <TextView
+                    <Button
                         android:id="@+id/new_help_request_position_label"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

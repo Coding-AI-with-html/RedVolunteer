@@ -1,11 +1,17 @@
 package com.redvolunteer.NewRequestHelp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,23 +20,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -41,13 +36,12 @@ import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;
 import com.google.android.libraries.places.api.Places;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class NewRequestHelpActivity extends AppCompatActivity  {
+public class NewRequestHelpActivity extends AppCompatActivity implements LocationListener {
     private static final String TAG = "NewRequestHelpActivity";
 
     private Context mContext = NewRequestHelpActivity.this;
@@ -85,6 +79,8 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
      * Location Retrieved
      */
     private RequestLocation mRetrievedLocation;
+    LocationManager locationManager;
+
 
     /**
      * If Fields were be empty
@@ -109,11 +105,10 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
     private void bind(){
         Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
 
-        PlacesClient ClientPlace = Places.createClient(mContext);
 
         mHelpRequestName = (EditText) findViewById(R.id.new_request_name);
         mRequestDescription = (EditText) findViewById(R.id.new_request_description);
-        LinearLayout choseMap = (LinearLayout) findViewById(R.id.new_help_request_map);
+        Button choseMap = (Button) findViewById(R.id.new_help_request_position_label);
 
         ImageView mBackButton = (ImageView) findViewById(R.id.new_request_cancel_button);
         Button finishButton = findViewById(R.id.new_request_button_finish);
@@ -145,35 +140,19 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
         choseMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: Starting navigation acitivity");
-                List<Place.Field> placeField = Arrays.asList(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
-
-                FindCurrentPlaceRequest requestLocation = FindCurrentPlaceRequest.builder(placeField).build();
 
                 /**
                  * Takes User current location and makes it HelpRequestLocation
                  */
 
                 if (checkSelfPermission(ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                        && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions((Activity) mContext, new String[]
                             {ACCESS_FINE_LOCATION}, REQUEST_CODE);
                 } else {
 
-                    ClientPlace.findCurrentPlace(requestLocation).addOnSuccessListener(new OnSuccessListener<FindCurrentPlaceResponse>() {
-                        @Override
-                        public void onSuccess(FindCurrentPlaceResponse findCurrentPlaceResponse) {
-                           for(PlaceLikelihood placeLikelihood: findCurrentPlaceResponse.getPlaceLikelihoods()){
-                               Log.d(TAG, "onSuccess: something else" + placeLikelihood.getPlace().getLatLng().longitude + "Latitude" + placeLikelihood.getPlace().getLatLng().latitude);
-                           }
-                        }
-                    });
-
-
-
-
-
+                    getLocation();
 
 
 
@@ -202,6 +181,18 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
                 }
             }
         });
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+
+        try {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 3, NewRequestHelpActivity.this);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public User getHelpRequestCreator(){
@@ -254,4 +245,36 @@ public class NewRequestHelpActivity extends AppCompatActivity  {
 
   }
 
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged: Latitude and longitude is:   " + location.getLatitude() + " AND " + location.getLongitude());
+
+        try {
+            Context context;
+            Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+            List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            String addres = addressList.get(0).getAddressLine(0);
+
+            Log.d(TAG, "onLocationChanged: Address is:  " + addres);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
 }

@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -82,7 +85,14 @@ public class RequestWallFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        bind(view);
         super.onViewCreated(view, savedInstanceState);
+
+    }
+
+    private void bind(View view){
+        this.SetupToolbar(view);
+
     }
 
 
@@ -98,6 +108,11 @@ public class RequestWallFragment extends Fragment {
         });
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_request_wall, container, false);
+    }
 
     /**
      * Initialize the ListView with helpRequest
@@ -107,11 +122,9 @@ public class RequestWallFragment extends Fragment {
 
 
 
-
-
     }
 
-    @Override
+    /**@Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden){
@@ -166,7 +179,7 @@ public class RequestWallFragment extends Fragment {
 
         }
     }
-
+*/
     /**
      * Show's whait spinner
      */
