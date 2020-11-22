@@ -12,16 +12,16 @@
         android:allowBackup="true"
 
         android:label="@string/app_name"
-        android:icon="@mipmap/ic_main_louncher"
+        android:icon="@mipmap/ic_main_louncher_round"
         android:roundIcon="@mipmap/ic_main_louncher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RedVolunteer"
         android:name=".RedVolunteerApplication"
         android:usesCleartextTraffic="true">
 
-    <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+    <activity android:name=".SplashScreenActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/Theme.AppCompat">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,12 +29,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"/>
         <activity android:name=".NewRequestHelp.NewRequestHelpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity android:name=".MapsActivity"
             android:screenOrientation="portrait"/>
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyByGJCsFU79jgpN35y1R3DZMB4PP2f4-do"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC25bqVTn_mgPBVr7TUFn1zdtJ9XE5jacs"/>
     </application>
 
 

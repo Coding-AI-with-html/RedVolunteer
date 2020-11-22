@@ -28,10 +28,6 @@
             android:layout_height="349dp"
             tools:context=".MapsActivity" />
 
-        <ListView
-            android:id="@+id/listPlaces"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

@@ -56,7 +56,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
     private final LatLng mDefaultLocation = new LatLng(55.399330, 22.544180);
-    private static final int DEFAULT_ZOOM = 15;
+    private static final int DEFAULT_ZOOM = 20;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
@@ -78,18 +78,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //
-        // PASTE THE LINES BELOW THIS COMMENT
-        //
 
 
-        // Set up the action toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
         // Set up the views
-        lstPlaces = (ListView) findViewById(R.id.listPlaces);
+        //lstPlaces = (ListView) findViewById(R.id.listPlaces);
 
         // Initialize the Places client
         String apiKey = getString(R.string.google_api_key);
@@ -104,7 +100,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         LatLng sydney = new LatLng(55, 22);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Puzai"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         //

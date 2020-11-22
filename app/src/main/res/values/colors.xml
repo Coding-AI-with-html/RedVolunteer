@@ -11,4 +11,5 @@
     <color name="positive_event_green">#008c1a</color>
     <color name="grey">#999999</color>
     <color name="darkerGrey">#3B3B3B</color>
+    <color name="mainColorRed">#C4302B</color>
 </resources>
