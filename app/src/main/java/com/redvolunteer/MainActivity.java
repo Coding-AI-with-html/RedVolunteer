@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.redvolunteer.NewRequestHelp.NewRequestHelpActivity;
+import com.redvolunteer.Utils.StyleUtils;
 import com.redvolunteer.ViewModels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
@@ -100,6 +101,9 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         mUserViewModel = getUserViewModel();
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started main Activity");
+
+        StyleUtils styleUtils = new StyleUtils();
+        styleUtils.setNavigationBarColor(getWindow(),getColor(R.color.mainColorRed));
 
         bindLayoutComponents();
         setFragments();

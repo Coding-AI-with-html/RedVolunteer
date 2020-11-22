@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/black"
+        android:background="@color/mainColorRed"
         android:padding="20dp"
         android:text="@string/create_request_button_label"
         android:textColor="@color/white"
