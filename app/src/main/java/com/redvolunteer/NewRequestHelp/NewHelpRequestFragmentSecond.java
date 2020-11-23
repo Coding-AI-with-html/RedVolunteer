@@ -131,11 +131,14 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         mapChose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(ContextCompat.checkSelfPermission(NewHelpRequestFragmentSecond.this,Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(NewHelpRequestFragmentSecond.this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Intent myIntent = new Intent(getContext(), MapsActivity.class);
+                    getActivity().startActivity(myIntent);
 
-                Intent myIntent = new Intent(getContext(), MapsActivity.class);
-                getActivity().startActivity(myIntent);
+                } else {
+                    showLocationRequestPermission();
 
-
+                }
             }
 
 
@@ -144,6 +147,12 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         });
         return myView;
 
+    }
+    private void showLocationRequestPermission(){
+        if(ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION ) && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION))
+
+    } else {
+        ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION});
     }
 
     @Override
