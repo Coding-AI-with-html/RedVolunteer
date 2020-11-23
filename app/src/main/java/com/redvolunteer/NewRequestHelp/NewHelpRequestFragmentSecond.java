@@ -2,7 +2,9 @@ package com.redvolunteer.NewRequestHelp;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +51,7 @@ import static androidx.core.content.PermissionChecker.checkSelfPermission;
 public class NewHelpRequestFragmentSecond extends Fragment {
 
     private static final int PLACE_PICKER = 1;
-    private static final int  REQUEST_CODE = 101;
+    private static final int  REQUEST_CODE = 1;
     private static final String TAG = "NewHelpRequestFragmentS";
 
 
@@ -114,12 +117,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
     }
 
-    private void getLocationPermission() {
-        ActivityCompat.requestPermissions(getActivity(),new String[]
-                {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-        return;
-
-    }
 
 
     @Nullable
@@ -131,14 +128,10 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         mapChose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(ContextCompat.checkSelfPermission(NewHelpRequestFragmentSecond.this,Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(NewHelpRequestFragmentSecond.this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
                     Intent myIntent = new Intent(getContext(), MapsActivity.class);
                     getActivity().startActivity(myIntent);
 
-                } else {
-                    showLocationRequestPermission();
-
-                }
             }
 
 
@@ -149,11 +142,29 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
     }
     private void showLocationRequestPermission(){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION ) && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION))
-
-    } else {
-        ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION});
+        if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), ACCESS_FINE_LOCATION ) && ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION)){
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to continue")
+                    .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION},REQUEST_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION},REQUEST_CODE);
+        }
     }
+
+
 
     @Override
     public void onAttach(@NonNull Context context) {
