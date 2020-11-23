@@ -101,7 +101,7 @@ public class Login extends AppCompatActivity {
 
     private void bindFacebookButton(){
 
-        mFacebookLogin = (Button) this.findViewById();
+        //mFacebookLogin = (Button) this.findViewById();
 
         LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookLoginRequestCallBack());
 
@@ -125,7 +125,7 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        stopWhaitSpinner();
+        //stopWhaitSpinner();
         super.onActivityResult(requestCode, resultCode, data);
 
         fbCallBackManager.onActivityResult(requestCode,resultCode,data);
@@ -134,7 +134,7 @@ public class Login extends AppCompatActivity {
     private class FacebookLoginRequestCallBack implements FacebookCallback<LoginResult>{
        @Override
        public void onSuccess(LoginResult loginResult) {
-           showWhaitSpinner();
+           //showWhaitSpinner();
            handleFacebookTokenAccesFromFirebase(loginResult.getAccessToken());
        }
 

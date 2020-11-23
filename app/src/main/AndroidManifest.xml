@@ -12,8 +12,8 @@
         android:allowBackup="true"
 
         android:label="@string/app_name"
-        android:icon="@mipmap/ic_main_louncher_round"
-        android:roundIcon="@mipmap/ic_main_louncher_round"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RedVolunteer"
         android:name=".RedVolunteerApplication"
