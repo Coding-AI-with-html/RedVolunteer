@@ -4,6 +4,7 @@
     <string name="alert_no_age">Hey, tell us your birthdate!</string>
     <string name="error_message_download_resources">Something went wrong while retrieving the data! Sorry…</string>
     <string name="loading_popup_message_spinner">Loading. Please wait…</string>
+    <string name="loading_text">Kraunama. Prasome palaukti…</string>
     <string name="ok_button">OK</string>
     <string name="recconnecting_request">No internet connection. Once reconnected it could take a while to recontact the server</string>
     <string name="description_input_label">Type a description about what help you need!</string>

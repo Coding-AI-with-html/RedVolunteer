@@ -1,6 +1,7 @@
 package com.redvolunteer.LoginAndRegister;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -101,7 +102,7 @@ public class Login extends AppCompatActivity {
 
     private void bindFacebookButton(){
 
-        //mFacebookLogin = (Button) this.findViewById();
+        mFacebookLogin = (Button) this.findViewById(R.id.login_facebook_button);
 
         LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookLoginRequestCallBack());
 
@@ -125,7 +126,7 @@ public class Login extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        //stopWhaitSpinner();
+        showWhaitSpiner();
         super.onActivityResult(requestCode, resultCode, data);
 
         fbCallBackManager.onActivityResult(requestCode,resultCode,data);
@@ -134,7 +135,7 @@ public class Login extends AppCompatActivity {
     private class FacebookLoginRequestCallBack implements FacebookCallback<LoginResult>{
        @Override
        public void onSuccess(LoginResult loginResult) {
-           //showWhaitSpinner();
+           showWhaitSpiner();
            handleFacebookTokenAccesFromFirebase(loginResult.getAccessToken());
        }
 
@@ -198,6 +199,10 @@ public class Login extends AppCompatActivity {
        }
 
    }
+   private void showWhaitSpiner(){
+       popupProgDialog = ProgressDialog.show(this, "",
+               getString(R.string.loading_text), true);
+   }
 
    private void stopSpinner(){
         if(popupProgDialog != null){
@@ -211,5 +216,7 @@ public class Login extends AppCompatActivity {
         stopSpinner();
        Toast.makeText(getApplicationContext(), "Nera prisijungta prie interneto", Toast.LENGTH_SHORT).show();
     }
+
+
 
 }

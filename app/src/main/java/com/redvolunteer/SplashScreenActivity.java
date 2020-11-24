@@ -8,6 +8,7 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 
+import com.redvolunteer.LoginAndRegister.Login;
 import com.redvolunteer.Utils.StyleUtils;
 
 public class SplashScreenActivity extends Activity {
@@ -40,7 +41,7 @@ public class SplashScreenActivity extends Activity {
 
     private void gatekeeper()
     {
-            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+            startActivity(new Intent(SplashScreenActivity.this, Login.class));
 
     }
 

@@ -14,10 +14,10 @@
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.185" />
+        app:layout_constraintVertical_bias="0.148" />
 
     <EditText
         android:id="@+id/PersonNameX"
@@ -80,67 +80,64 @@
         app:layout_constraintVertical_bias="0.055" />
 
     <Button
-        android:id="@+id/AddPassport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Passport"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone"
-        app:layout_constraintVertical_bias="0.245" />
-
-    <Button
         android:id="@+id/BtnSignUp"
         android:layout_width="150dp"
         android:layout_height="55dp"
+        android:layout_marginBottom="160dp"
         android:text="Sign Up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AddPassport"
-        app:layout_constraintVertical_bias="0.142" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="200dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center_horizontal"
+        tools:layout_editor_absoluteX="117dp"
+        tools:layout_editor_absoluteY="589dp" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="402dp"
+        android:layout_height="81dp"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/redvolunteer" />
 
     <TextView
         android:id="@+id/SignUpVolunteer"
-        android:layout_width="305dp"
-        android:layout_height="35dp"
+        android:layout_width="187dp"
+        android:layout_height="54dp"
         android:text="Sign up as a Volunteer"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/BtnSignUp"
-        app:layout_constraintVertical_bias="0.159" />
+        app:layout_constraintVertical_bias="0.542" />
 
     <TextView
         android:id="@+id/BackLogin"
-        android:layout_width="255dp"
-        android:layout_height="45dp"
+        android:layout_width="187dp"
+        android:layout_height="54dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="48dp"
         android:text="Already have account, darling? Login here"
+        android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="italic"
-        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SignUpVolunteer"
-        app:layout_constraintVertical_bias="0.263" />
+        app:layout_constraintStart_toEndOf="@+id/SignUpVolunteer"
+        app:layout_constraintTop_toBottomOf="@+id/BtnSignUp"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/XPassword"
@@ -160,10 +157,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="date"
         android:hint="Select your birthdate"
+        android:inputType="date"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/AddPassport"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
