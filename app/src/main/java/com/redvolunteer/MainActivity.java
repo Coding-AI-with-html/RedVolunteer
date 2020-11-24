@@ -105,6 +105,9 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         StyleUtils styleUtils = new StyleUtils();
         styleUtils.setNavigationBarColor(getWindow(),getColor(R.color.mainColorRed));
 
+
+        
+
         bindLayoutComponents();
         setFragments();
         //setupFirebaseAuth();
