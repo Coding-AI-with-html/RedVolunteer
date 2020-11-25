@@ -1,6 +1,6 @@
 package com.redvolunteer;
 
-import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.viewmodels.UserViewModel;
 
 public interface FragmentInteractionListener {
 

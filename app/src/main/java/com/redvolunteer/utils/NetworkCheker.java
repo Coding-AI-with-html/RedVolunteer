@@ -1,4 +1,4 @@
-package com.redvolunteer.Utils;
+package com.redvolunteer.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

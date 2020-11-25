@@ -32,7 +32,7 @@
         <activity android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"/>
-        <activity android:name=".NewRequestHelp.NewRequestHelpActivity"
+        <activity android:name=".newrequesthelp.NewRequestHelpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity android:name=".LoginAndRegister.Login"

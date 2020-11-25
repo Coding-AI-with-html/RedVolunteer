@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -19,19 +18,16 @@ import androidx.fragment.app.Fragment;
 
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.MainActivity;
-import com.redvolunteer.NewRequestHelp.NewRequestHelpActivity;
+import com.redvolunteer.newrequesthelp.NewRequestHelpActivity;
 import com.redvolunteer.R;
-import com.redvolunteer.Utils.NetworkCheker;
-import com.redvolunteer.ViewModels.HelpRequestViewModel;
-import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.viewmodels.HelpRequestViewModel;
+import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.dataModels.RequestHelpModel;
 import com.redvolunteer.pojo.RequestHelp;
 
 import org.reactivestreams.Subscription;
 
 import java.util.List;
-
-import io.reactivex.FlowableSubscriber;
 
 public class RequestWallFragment extends Fragment {
 

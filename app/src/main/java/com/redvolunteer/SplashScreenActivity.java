@@ -9,7 +9,7 @@ import android.os.Handler;
 import androidx.annotation.Nullable;
 
 import com.redvolunteer.LoginAndRegister.Login;
-import com.redvolunteer.Utils.StyleUtils;
+import com.redvolunteer.utils.StyleUtils;
 
 public class SplashScreenActivity extends Activity {
 

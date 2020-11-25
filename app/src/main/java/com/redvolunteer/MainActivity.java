@@ -1,6 +1,5 @@
 package com.redvolunteer;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -9,14 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.redvolunteer.NewRequestHelp.NewRequestHelpActivity;
-import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
 import com.redvolunteer.fragments.UserMessageFragment;

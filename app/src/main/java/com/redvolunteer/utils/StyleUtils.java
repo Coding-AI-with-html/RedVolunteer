@@ -1,4 +1,4 @@
-package com.redvolunteer.Utils;
+package com.redvolunteer.utils;
 
 import android.graphics.Color;
 import android.os.Build;

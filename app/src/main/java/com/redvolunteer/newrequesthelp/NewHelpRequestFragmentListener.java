@@ -1,4 +1,4 @@
-package com.redvolunteer.NewRequestHelp;
+package com.redvolunteer.newrequesthelp;
 
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;

@@ -1,4 +1,4 @@
-package com.redvolunteer.NewRequestHelp;
+package com.redvolunteer.newrequesthelp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
-import com.redvolunteer.ViewModels.HelpRequestViewModel;
-import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.viewmodels.HelpRequestViewModel;
+import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;

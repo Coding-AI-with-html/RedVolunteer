@@ -1,4 +1,4 @@
-package com.redvolunteer.ViewModels;
+package com.redvolunteer.viewmodels;
 
 import com.redvolunteer.dataModels.UserModel;
 import com.redvolunteer.pojo.User;

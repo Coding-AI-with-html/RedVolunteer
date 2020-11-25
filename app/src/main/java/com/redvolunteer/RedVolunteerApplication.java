@@ -2,8 +2,8 @@ package com.redvolunteer;
 
 import android.app.Application;
 
-import com.redvolunteer.ViewModels.HelpRequestViewModel;
-import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.viewmodels.HelpRequestViewModel;
+import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.dataModels.RequestHelpModel;
 import com.redvolunteer.dataModels.UserModel;
 

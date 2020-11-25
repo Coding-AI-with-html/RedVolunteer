@@ -1,4 +1,4 @@
-package com.redvolunteer.Utils.calendar;
+package com.redvolunteer.utils.calendar;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -14,7 +14,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,15 +24,15 @@ import androidx.fragment.app.Fragment;
 
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
-import com.redvolunteer.ViewModels.UserViewModel;
+import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
 
 import java.util.Calendar;
 
 import com.redvolunteer.LoginAndRegister.Login;
-import com.redvolunteer.Utils.NetworkCheker;
-import com.redvolunteer.Utils.calendar.CalendarFormatter;
-import com.redvolunteer.Utils.imagemarshalling.ImageBase64Marshaller;
+import com.redvolunteer.utils.NetworkCheker;
+import com.redvolunteer.utils.calendar.CalendarFormatter;
+import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
 
 public class ProfileFragment extends Fragment {
 

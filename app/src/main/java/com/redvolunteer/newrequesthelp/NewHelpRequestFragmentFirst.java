@@ -1,4 +1,4 @@
-package com.redvolunteer.NewRequestHelp;
+package com.redvolunteer.newrequesthelp;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
