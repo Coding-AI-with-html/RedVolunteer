@@ -65,7 +65,7 @@ public class FirebaseUserDao implements RemoteUserDao {
 
 
                         }
-                    })
+                    });
                 }
             }
         }, BackpressureStrategy.BUFFER);

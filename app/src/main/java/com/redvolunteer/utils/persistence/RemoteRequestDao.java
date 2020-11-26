@@ -11,8 +11,9 @@ public interface RemoteRequestDao {
 
     /**
      * it load's new Request
+     * @return
      */
-    Flowable<RequestHelp> loadNewRequests(int NumResult, int anchorID);
+    Flowable<List<RequestHelp>> loadNewRequests(int NumResult, int anchorID);
 
     /**
      * it loads user created help request
