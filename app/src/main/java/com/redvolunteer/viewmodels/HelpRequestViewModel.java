@@ -19,6 +19,12 @@ public class HelpRequestViewModel {
     public Flowable<List<RequestHelp>> getUserHelpRequests(){
         return mRequestHelpModel.getUserHelpRequests();
     }
+    public Flowable<List<RequestHelp>> getRequests() {
+        return mRequestHelpModel.getRequests();
+    }
+    public Flowable<RequestHelp> getRequest(String requestID){
+        return mRequestHelpModel.getEventByID(requestID);
+    }
     public void setLocation(RequestLocation location){
         mRequestHelpModel.setLocation(location);
     }

@@ -2,6 +2,7 @@ package com.redvolunteer;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.redvolunteer.pojo.RequestHelp;
+import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
@@ -77,29 +79,29 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
         if(NetworkCheker.getInstance().isNetworkAvailable(this)){
 
-            mHelpRequestViewModel.getUserHelpRequests().subscribe(new FlowableSubscriber<RequestHelp>() {
+            mHelpRequestViewModel.getRequest(requestID).subscribe(new FlowableSubscriber<RequestHelp>() {
                 @Override
                 public void onSubscribe(@NonNull Subscription subscription) {
 
                     subscription.request(Long.MAX_VALUE);
-                    requestRetrieve  = subscription;
+                    requestRetrieve = subscription;
+
                 }
 
                 @Override
-                public void onNext(RequestHelp requestHelps) {
+                public void onNext(RequestHelp requestHelp) {
 
-                    //keep retrieved request
-                    mRetrievedRequest = requestHelps;
-                    //show on layout
+                    mRetrievedRequest = requestHelp;
+
                     showLayout();
-                    //fill activity with the new data
-                    fillActivityInformation(requestHelps);
 
+                    fillActivityInformation(requestHelp);
                 }
 
                 @Override
                 public void onError(Throwable throwable) {
 
+                    showRetrievedErrorPopup();
                 }
 
                 @Override
@@ -149,14 +151,33 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
         setRequestActionButton();
 
-        showMapButtons();
+        showMapButton();
 
 
 
 
     }
 
+ private void showMapButton(){
 
+        this.mOpenMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                RequestLocation requestLocation = mRetrievedRequest.getRequestLocation();
+
+                double latitude = requestLocation.getLatitude();
+                double longitude = requestLocation.getLongitude();
+
+                
+            }
+        });
+
+
+
+
+ }
 
 
 }
