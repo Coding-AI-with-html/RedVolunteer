@@ -47,13 +47,13 @@
         android:layout_height="wrap_content"
         android:hint="Telefono Numeris"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/facebook_login_btn"
+        android:layout_above="@id/facebook_register_btn"
         android:layout_marginBottom="-150dp"
         />
 
 
     <Button
-        android:id="@+id/facebook_login_btn"
+        android:id="@+id/facebook_register_btn"
         android:layout_width="250dp"
         android:layout_above="@+id/tableRow1"
         android:layout_height="wrap_content"
