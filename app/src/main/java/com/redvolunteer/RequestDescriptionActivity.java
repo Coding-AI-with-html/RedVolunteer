@@ -1,14 +1,17 @@
 package com.redvolunteer;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +28,6 @@ import com.redvolunteer.viewmodels.UserViewModel;
 
 import org.reactivestreams.Subscription;
 
-import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.FlowableSubscriber;
@@ -116,7 +118,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
             });
 
         } else {
-            showNoInternetConnectionPopup();
+            ShowNoInternetPopup();
         }
     }
 
@@ -153,8 +155,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
                 retrievedRequest.getRequestLocation().getLongitude()));
 
         //show action buttons depending on the ownership of the request
-
-        setRequestActionButton();
+        setRequestActionButtons();
 
         showMapButton();
 
@@ -163,7 +164,8 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
     }
 
- private void showMapButton(){
+
+    private void showMapButton(){
 
         this.mOpenMapButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,7 +210,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
         mModifyRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View modifButton) {
-                modifButton.setVisibility(View.GONEs);
+                modifButton.setVisibility(View.GONE);
 
                 //allow desctiption modification
                 mRequestDescription.setEnabled(true);
@@ -265,17 +267,108 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
  }
 
- private void isLoggedUserIsVolunteer(){
+ private boolean isLoggedUserIsVolunteer(){
 
         String loggedUserId = mUserViewModel.retrieveCachedUser().getId();
 
         return true;
-
-
  }
- private void checkIfUserIsAdmin(){
+ private boolean checkIfUserIsAdmin(){
 
+        boolean isAdmin = false;
+
+        if(mRetrievedRequest.getHelpRequestCreatorID().equals(this.mUserViewModel.retrieveCachedUser().getId())) {
+            isAdmin = true;
+        }
+
+        return isAdmin;
  }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
 
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+
+
+    private void refresh(){
+
+
+        Intent refresh = new Intent(this, RequestDescriptionActivity.class);
+        Bundle oldExtras = getIntent().getExtras();
+        if(oldExtras != null){
+            refresh.putExtra(getIntent().getExtras());
+
+            startActivity(refresh);
+        }
+    }
+
+
+    public void onBackPressed(){
+
+        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(requestRetrieve != null){
+            requestRetrieve.cancel();
+        }
+    }
+
+    private void showRetrievedErrorPopup(){
+
+        if(this.popupDialogProgress != null){
+            this.popupDialogProgress.dismiss();
+        }
+
+        Context context;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setMessage(R.string.error_message_download_resources)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void ShowNoInternetPopup(){
+
+        if(this.popupDialogProgress != null){
+            this.popupDialogProgress.dismiss();
+        }
+
+        Context context;
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setMessage(R.string.recconnecting_request)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int id) {
+
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                });
+
+        AlertDialog alert = alertBuilder.create();
+        alert.show();
+    }
 }

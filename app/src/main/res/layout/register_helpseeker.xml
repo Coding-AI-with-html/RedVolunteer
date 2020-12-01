@@ -1,168 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to RedVolunteer Registration"
-        android:textSize="23sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.148" />
-
-    <EditText
-        android:id="@+id/PersonNameX"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Name"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.052" />
-
-    <EditText
-        android:id="@+id/PersonSurnameX"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Surname"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PersonNameX"
-        app:layout_constraintVertical_bias="0.032" />
-
-    <!--BUTTON TO TAKE A PHOTO OF A PASSPORT -->
-
-    <EditText
-        android:id="@+id/EmailAddressX"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:hint="Email"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PersonSurnameX"
-        app:layout_constraintVertical_bias="0.146" />
-
-    <EditText
-        android:id="@+id/editTextPhone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Phone number(+370)"
-        android:inputType="phone"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/EmailAddressX"
-        app:layout_constraintVertical_bias="0.055" />
-
-    <Button
-        android:id="@+id/BtnSignUp"
-        android:layout_width="150dp"
-        android:layout_height="55dp"
-        android:layout_marginBottom="160dp"
-        android:text="Sign Up"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
-        android:layout_width="200dp"
-        android:layout_height="52dp"
-        android:layout_gravity="center_horizontal"
-        tools:layout_editor_absoluteX="117dp"
-        tools:layout_editor_absoluteY="589dp" />
+    android:layout_height="match_parent"
+    android:background="@color/mainColorRed"
+    android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="402dp"
-        android:layout_height="81dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/redvolunteer" />
+        android:id="@+id/logoSVG"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginBottom="170dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="70dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/red_volunteer_splash_image"
+        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/redVolunteer_logo"/>
 
-    <TextView
-        android:id="@+id/SignUpVolunteer"
-        android:layout_width="187dp"
-        android:layout_height="54dp"
-        android:text="Sign up as a Volunteer"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/BtnSignUp"
-        app:layout_constraintVertical_bias="0.542" />
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Vardas"
+        android:id="@+id/Name_register"
+        android:layout_above="@id/Surname_register"
+        android:layout_centerHorizontal="true"
+        />
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Pavarde"
+        android:id="@+id/Surname_register"
+        android:layout_above="@id/Email_register"
+        android:layout_centerHorizontal="true"
+        />
+    <Button
+        android:id="@+id/Email_register"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="E-pastas"
+        android:layout_above="@id/Phone_number_register"
+        android:layout_centerHorizontal="true"
+        />
+    <Button
+        android:id="@+id/Phone_number_register"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Telefono Numeris"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/facebook_login_btn"
+        android:layout_marginBottom="-150dp"
+        />
 
-    <TextView
-        android:id="@+id/BackLogin"
-        android:layout_width="187dp"
-        android:layout_height="54dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="48dp"
-        android:text="Already have account, darling? Login here"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/SignUpVolunteer"
-        app:layout_constraintTop_toBottomOf="@+id/BtnSignUp"
-        app:layout_constraintVertical_bias="1.0" />
 
-    <EditText
-        android:id="@+id/XPassword"
+    <Button
+        android:id="@+id/facebook_login_btn"
+        android:layout_width="250dp"
+        android:layout_above="@+id/tableRow1"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="300dp"
+        android:background="@drawable/my_facebook_button"
+        android:drawableStart="@drawable/ic_facebook"
+        android:drawableLeft="@drawable/ic_facebook"
+        android:padding="15dp"
+        android:text="@string/login_with_facebook"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TableRow
+        android:id="@+id/tableRow1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="password"
-        android:textAlignment="center"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/EmailAddressX"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PersonSurnameX" />
-
-    <EditText
-        android:id="@+id/editTextDate2"
-        android:layout_width="wrap_content"
+        android:layout_marginBottom="55dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
+        <Button
+            android:id="@+id/go_to_login"
+            android:layout_width="165dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/my_facebook_button"
+            android:padding="10dp"
+            android:hint="Prisijunkite Cia"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+    <Button
+        android:id="@+id/register_as_volunteer"
+        android:layout_width="165dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Select your birthdate"
-        android:inputType="date"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone" />
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/my_facebook_button"
+        android:padding="10dp"
+        android:layout_marginLeft="50dp"
+        android:hint="Prisiregistruok kaip savanoris!"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    </TableRow>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</RelativeLayout>

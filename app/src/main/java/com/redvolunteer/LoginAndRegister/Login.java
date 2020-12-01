@@ -64,7 +64,7 @@ public class Login extends AppCompatActivity {
 
 
         if(!NetworkCheker.getInstance().isNetworkAvailable(this)){
-            Toast.makeText(Login.this, "Reikia interneto prieigos!", Toast.LENGTH_LONG).show();
+            Toast.makeText(Login.this, R.string.no_internet_popup_label, Toast.LENGTH_LONG).show();
         }
 
         this.loginModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();

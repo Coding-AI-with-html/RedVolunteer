@@ -14,7 +14,7 @@ public interface UserModel {
 
 
     /**
-     * Retunrs true if user currently Logged,false otherwise
+     * Returns true if user currently Logged,false otherwise
      */
 
     boolean isAuth();
