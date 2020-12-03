@@ -65,7 +65,11 @@ public class RegisterVolunteer extends AppCompatActivity {
 
 
 
-        this.bindFacebookButton();
+        //this.bindFacebookButton();
+    }
+
+    private void bindLayoutComponents(){
+
     }
 
     private void setupFirebaseAuth(){
@@ -78,13 +82,14 @@ public class RegisterVolunteer extends AppCompatActivity {
         fbCallBackManager  = CallbackManager.Factory.create();
     }
 
-    private void bindFacebookButton(){
+    /**private void bindFacebookButton(){
 
-        fbRegister = (Button) findViewById(R.id.facebook_register_btn);
+        fbRegister = (Button) findViewById(R.id.facebook_register_btnSecond);
 
 
         LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookRegisterRequestCallBack());
     }
+     */
 
     private class FacebookRegisterRequestCallBack implements FacebookCallback<LoginResult> {
 
@@ -147,5 +152,25 @@ public class RegisterVolunteer extends AppCompatActivity {
         } else {
             Toast.makeText(this, "E-pasto klaida", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void showWhaitSpinner(){
+
+        popupProgDialog = ProgressDialog.show(this, "", getString(R.string.loading_text), true);
+    }
+
+    private void stopSpinner(){
+        if(popupProgDialog != null)
+
+            popupProgDialog.dismiss();
+            popupProgDialog = null;
+
+    }
+
+    private void ShowNoInternetConnectionToast(){
+
+        stopSpinner();
+
+        Toast.makeText(getApplicationContext(), R.string.no_internet_popup_label, Toast.LENGTH_LONG).show();
     }
 }

@@ -305,7 +305,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
         Intent refresh = new Intent(this, RequestDescriptionActivity.class);
         Bundle oldExtras = getIntent().getExtras();
         if(oldExtras != null){
-            refresh.putExtra(getIntent().getExtras());
+            //refresh.putExtra(getIntent().getExtras());
 
             startActivity(refresh);
         }

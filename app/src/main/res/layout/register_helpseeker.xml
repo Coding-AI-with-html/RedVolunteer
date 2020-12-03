@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/mainColorRed"
     android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
@@ -9,15 +10,16 @@
         android:id="@+id/logoSVG"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginBottom="170dp"
         android:layout_marginLeft="70dp"
         android:layout_marginRight="70dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/red_volunteer_splash_image"
         android:layout_centerHorizontal="true"
+        android:layout_above="@id/Name_register"
         android:contentDescription="@string/redVolunteer_logo"/>
 
-    <Button
+    <EditText
+        android:inputType="text"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Vardas"
@@ -25,15 +27,34 @@
         android:layout_above="@id/Surname_register"
         android:layout_centerHorizontal="true"
         />
-    <Button
+    <EditText
+        android:inputType="text"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Pavarde"
         android:id="@+id/Surname_register"
-        android:layout_above="@id/Email_register"
+        android:layout_above="@id/username_text_input_layout"
         android:layout_centerHorizontal="true"
         />
-    <Button
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/username_text_input_layout"
+        app:passwordToggleEnabled="true"
+        android:layout_above="@id/Email_register"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="Slaptazodis"
+        android:id="@+id/Password_register"
+        android:inputType="textPassword"
+        android:ems="10"
+        />
+    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:inputType="text"
         android:id="@+id/Email_register"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -41,19 +62,27 @@
         android:layout_above="@id/Phone_number_register"
         android:layout_centerHorizontal="true"
         />
-    <Button
+    <EditText
+        android:inputType="text"
         android:id="@+id/Phone_number_register"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Telefono Numeris"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/facebook_register_btn"
-        android:layout_marginBottom="-150dp"
+        android:layout_above="@id/register_helpseeker"
         />
+    <Button
+        android:id="@+id/register_helpseeker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registruotis"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/facebook_register_btnSecond"
+        android:layout_marginBottom="-250dp"/>
 
 
     <Button
-        android:id="@+id/facebook_register_btn"
+        android:id="@+id/facebook_register_btnSecond"
         android:layout_width="250dp"
         android:layout_above="@+id/tableRow1"
         android:layout_height="wrap_content"
@@ -66,6 +95,7 @@
         android:padding="15dp"
         android:text="@string/login_with_facebook"
         android:textAllCaps="false"
+        android:layout_centerHorizontal="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TableRow
@@ -97,9 +127,6 @@
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
     </TableRow>
-
-
-
 
 
 
