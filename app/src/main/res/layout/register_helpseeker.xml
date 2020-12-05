@@ -5,72 +5,195 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/mainColorRed"
     android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:id="@+id/Logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/logoSVG"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="70dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:src="@drawable/red_volunteer_splash_image"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/Name_register"
         android:contentDescription="@string/redVolunteer_logo"/>
+        </RelativeLayout>
+            <LinearLayout
+                android:layout_below="@id/Logo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <EditText
-        android:inputType="text"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="Vardas"
-        android:id="@+id/Name_register"
-        android:layout_above="@id/Surname_register"
-        android:layout_centerHorizontal="true"
-        />
-    <EditText
-        android:inputType="text"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="Pavarde"
-        android:id="@+id/Surname_register"
-        android:layout_above="@id/username_text_input_layout"
-        android:layout_centerHorizontal="true"
-        />
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/username_text_input_layout"
-        app:passwordToggleEnabled="true"
-        android:layout_above="@id/Email_register"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
 
-    <EditText
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="Slaptazodis"
-        android:id="@+id/Password_register"
-        android:inputType="textPassword"
-        android:ems="10"
-        />
-    </com.google.android.material.textfield.TextInputLayout>
-    <EditText
-        android:inputType="text"
-        android:id="@+id/Email_register"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="E-pastas"
-        android:layout_above="@id/Phone_number_register"
-        android:layout_centerHorizontal="true"
-        />
-    <EditText
-        android:inputType="text"
-        android:id="@+id/Phone_number_register"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:hint="Telefono Numeris"
-        android:layout_centerHorizontal="true"
-        android:layout_above="@id/register_helpseeker"
-        />
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_margin="20dp"
+                    android:padding="1dp"
+                    >
+                    <TableRow android:weightSum="2">
+
+                        <EditText
+                            android:layout_weight="1"
+                            android:id="@+id/Name_register"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/profile_name_icons"
+                            android:drawableLeft="@drawable/profile_name_icons"
+
+                            android:nextFocusRight="@id/Surname_register"
+                            android:drawablePadding="15dp"
+                            android:hint="Vardas"
+                            android:inputType="text"
+                            android:paddingBottom="10dp"
+                            android:theme="@style/MyEditTextTheme" />
+
+                        <EditText
+                            android:layout_weight="1"
+                            android:id="@+id/Surname_register"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+
+                            android:drawableStart="@drawable/profile_name_icons"
+                            android:drawableLeft="@drawable/profile_name_icons"
+                            android:drawablePadding="15dp"
+                            android:hint="Pavarde"
+                            android:inputType="text"
+                            android:paddingBottom="10dp"
+                            android:theme="@style/MyEditTextTheme" />
+                    </TableRow>
+
+
+                    <TableRow>
+
+
+                        <EditText
+                            android:id="@+id/Email_register"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/email_icon"
+                            android:drawableLeft="@drawable/email_icon"
+                            android:hint="Enter Email Address"
+                            android:drawablePadding="15dp"
+                            android:inputType="textEmailAddress"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="15dp"
+                            android:theme="@style/MyEditTextTheme" />
+                    </TableRow>
+                    <TableRow>
+
+
+                        <EditText
+                            android:id="@+id/ordinary_user_sign_up_password"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/password_icon"
+                            android:drawableLeft="@drawable/password_icon"
+                            android:drawablePadding="15dp"
+
+                            android:paddingLeft="15dp"
+
+                            android:inputType="textPassword"
+                            android:paddingBottom="10dp"
+                            android:hint="Enter Password"
+
+
+                            android:theme="@style/MyEditTextTheme" />
+                    </TableRow>
+                    <TableRow
+
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        >
+
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="1"
+
+                            >
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:srcCompat="@drawable/gender_icons"
+                                android:layout_gravity="center"
+
+                                android:drawablePadding="15dp"
+
+                                android:paddingLeft="15dp"
+
+
+                                />
+
+                            <Spinner
+                                android:id="@+id/RegisterX_gender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:entries="@array/gender"
+                                android:prompt="@string/hint_resource"
+                                android:paddingLeft="15dp"
+                                android:layout_marginTop="10dp"
+                                android:theme="@style/MyEditTextTheme"
+
+                                android:spinnerMode="dropdown"
+                                />
+
+
+
+
+                        </LinearLayout>
+
+
+
+
+                    </TableRow>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#b4b4b4"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        />
+                    <TableRow>
+                        <EditText
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1"
+                            android:theme="@style/MyEditTextTheme"
+                            android:drawablePadding="15dp"
+                            android:paddingLeft="15dp"
+                            android:paddingBottom="10dp"
+                            android:hint="Enter Birthday"
+                            android:id="@+id/RegisterX_birth_date"
+
+                            android:drawableStart="@drawable/birthday_icons"
+
+                            android:drawableLeft="@drawable/birthday_icons"/>
+                    </TableRow>
+
+
+
+
+
+
+                </TableLayout>
+            </LinearLayout>
+
+
+
+
     <Button
         android:id="@+id/register_helpseeker"
         android:layout_width="wrap_content"
@@ -78,7 +201,7 @@
         android:text="Registruotis"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/facebook_register_btnSecond"
-        android:layout_marginBottom="-250dp"/>
+        android:layout_marginBottom="-290dp"/>
 
 
     <Button
@@ -86,7 +209,7 @@
         android:layout_width="250dp"
         android:layout_above="@+id/tableRow1"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginStart="150dp"
         android:layout_marginTop="300dp"
         android:background="@drawable/my_facebook_button"
@@ -127,7 +250,5 @@
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
     </TableRow>
-
-
-
+        </RelativeLayout>
 </RelativeLayout>

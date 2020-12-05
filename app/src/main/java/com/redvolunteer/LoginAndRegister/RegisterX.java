@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -69,9 +70,9 @@ public class RegisterX extends AppCompatActivity {
     private Button register;
     private EditText mName;
     private EditText mSurname;
-    private EditText mPassword;
+    private Spinner mGender;
     private EditText mEmail;
-    private EditText mPhoneNum;
+    private EditText mBirthday;
 
     /**
      * it simple is the popup spinner
@@ -105,7 +106,8 @@ public class RegisterX extends AppCompatActivity {
         mName = (EditText) findViewById(R.id.Name_register);
         mSurname = (EditText) findViewById(R.id.Surname_register);
         mEmail = (EditText) findViewById(R.id.Email_register);
-        mPhoneNum = (EditText) findViewById(R.id.Phone_number_register);
+        mGender = (Spinner) findViewById(R.id.RegisterX_gender);
+        mBirthday = (EditText) findViewById(R.id.RegisterX_birth_date);
         register = (Button) findViewById(R.id.register_helpseeker);
 
     }
