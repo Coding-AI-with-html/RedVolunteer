@@ -152,24 +152,51 @@ public class RegisterX extends AppCompatActivity {
                String password = mPassword.getText().toString();
                String phoneNum = phoneNumber.getText().toString().trim();
 
-               if(ValidateUtils.isEmpty(name) ){
-                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
-                   return;
-               } else if(ValidateUtils.isUserName(name)){
+
+               if(ValidateUtils.isUserName(name)){
+
+                   if(ValidateUtils.isEmpty(name) )
+                       Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
+                       return;
 
                }
-               if(ValidateUtils.isEmpty(surname)){
-                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
-                   return;
+
+
+
+               //REGEX SURNAME INPUT
+               if(ValidateUtils.isUserName(surname)){
+                   if(ValidateUtils.isEmpty(surname)){
+                       Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
+                       return;
+                   }
                }
 
-               if(ValidateUtils.isEmpty(email)){
-                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
-                   return;
-               }
-               if(ValidateUtils.isEmpty(password)){
+                //REGEX EMAIL INPUT
+                if(ValidateUtils.isEmail(email)){
+
+                    if(ValidateUtils.isEmpty(email)){
+                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if(ValidateUtils.isValidEmail(email)){
+                        Toast.makeText(getApplicationContext(), "e-pastas nepriimtas!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                }
+
+
+
+               if(ValidateUtils.isPassword(password)){
                    Toast.makeText(getApplicationContext(), "Pamirsote irasyti slaptazodi", Toast.LENGTH_SHORT).show();
                    return;
+                   if(ValidateUtils.isPasswLength(password)){
+
+                   }
+               }
+               if(ValidateUtils.isNumeric(phoneNum)){
+                   if(ValidateUtils.isPhone(phoneNum)){
+                       return;
+                   }
                }
 
             }
