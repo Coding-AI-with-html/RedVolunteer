@@ -12,4 +12,6 @@
     <color name="grey">#999999</color>
     <color name="darkerGrey">#3B3B3B</color>
     <color name="mainColorRed">#C4302B</color>
+    <color name="lighterGrey">#f0f0f0</color>
+    <color name="colorPrimaryDark">#304564</color>
 </resources>

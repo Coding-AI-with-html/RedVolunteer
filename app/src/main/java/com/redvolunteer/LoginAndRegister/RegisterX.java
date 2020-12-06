@@ -68,11 +68,15 @@ public class RegisterX extends AppCompatActivity {
      * layout
      */
     private Button register;
+    private Button login;
+    private Button addVolunter;
     private EditText mName;
     private EditText mSurname;
     private Spinner mGender;
     private EditText mEmail;
     private EditText mBirthday;
+    private EditText mPassword;
+    private EditText phoneNumber;
 
     /**
      * it simple is the popup spinner
@@ -109,6 +113,23 @@ public class RegisterX extends AppCompatActivity {
         mGender = (Spinner) findViewById(R.id.RegisterX_gender);
         mBirthday = (EditText) findViewById(R.id.RegisterX_birth_date);
         register = (Button) findViewById(R.id.register_helpseeker);
+        login = (Button) findViewById(R.id.go_to_login);
+        addVolunter = (Button) findViewById(R.id.register_volunteer);
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), Login.class));
+            }
+        });
+        addVolunter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), RegisterVolunteer.class));
+            }
+        });
+
+
 
     }
 
@@ -120,23 +141,44 @@ public class RegisterX extends AppCompatActivity {
      * Register without Facebook
      */
 
+    private void RegisterNewHelpSeeker(){
+
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = mName.getText().toString();
+                String surname = mSurname.getText().toString();
+               String email = mEmail.getText().toString();
+               String password = mPassword.getText().toString();
+               String phoneNum = phoneNumber.getText().toString().trim();
+
+               if(ValidateUtils.isEmpty(name) ){
+                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
+                   return;
+               } else if(ValidateUtils.isUserName(name)){
+
+               }
+               if(ValidateUtils.isEmpty(surname)){
+                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
+                   return;
+               }
+
+               if(ValidateUtils.isEmpty(email)){
+                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
+                   return;
+               }
+               if(ValidateUtils.isEmpty(password)){
+                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti slaptazodi", Toast.LENGTH_SHORT).show();
+                   return;
+               }
+
+            }
+        });
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 
@@ -151,7 +193,7 @@ public class RegisterX extends AppCompatActivity {
 
     private void bindFacebookButton(){
 
-        fbRegister = (Button) findViewById(R.id.facebook_register_btnSecond);
+        fbRegister = (Button) findViewById(R.id.facebook_register_btn);
 
 
         LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookRegisterRequestCallBack());
