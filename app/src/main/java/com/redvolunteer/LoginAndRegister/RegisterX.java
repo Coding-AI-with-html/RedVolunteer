@@ -2,15 +2,21 @@ package com.redvolunteer.LoginAndRegister;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -34,6 +40,7 @@ import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.ValidateUtils;
 import com.redvolunteer.viewmodels.UserViewModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -82,7 +89,7 @@ public class RegisterX extends AppCompatActivity {
      * it simple is the popup spinner
      */
     private ProgressDialog popupProgDialog;
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         bindLayoutComponents();
@@ -110,11 +117,60 @@ public class RegisterX extends AppCompatActivity {
         mName = (EditText) findViewById(R.id.Name_register);
         mSurname = (EditText) findViewById(R.id.Surname_register);
         mEmail = (EditText) findViewById(R.id.Email_register);
-        mGender = (Spinner) findViewById(R.id.RegisterX_gender);
         mBirthday = (EditText) findViewById(R.id.RegisterX_birth_date);
         register = (Button) findViewById(R.id.register_helpseeker);
         login = (Button) findViewById(R.id.go_to_login);
         addVolunter = (Button) findViewById(R.id.register_volunteer);
+
+        final Spinner spinner =(Spinner) findViewById(R.id.registerX_gender);
+                //gender selector
+        String[] genders = new String[]{
+                "Pasirinkite lyti",
+                "Vyras",
+                "Moteris",
+                "Kita"
+        };
+
+        final List<String> plantsList = new ArrayList<>(Arrays.asList(genders));
+
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+                this, R.layout.spinner_item, plantsList) {
+            @Override
+            public boolean isEnabled(int position) {
+
+                if(position == 0){
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView GendertextView = (TextView) view;
+
+                if(position == 0){
+                    GendertextView.setText("");
+                }
+                else {
+                }
+                return view;
+            }
+        };
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +184,55 @@ public class RegisterX extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), RegisterVolunteer.class));
             }
         });
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = mName.getText().toString();
+                String surname = mSurname.getText().toString();
+                String email = mEmail.getText().toString();
+                String password = mPassword.getText().toString();
+                String phoneNum = phoneNumber.getText().toString().trim();
 
+
+
+                    if(ValidateUtils.isEmpty(name) ) {
+                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+
+
+                //REGEX SURNAME INPUT
+                    if(ValidateUtils.isEmpty(surname)){
+                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+
+                //REGEX EMAIL INPUT
+                    if(ValidateUtils.isEmpty(email)){
+                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else if(ValidateUtils.isValidEmail(email)){
+                        Toast.makeText(getApplicationContext(), "toks e-pastas neegzistuoja!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    //REGEX PASSWORD
+                    if(ValidateUtils.isPasswLength(password)){
+                        Toast.makeText(getApplicationContext(),"Slaptazodis per trumpas", Toast.LENGTH_SHORT).show();
+                        return;
+                }
+
+                    //REGEX PHONE-NUMBER
+                if(ValidateUtils.isNumeric(phoneNum)){
+                    if(ValidateUtils.isPhone(phoneNum)){
+                        return;
+                    }
+                }
+
+            }
+        });
 
 
     }
@@ -143,64 +247,6 @@ public class RegisterX extends AppCompatActivity {
 
     private void RegisterNewHelpSeeker(){
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = mName.getText().toString();
-                String surname = mSurname.getText().toString();
-               String email = mEmail.getText().toString();
-               String password = mPassword.getText().toString();
-               String phoneNum = phoneNumber.getText().toString().trim();
-
-
-               if(ValidateUtils.isUserName(name)){
-
-                   if(ValidateUtils.isEmpty(name) )
-                       Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
-                       return;
-
-               }
-
-
-
-               //REGEX SURNAME INPUT
-               if(ValidateUtils.isUserName(surname)){
-                   if(ValidateUtils.isEmpty(surname)){
-                       Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
-                       return;
-                   }
-               }
-
-                //REGEX EMAIL INPUT
-                if(ValidateUtils.isEmail(email)){
-
-                    if(ValidateUtils.isEmpty(email)){
-                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if(ValidateUtils.isValidEmail(email)){
-                        Toast.makeText(getApplicationContext(), "e-pastas nepriimtas!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                }
-
-
-
-               if(ValidateUtils.isPassword(password)){
-                   Toast.makeText(getApplicationContext(), "Pamirsote irasyti slaptazodi", Toast.LENGTH_SHORT).show();
-                   return;
-                   if(ValidateUtils.isPasswLength(password)){
-
-                   }
-               }
-               if(ValidateUtils.isNumeric(phoneNum)){
-                   if(ValidateUtils.isPhone(phoneNum)){
-                       return;
-                   }
-               }
-
-            }
-        });
 
 
 

@@ -187,7 +187,7 @@ prisiregistruokit"
                         />
 
                     <Spinner
-                        android:id="@+id/RegisterX_gender"
+                        android:id="@+id/registerX_gender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -306,4 +306,11 @@ prisiregistruokit"
     </LinearLayout>
 
     </ScrollView>
+    <ProgressBar
+        android:id="@+id/helpseeker_register_progressbar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
