@@ -20,9 +20,9 @@
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="247dp"
-        android:layout_height="39dp"
-        android:text="Welcome Back!"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Sveiki sugrize!"
         android:textAlignment="center"
         android:textSize="35sp"
         android:textStyle="italic"
@@ -34,8 +34,8 @@
 
     <EditText
         android:id="@+id/LoginEmailAddress"
-        android:layout_width="247dp"
-        android:layout_height="62dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
@@ -48,8 +48,8 @@
 
     <EditText
         android:id="@+id/PasswordLogin"
-        android:layout_width="247dp"
-        android:layout_height="62dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPassword"
         android:hint="Password"
@@ -73,23 +73,12 @@
         app:layout_constraintTop_toBottomOf="@+id/PasswordLogin"
         app:layout_constraintVertical_bias="0.135" />
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_facebook_button"
-        android:layout_width="200dp"
-        android:layout_height="52dp"
-        android:layout_gravity="center_horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        app:layout_constraintVertical_bias="0.149" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="255dp"
-        android:layout_height="45dp"
-        android:text="Don't have account yet, darling? Create one here"
+        android:id="@+id/go_to_register_helpseeker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dar neturite paskyros? susikurkit cia"
         android:textSize="18sp"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,4 +87,50 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         app:layout_constraintVertical_bias="0.463" />
+
+    <Button
+        android:id="@+id/facebook_login_btn"
+        android:layout_width="185dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/my_facebook_button"
+        android:drawableStart="@drawable/ic_facebook"
+        android:drawableLeft="@drawable/ic_facebook"
+        android:padding="4dp"
+        android:text="@string/login_with_facebook"
+        android:textAllCaps="false"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.722" />
+
+    <ProgressBar
+        android:id="@+id/ProgBar"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/pleaseWait"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/ProgBar"
+        android:layout_alignRight="@id/ProgBar"
+        android:layout_alignBottom="@id/ProgBar"
+        android:layout_marginTop="6dp"
+        android:text="Please what..."
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ProgBar"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

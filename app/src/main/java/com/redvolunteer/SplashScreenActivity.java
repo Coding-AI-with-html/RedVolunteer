@@ -8,6 +8,7 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.redvolunteer.LoginAndRegister.Login;
 import com.redvolunteer.LoginAndRegister.RegisterX;
 import com.redvolunteer.utils.StyleUtils;
@@ -42,8 +43,16 @@ public class SplashScreenActivity extends Activity {
 
     private void gatekeeper()
     {
-            startActivity(new Intent(SplashScreenActivity.this, RegisterX.class));
 
+            startActivity(new Intent(SplashScreenActivity.this, Login.class));
+
+    }
+    //check if user logged in or not
+    private void checkIsUserLoggedIn(FirebaseUser Fuser){
+
+        if (Fuser == null){
+
+        }
     }
 
 

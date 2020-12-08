@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -84,6 +87,7 @@ public class RegisterX extends AppCompatActivity {
     private EditText mBirthday;
     private EditText mPassword;
     private EditText phoneNumber;
+    private ProgressBar progBar;
 
     /**
      * it simple is the popup spinner
@@ -121,6 +125,7 @@ public class RegisterX extends AppCompatActivity {
         register = (Button) findViewById(R.id.register_helpseeker);
         login = (Button) findViewById(R.id.go_to_login);
         addVolunter = (Button) findViewById(R.id.register_volunteer);
+        progBar = (ProgressBar) findViewById(R.id.helpseeker_register_progressbar);
 
         final Spinner spinner =(Spinner) findViewById(R.id.registerX_gender);
                 //gender selector
@@ -161,15 +166,23 @@ public class RegisterX extends AppCompatActivity {
         };
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long l) {
+                String selectedTextItem = (String) parent.getItemAtPosition(position);
+
+                if(position >0){
+
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
+
         });
+
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(spinnerArrayAdapter);
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -184,55 +197,7 @@ public class RegisterX extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), RegisterVolunteer.class));
             }
         });
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = mName.getText().toString();
-                String surname = mSurname.getText().toString();
-                String email = mEmail.getText().toString();
-                String password = mPassword.getText().toString();
-                String phoneNum = phoneNumber.getText().toString().trim();
 
-
-
-                    if(ValidateUtils.isEmpty(name) ) {
-                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-
-
-                //REGEX SURNAME INPUT
-                    if(ValidateUtils.isEmpty(surname)){
-                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-
-                //REGEX EMAIL INPUT
-                    if(ValidateUtils.isEmpty(email)){
-                        Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if(ValidateUtils.isValidEmail(email)){
-                        Toast.makeText(getApplicationContext(), "toks e-pastas neegzistuoja!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    //REGEX PASSWORD
-                    if(ValidateUtils.isPasswLength(password)){
-                        Toast.makeText(getApplicationContext(),"Slaptazodis per trumpas", Toast.LENGTH_SHORT).show();
-                        return;
-                }
-
-                    //REGEX PHONE-NUMBER
-                if(ValidateUtils.isNumeric(phoneNum)){
-                    if(ValidateUtils.isPhone(phoneNum)){
-                        return;
-                    }
-                }
-
-            }
-        });
 
 
     }
@@ -246,10 +211,85 @@ public class RegisterX extends AppCompatActivity {
      */
 
     private void RegisterNewHelpSeeker(){
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String name = mName.getText().toString();
+                String surname = mSurname.getText().toString();
+                String email = mEmail.getText().toString();
+                String password = mPassword.getText().toString();
+                String phoneNum = phoneNumber.getText().toString().trim();
+
+
+
+                if(ValidateUtils.isEmpty(name) ) {
+                    Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //REGEX SURNAME INPUT
+                if(ValidateUtils.isEmpty(surname)){
+                    Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                //REGEX EMAIL INPUT
+                if(ValidateUtils.isEmpty(email)){
+                    Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if(ValidateUtils.isValidEmail(email)){
+                    Toast.makeText(getApplicationContext(), "toks e-pastas neegzistuoja!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //REGEX PASSWORD
+                if(ValidateUtils.isPasswLength(password)){
+                    Toast.makeText(getApplicationContext(),"Slaptazodis per trumpas", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //REGEX PHONE-NUMBER
+                if(ValidateUtils.isNumeric(phoneNum)){
+                    if(ValidateUtils.isPhone(phoneNum)){
+                        return;
+                    }
+                }
+
+                progBar.setVisibility(View.VISIBLE);
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(RegisterX.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                if(!task.isSuccessful()){
+                                    Toast.makeText(RegisterX.this, "Klaida kuriant paskyra!" + task.getException(), Toast.LENGTH_SHORT).show();
+                                } else {
+
+                                    progBar.setVisibility(View.GONE);
+
+                                    String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
 
 
+                                }
+
+
+
+
+
+
+
+
+                            }
+                        });
+
+
+
+
+            }
+        });
 
     }
 
