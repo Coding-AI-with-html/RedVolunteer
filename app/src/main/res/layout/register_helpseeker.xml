@@ -115,7 +115,7 @@ prisiregistruokit"
 
 
                 <EditText
-                    android:id="@+id/RegisterX_phone"
+                    android:id="@+id/registerX_phone"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_weight="1"
@@ -141,7 +141,7 @@ prisiregistruokit"
 
 
                     <EditText
-                        android:id="@+id/RegisterX_password"
+                        android:id="@+id/registerX_password"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"

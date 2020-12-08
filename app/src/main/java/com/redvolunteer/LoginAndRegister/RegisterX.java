@@ -145,6 +145,8 @@ public class RegisterX extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.Email_register);
         mBirthday = (EditText) findViewById(R.id.RegisterX_birth_date);
         mGender = (Spinner) findViewById(R.id.registerX_gender);
+        mPassword = (EditText) findViewById(R.id.registerX_password);
+        phoneNumber =(EditText) findViewById(R.id.registerX_phone);
         register = (Button) findViewById(R.id.register_helpseeker);
         login = (Button) findViewById(R.id.go_to_login);
         addVolunter = (Button) findViewById(R.id.register_volunteer);
@@ -250,6 +252,12 @@ public class RegisterX extends AppCompatActivity {
                 mBirthday.setHint(date);
             }
         };
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RegisterNewHelpSeeker();
+            }
+        });
 
 
     }
@@ -287,9 +295,6 @@ public class RegisterX extends AppCompatActivity {
                 //REGEX EMAIL INPUT
                 if(ValidateUtils.isEmpty(email)){
                     Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
-                    return;
-                } else if(ValidateUtils.isValidEmail(email)){
-                    Toast.makeText(getApplicationContext(), "toks e-pastas neegzistuoja!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -346,6 +351,8 @@ public class RegisterX extends AppCompatActivity {
                                         Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/BirthDate").setValue(mBirthday.toString());
                                         Fdata.getReference("AllUsers"+"/"+userUID.toString()+"/Email").setValue("Help Seekers");
 
+                                        startActivity(new Intent(RegisterX.this, MainActivity.class));
+                                        finish();
                                     }
 
 
