@@ -69,7 +69,6 @@ public class Login extends AppCompatActivity {
      **/
     private EditText mEmail, mPassword;
     private ProgressBar mProgBar;
-    private TextView mPleaseWhaitSign;
 
 
 
@@ -97,9 +96,7 @@ public class Login extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.LoginEmailAddress);
         mPassword = (EditText) findViewById(R.id.PasswordLogin);
         mProgBar = (ProgressBar) findViewById(R.id.ProgBar);
-        mPleaseWhaitSign = (TextView) findViewById(R.id.pleaseWait);
 
-        mPleaseWhaitSign.setVisibility(View.GONE);
         mProgBar.setVisibility(View.GONE);
 
         Button mLoginBtn = (Button) findViewById(R.id.btnLogin);
@@ -114,7 +111,6 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Slaptazodis arba e-pastas neirasytas!", Toast.LENGTH_SHORT).show();
                 } else {
                     mProgBar.setVisibility(View.VISIBLE);
-                    mPleaseWhaitSign.setVisibility(View.VISIBLE);
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -131,7 +127,6 @@ public class Login extends AppCompatActivity {
                                     } else {
                                         Log.d(TAG, "onComplete: failure" + task.getException());
                                         Toast.makeText(Login.this, "Paskyra neegzistuoja!", Toast.LENGTH_SHORT).show();
-                                        mPleaseWhaitSign.setVisibility(View.GONE);
                                         mProgBar.setVisibility(View.GONE);
                                     }
                                 }
@@ -154,7 +149,7 @@ public class Login extends AppCompatActivity {
 
     private void setupFirebaseAuth(){
         //Initialiazing Firebase authenticator;
-        mAuth =FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     /**

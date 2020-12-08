@@ -17,6 +17,8 @@ public class User {
     private String fullSurname;
     private String email;
     private String biography;
+    private long phone_number;
+    private String gender;
 
     /**
      * Encoded user pic
@@ -89,6 +91,22 @@ public class User {
         BirthDate = birthDate;
     }
 
+    public long getPhone_number() {
+        return phone_number;
+    }
+
+    public void setPhone_number(long phone_number) {
+        this.phone_number = phone_number;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -97,6 +115,8 @@ public class User {
                 ", fullSurname='" + fullSurname + '\'' +
                 ", email='" + email + '\'' +
                 ", biography='" + biography + '\'' +
+                ", phone_number=" + phone_number +
+                ", gender='" + gender + '\'' +
                 ", photo='" + photo + '\'' +
                 ", BirthDate=" + BirthDate +
                 '}';

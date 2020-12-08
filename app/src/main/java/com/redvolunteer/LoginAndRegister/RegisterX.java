@@ -1,14 +1,19 @@
 package com.redvolunteer.LoginAndRegister;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -33,8 +38,12 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -45,12 +54,15 @@ import com.redvolunteer.viewmodels.UserViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 
 public class RegisterX extends AppCompatActivity {
 
+    private static final String TAG = "RegisterX";
 
     /**
      * Facebook register
@@ -66,8 +78,11 @@ public class RegisterX extends AppCompatActivity {
      * Handle to register with WM
      */
     private UserViewModel mUserViewModel;
-
+    //firebase
     private FirebaseAuth mFirebaseAuth;
+    private FirebaseDatabase Fdata;
+    private DatabaseReference DataRefs;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     /**
      * Checking inputs
@@ -90,13 +105,18 @@ public class RegisterX extends AppCompatActivity {
     private ProgressBar progBar;
 
     /**
+     * DatePicker for birthday
+     */
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    /**
      * it simple is the popup spinner
      */
     private ProgressDialog popupProgDialog;
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        bindLayoutComponents();
         super.onCreate(savedInstanceState);
 
         if(!NetworkCheker.getInstance().isNetworkAvailable(this)){
@@ -109,6 +129,8 @@ public class RegisterX extends AppCompatActivity {
 
     setContentView(R.layout.register_helpseeker);
 
+
+        bindLayoutComponents();
     this.bindFacebookButton();
 
     }
@@ -122,6 +144,7 @@ public class RegisterX extends AppCompatActivity {
         mSurname = (EditText) findViewById(R.id.Surname_register);
         mEmail = (EditText) findViewById(R.id.Email_register);
         mBirthday = (EditText) findViewById(R.id.RegisterX_birth_date);
+        mGender = (Spinner) findViewById(R.id.registerX_gender);
         register = (Button) findViewById(R.id.register_helpseeker);
         login = (Button) findViewById(R.id.go_to_login);
         addVolunter = (Button) findViewById(R.id.register_volunteer);
@@ -197,7 +220,36 @@ public class RegisterX extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), RegisterVolunteer.class));
             }
         });
+        mBirthday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar cal = Calendar.getInstance();
 
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        RegisterX.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListener,
+                        year, month, day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+
+            }
+        });
+
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                month = month +1;
+
+                String date = year + " - " + month + " - "+ day + " ";
+                mBirthday.setHint(date);
+            }
+        };
 
 
     }
@@ -211,14 +263,13 @@ public class RegisterX extends AppCompatActivity {
      */
 
     private void RegisterNewHelpSeeker(){
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String name = mName.getText().toString();
-                String surname = mSurname.getText().toString();
-                String email = mEmail.getText().toString();
-                String password = mPassword.getText().toString();
+                String name = mName.getText().toString().trim();
+                String surname = mSurname.getText().toString().trim();
+                String email = mEmail.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
                 String phoneNum = phoneNumber.getText().toString().trim();
+                String gender = mGender.getSelectedItem().toString();
+                String birthDate = mBirthday.getHint().toString();
 
 
 
@@ -254,44 +305,78 @@ public class RegisterX extends AppCompatActivity {
                         return;
                     }
                 }
+                if(gender.equals("Pasirinkite lyti")){
+                    Toast.makeText(getApplicationContext(), "Turi pasirinkti lyti!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(birthDate.equals("Pasirinkite gimimo data")){
+                    Toast.makeText(getApplicationContext(), "Pasirinkite gimimo data", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 progBar.setVisibility(View.VISIBLE);
-                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                firebaseAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(RegisterX.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                if(!task.isSuccessful()){
-                                    Toast.makeText(RegisterX.this, "Klaida kuriant paskyra!" + task.getException(), Toast.LENGTH_SHORT).show();
-                                } else {
 
-                                    progBar.setVisibility(View.GONE);
+                Fdata = FirebaseDatabase.getInstance();
+                DataRefs = Fdata.getReference();
+                mAuthListener = new FirebaseAuth.AuthStateListener() {
+                    @Override
+                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if(currentUser != null){
 
-                                    String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            DataRefs.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot Dsnapshot) {
+                                    if(checkIfUserAlreadyExist(email, Dsnapshot)){
+                                        Log.d(TAG, "onDataChange: Founded match");
+                                        Toast.makeText(getApplicationContext(), "Jusu paskyra jau yra sukurta, prisijunkite!", Toast.LENGTH_SHORT).show();
+                                    } else {
+
+                                        progBar.setVisibility(View.GONE);
+                                        String userUID = mFirebaseAuth.getCurrentUser().getUid();
+
+                                        DataRefs.child("Help Seekers").child(userUID).child(userUID.toString()).push();
+
+                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()).setValue(userUID.toString());
+                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Personal Name").setValue(mName.getText().toString());
+                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Personal Surname").setValue(mSurname.getText().toString());
+                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Email").setValue(mEmail.getText().toString());
+                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Gender").setValue(mGender.toString());
+                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/BirthDate").setValue(mBirthday.toString());
+                                        Fdata.getReference("AllUsers"+"/"+userUID.toString()+"/Email").setValue("Help Seekers");
+
+                                    }
+
 
 
 
 
                                 }
 
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-
-
-
-
-
-
-                            }
-                        });
-
-
-
-
+                                }
+                            });
+                        }
+                    }
+                };
             }
-        });
 
+            private boolean checkIfUserAlreadyExist(String email, DataSnapshot dataSnapshot){
+
+        String userUID = mFirebaseAuth.getCurrentUser().getUid();
+        User user = new User();
+        userUID = mFirebaseAuth.getCurrentUser().getUid();
+        for(DataSnapshot ds: dataSnapshot.child(userUID).getChildren()){
+            user.setEmail(ds.getValue(User.class).getEmail());
+            if(user.getEmail().equals(email))
+                return true;
+        }
+        return false;
     }
+
 
 
 

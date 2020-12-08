@@ -16,6 +16,7 @@ import com.redvolunteer.utils.StyleUtils;
 public class SplashScreenActivity extends Activity {
 
     Context mContext;
+    FirebaseUser Fuser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -43,17 +44,15 @@ public class SplashScreenActivity extends Activity {
 
     private void gatekeeper()
     {
+        if(Fuser != null){
+            startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+    } else {
 
             startActivity(new Intent(SplashScreenActivity.this, Login.class));
-
-    }
-    //check if user logged in or not
-    private void checkIsUserLoggedIn(FirebaseUser Fuser){
-
-        if (Fuser == null){
-
         }
+
     }
+
 
 
 }
