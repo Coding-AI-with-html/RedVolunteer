@@ -33,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.UserSettings;
-import com.redvolunteer.utils.auth.Auth20FirebaseHandlerlmpl;
 import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseUserDao;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
@@ -44,8 +43,6 @@ import com.redvolunteer.LoginAndRegister.Login;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.calendar.CalendarFormatter;
 import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
-
-import io.reactivex.Flowable;
 
 public class ProfileFragment extends Fragment {
 
@@ -86,7 +83,8 @@ public class ProfileFragment extends Fragment {
    private FirebaseAuth.AuthStateListener mAuthListener;
    private FirebaseDatabase mFireData;
    private DatabaseReference mDataRefs;
-    private Context mContext;
+
+   private UserSettings mSettings;
 
     /**
      * Layout components
@@ -127,6 +125,7 @@ public class ProfileFragment extends Fragment {
     private void bind(View view) {
 
         setupTolbar(view);
+
 
         mUserPic = (ImageView) view.findViewById(R.id.profile_user_pic);
         mUserName = (TextView) view.findViewById(R.id.user_name);
@@ -182,7 +181,7 @@ public class ProfileFragment extends Fragment {
                 mShowedUSer.setPhoto(tmpOldPicture);
                 mShowedUSer.setBirthDate(tmpOldBirthDate);
 
-                fillFragments();
+                //fillFragments();
 
 
             }
@@ -208,7 +207,7 @@ public class ProfileFragment extends Fragment {
 
                         mShowedUSer.setBirthDate(cal.getTime().getTime());
 
-                        fillFragments();
+                        //fillFragments();
                     }
                 },   cal
                 .get(Calendar.YEAR), cal.get(Calendar.MONTH),
@@ -318,10 +317,12 @@ public class ProfileFragment extends Fragment {
      */
 
     private void fillFragments(){
-        if(mShowedUSer != null){
-            mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
-            mUserName.setText(mShowedUSer.getFullName());
-            mUserSurname.setText(mShowedUSer.getFullSurname());
+
+        User user = mSettings.getUser();
+        if(user != null){
+            mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(user.getPhoto()));
+            mUserName.setText(user.getFullName());
+            mUserSurname.setText(user.getFullSurname());
 
             //if the user has not his birth date
 
@@ -329,10 +330,10 @@ public class ProfileFragment extends Fragment {
                 mBirthDate.setText(R.string.alert_no_age);
 
             } else {
-                mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDate()));
+                mBirthDate.setText(CalendarFormatter.getDate(user.getBirthDate()));
 
             }
-            userBio.setText(mShowedUSer.getBiography());
+            userBio.setText(user.getBiography());
         }
 
     }
@@ -424,28 +425,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void GetUserSettingsFromDatabase(DataSnapshot dataSnapshot){
-        String userUID = mAuth.getCurrentUser().getUid();
-        mShowedUSer = new User();
-        UserSettings mSetings = new UserSettings();
 
-        for(DataSnapshot ds: dataSnapshot.getChildren()){
-
-            if (ds.getKey().equals(mContext.getString(R.string.database_user_settings))) {
-                Log.d(TAG, "GetUserSettingsFromDatabase: Providing datasnapshot" + ds);
-
-                mShowedUSer.setFullName(
-                        ds.child(userUID)
-                        .getValue(mShowedUSer.cl)
-
-                );
-
-            }
-
-
-        }
-
-    }
 }
 
 

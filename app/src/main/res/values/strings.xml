@@ -29,6 +29,7 @@
     <string name="redVolunteer_logo">RedVolunteer Logo</string>
     <string name="hint_resource">Pasirinkite lyti</string>
     <string name="database_user_settings">User_Settings</string>
+    <string name="database_all_users">AllUsers</string>
 
 
     <string-array name="gender">
