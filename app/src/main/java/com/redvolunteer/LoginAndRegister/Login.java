@@ -126,7 +126,7 @@ public class Login extends AppCompatActivity {
                                         }
                                     } else {
                                         Log.d(TAG, "onComplete: failure" + task.getException());
-                                        Toast.makeText(Login.this, "Paskyra neegzistuoja!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Login.this, "Slaptazodis arba e-pastas netinka!", Toast.LENGTH_SHORT).show();
                                         mProgBar.setVisibility(View.GONE);
                                     }
                                 }

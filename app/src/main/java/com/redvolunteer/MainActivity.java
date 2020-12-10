@@ -1,5 +1,6 @@
 package com.redvolunteer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
@@ -99,7 +101,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
         bindLayoutComponents();
         setFragments();
-        //setupFirebaseAuth();
+        setupFirebaseAuth();
     }
 
     private void bindLayoutComponents(){
@@ -235,7 +237,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
 
 
-    /*private void checkCurrentUser(FirebaseUser currentUser){
+    private void checkCurrentUser(FirebaseUser currentUser){
         Log.d(TAG, "checkCurrentUser: checking if user has already logged");
         if(currentUser == null){
             Intent intent = new Intent(MainContext, Login.class);
@@ -244,9 +246,9 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         }
         
     }
-    */
 
-   /*
+
+
     public void setupFirebaseAuth(){
 
         Log.d(TAG, "setupFirebaseAuth: starting authentication");
@@ -263,12 +265,12 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
                 } else {
                     Log.d(TAG, "onAuthStateChanged: signed_out");
+                    signOut();
                 }
             }
         };
 
     }
-    */
     private void signOut(){
         mAuth.signOut();
         Intent intent = new Intent(MainActivity.this, Login.class);
@@ -276,7 +278,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
     }
 
-    /*
+
     @Override
 
     protected void onStart() {
@@ -284,7 +286,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         mAuth.addAuthStateListener(FAuthListener);
         checkCurrentUser(mAuth.getCurrentUser());
     }
-    */
+
 
     @Override
     protected void onStop() {

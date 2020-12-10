@@ -1,10 +1,13 @@
 package com.redvolunteer.utils.persistence.firebasepersistence;
 
+import android.content.Context;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
 
@@ -29,6 +32,8 @@ public class FirebaseUserDao implements RemoteUserDao {
      * ref to firebase
      */
     private DatabaseReference dataRef;
+
+    private Context mContext;
 
     @Override
     public Flowable<User> loadById(String userID) {
@@ -88,9 +93,7 @@ public class FirebaseUserDao implements RemoteUserDao {
     }
 
 
-
-
-private class UserLoaderProvider implements FlowableOnSubscribe<User>{
+    private class UserLoaderProvider implements FlowableOnSubscribe<User>{
 
         private String userID;
 

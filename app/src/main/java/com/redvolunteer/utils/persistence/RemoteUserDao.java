@@ -1,5 +1,6 @@
 package com.redvolunteer.utils.persistence;
 
+import com.google.firebase.database.DataSnapshot;
 import com.redvolunteer.pojo.User;
 
 import java.util.List;
@@ -15,7 +16,6 @@ public interface RemoteUserDao {
      * @return
      */
     Flowable<User> loadById(String userID);
-
 
     /**
      * Load a set of users from the store. operation might can be aSync;

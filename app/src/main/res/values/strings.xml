@@ -27,7 +27,8 @@
     <string name="facebook_login_error_string">Ops, facebook klaida!</string>
     <string name="facebook_error_credential_string">Ops, klaida su programeles serveriu!</string>
     <string name="redVolunteer_logo">RedVolunteer Logo</string>
-    <string name="hint_resource">Choose Gender</string>
+    <string name="hint_resource">Pasirinkite lyti</string>
+    <string name="database_user_settings">User_Settings</string>
 
 
     <string-array name="gender">

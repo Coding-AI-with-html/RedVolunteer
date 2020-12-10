@@ -299,10 +299,6 @@ public class RegisterX extends AppCompatActivity {
                 }
 
                 //REGEX PASSWORD
-                if(ValidateUtils.isPasswLength(password)){
-                    Toast.makeText(getApplicationContext(),"Slaptazodis per trumpas", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
                 //REGEX PHONE-NUMBER
                 if(ValidateUtils.isNumeric(phoneNum)){
@@ -323,52 +319,45 @@ public class RegisterX extends AppCompatActivity {
 
 
                 Fdata = FirebaseDatabase.getInstance();
+
                 DataRefs = Fdata.getReference();
-                mAuthListener = new FirebaseAuth.AuthStateListener() {
-                    @Override
-                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                        if(currentUser != null){
 
-                            DataRefs.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot Dsnapshot) {
-                                    if(checkIfUserAlreadyExist(email, Dsnapshot)){
-                                        Log.d(TAG, "onDataChange: Founded match");
-                                        Toast.makeText(getApplicationContext(), "Jusu paskyra jau yra sukurta, prisijunkite!", Toast.LENGTH_SHORT).show();
-                                    } else {
+                mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(RegisterX.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                        progBar.setVisibility(View.GONE);
-                                        String userUID = mFirebaseAuth.getCurrentUser().getUid();
+                                if(!task.isSuccessful()){
+                                    Log.d(TAG, "onDataChange: Founded match");
+                                    progBar.setVisibility(View.GONE);
+                                    Toast.makeText(getApplicationContext(), "Tokia paskyra jau yra, prisijunkite!", Toast.LENGTH_SHORT).show();
+                                } else {
 
-                                        DataRefs.child("Help Seekers").child(userUID).child(userUID.toString()).push();
+                                    progBar.setVisibility(View.GONE);
+                                    String userUID = mFirebaseAuth.getCurrentUser().getUid();
 
-                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()).setValue(userUID.toString());
-                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Personal Name").setValue(mName.getText().toString());
-                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Personal Surname").setValue(mSurname.getText().toString());
-                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Email").setValue(mEmail.getText().toString());
-                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/Gender").setValue(mGender.toString());
-                                        Fdata.getReference("Help Seekers"+"/"+userUID.toString()+"/BirthDate").setValue(mBirthday.toString());
-                                        Fdata.getReference("AllUsers"+"/"+userUID.toString()+"/Email").setValue("Help Seekers");
+                                    DataRefs.child("Help_Seekers").child(userUID).child(userUID.toString()).push();
 
-                                        startActivity(new Intent(RegisterX.this, MainActivity.class));
-                                        finish();
-                                    }
+                                    Fdata.getReference("Help_Seekers"+"/"+userUID.toString()).setValue(userUID.toString());
+                                    Fdata.getReference("Help_Seekers"+"/"+userUID.toString()+"/Name").setValue(name);
+                                    Fdata.getReference("Help_Seekers"+"/"+userUID.toString()+"/Surname").setValue(surname);
+                                    Fdata.getReference("Help_Seekers"+"/"+userUID.toString()+"/Email").setValue(email);
+                                    Fdata.getReference("Help_Seekers"+"/"+userUID.toString()+"/Phone_Number").setValue(phoneNum);
+                                    Fdata.getReference("Help_Seekers"+"/"+userUID.toString()+"/Gender").setValue(gender);
+                                    Fdata.getReference("Help_Seekers"+"/"+userUID.toString()+"/BirthDay").setValue(birthDate);
+                                    Fdata.getReference("AllUsers"+"/"+userUID.toString()).setValue("Help_Seeker");
 
-
-
-
-
+                                    startActivity(new Intent(RegisterX.this, MainActivity.class));
+                                    finish();
                                 }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                }
-                            });
-                        }
-                    }
-                };
+
+
+
+                            }
+
+                        });
             }
 
             private boolean checkIfUserAlreadyExist(String email, DataSnapshot dataSnapshot){
@@ -514,4 +503,5 @@ public class RegisterX extends AppCompatActivity {
         // facebook request has NO USER DEFINED CODEs
         fbCallBackManager.onActivityResult(requestCode, resultCode, data);
     }
+
 }
