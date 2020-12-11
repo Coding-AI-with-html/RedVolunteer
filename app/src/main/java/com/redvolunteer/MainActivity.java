@@ -96,12 +96,17 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         super.onCreate(savedInstanceState);
 
         mUserViewModel = getUserViewModel();
+
+
+        if(!mUserViewModel.isAuth()){
+            signOut();
+        }
+
+
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started main Activity");
-
         bindLayoutComponents();
         setFragments();
-        setupFirebaseAuth();
     }
 
     private void bindLayoutComponents(){
@@ -237,63 +242,13 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
 
 
-    private void checkCurrentUser(FirebaseUser currentUser){
-        Log.d(TAG, "checkCurrentUser: checking if user has already logged");
-        if(currentUser == null){
-            Intent intent = new Intent(MainContext, Login.class);
-            startActivity(intent);
-
-        }
-        
-    }
 
 
-
-    public void setupFirebaseAuth(){
-
-        Log.d(TAG, "setupFirebaseAuth: starting authentication");
-        mAuth = FirebaseAuth.getInstance();
-        FAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser currUser = FirebaseAuth.getInstance().getCurrentUser();
-                //check if user logged in
-                checkCurrentUser(currUser);
-
-                if(currUser != null){
-                    Log.d(TAG, "onAuthStateChanged: SIgned_in" + currUser.getUid());
-
-                } else {
-                    Log.d(TAG, "onAuthStateChanged: signed_out");
-                    signOut();
-                }
-            }
-        };
-
-    }
     private void signOut(){
         mAuth.signOut();
         Intent intent = new Intent(MainActivity.this, Login.class);
         startActivity(intent);
 
-    }
-
-
-    @Override
-
-    protected void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(FAuthListener);
-        checkCurrentUser(mAuth.getCurrentUser());
-    }
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(FAuthListener != null){
-            mAuth.removeAuthStateListener(FAuthListener);
-        }
     }
 
     @Override

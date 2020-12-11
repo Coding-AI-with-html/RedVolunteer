@@ -34,6 +34,7 @@ import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.UserSettings;
 import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseUserDao;
+import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
 
@@ -69,9 +70,7 @@ public class ProfileFragment extends Fragment {
      * @param view
      * @param savedInstanceState
      */
-    UserViewModel mUserViewModel;
-
-    FirebaseUserDao mUser;
+    private UserViewModel mUserViewModel;
 
     /**
      * User showed in this layout
@@ -79,12 +78,6 @@ public class ProfileFragment extends Fragment {
      * @param savedInstanceState
      */
     private User mShowedUSer;
-   private FirebaseAuth mAuth;
-   private FirebaseAuth.AuthStateListener mAuthListener;
-   private FirebaseDatabase mFireData;
-   private DatabaseReference mDataRefs;
-
-   private UserSettings mSettings;
 
     /**
      * Layout components
@@ -98,6 +91,7 @@ public class ProfileFragment extends Fragment {
     private  ImageView mEditBirthDate;
     private LinearLayout mActionModifyButton;
     private ImageView mEditPhotoIndicator;
+    private HelpRequestViewModel mHelpRequestViewModel;
 
     /**
      * Backup for old data
@@ -181,7 +175,7 @@ public class ProfileFragment extends Fragment {
                 mShowedUSer.setPhoto(tmpOldPicture);
                 mShowedUSer.setBirthDate(tmpOldBirthDate);
 
-                //fillFragments();
+                fillFragments();
 
 
             }
@@ -207,7 +201,7 @@ public class ProfileFragment extends Fragment {
 
                         mShowedUSer.setBirthDate(cal.getTime().getTime());
 
-                        //fillFragments();
+                        fillFragments();
                     }
                 },   cal
                 .get(Calendar.YEAR), cal.get(Calendar.MONTH),
@@ -264,45 +258,10 @@ public class ProfileFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.mUserViewModel = mFragListener.getUserViewModel();
-        setupFirebaseAuth();
         //retrieve the user from the local store
-    }
+        mShowedUSer = mUserViewModel.retrieveCachedUser();
 
-    private void setupFirebaseAuth(){
-        Log.d(TAG, "setupFirebaseAuth: setting up firebase authentication");
-        mAuth = FirebaseAuth.getInstance();
-
-        mDataRefs = mFireData.getReference();
-        mAuthListener = (FirebaseAuth.AuthStateListener) (firebaseauth) ->{
-
-            FirebaseUser Fuser = firebaseauth.getCurrentUser();
-
-            if(Fuser != null){
-
-                Log.d(TAG, "setupFirebaseAuth: user_signed:" + Fuser.getUid());
-
-            } else {
-                Log.d(TAG, "setupFirebaseAuth: user_signed_out");
-            }
-
-        };
-
-        mDataRefs.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                //retrieve user info from firebase-DB
-
-
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        //this.mHelpRequestViewModel = mFragListener.getHelpRequestViewModel();
     }
 
 
@@ -318,11 +277,11 @@ public class ProfileFragment extends Fragment {
 
     private void fillFragments(){
 
-        User user = mSettings.getUser();
-        if(user != null){
-            mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(user.getPhoto()));
-            mUserName.setText(user.getFullName());
-            mUserSurname.setText(user.getFullSurname());
+
+        if(mShowedUSer != null){
+            //mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
+            mUserName.setText(mShowedUSer.getFullName());
+            mUserSurname.setText(mShowedUSer.getFullSurname());
 
             //if the user has not his birth date
 
@@ -330,10 +289,10 @@ public class ProfileFragment extends Fragment {
                 mBirthDate.setText(R.string.alert_no_age);
 
             } else {
-                mBirthDate.setText(CalendarFormatter.getDate(user.getBirthDate()));
+                mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDate()));
 
             }
-            userBio.setText(user.getBiography());
+            userBio.setText(mShowedUSer.getBiography());
         }
 
     }
@@ -389,6 +348,9 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         //result of image capture
+        /**
+         *
+
         if (requestCode == REQUEST_IMAGE_CAPTURE && requestCode == RESULT_OK) {
 
             Bundle extras = data.getExtras();
@@ -398,33 +360,23 @@ public class ProfileFragment extends Fragment {
             mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
 
         }
+         */
 
 
 
     }
-
     @Override
     public void onResume() {
         super.onResume();
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-
-    }
 
     @Override
     public void onStop() {
         super.onStop();
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
-        if(mAuthListener != null){
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
     }
-
 
 }
 

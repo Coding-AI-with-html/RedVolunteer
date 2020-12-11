@@ -2,6 +2,7 @@ package com.redvolunteer.utils.persistence;
 
 import com.google.firebase.database.DataSnapshot;
 import com.redvolunteer.pojo.User;
+import com.redvolunteer.pojo.UserSettings;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ public interface RemoteUserDao {
      * @return
      */
     Flowable<Map<String, User>> loadByIds(List<String> userIDs);
+
+    //UserSettings getUserInfo(DataSnapshot dataSnapshot);
 
 
     /**
