@@ -2,6 +2,7 @@ package com.redvolunteer.utils.persistence.firebasepersistence;
 
 import android.content.Context;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,8 +33,12 @@ public class FirebaseUserDao implements RemoteUserDao {
      * ref to firebase
      */
     private DatabaseReference dataRef;
-
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private String userID;
     private Context mContext;
+
 
     @Override
     public Flowable<User> loadById(String userID) {
@@ -80,12 +85,15 @@ public class FirebaseUserDao implements RemoteUserDao {
     public void save(User userToStore) {
         //USer ALLWAYS has an a ID
         String userID = userToStore.getId();
+       //String userUID =  FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //save the request to store
-        userID = this.dataRef.child(userID).getKey();
+       userID = this.dataRef.child(userID).getKey();
         //save in database;
         this.dataRef.child(userID).setValue(userToStore);
     }
+
+
     public FirebaseUserDao(FirebaseDatabase firebaseDatabase, String userStoreName){
 
         //access to remote the user store
@@ -137,4 +145,38 @@ public class FirebaseUserDao implements RemoteUserDao {
     }
 }
 
+
+    @Override
+    public UserInfoProvider getUserInfo(DataSnapshot dataSnapshot) {
+
+        User user = new User();
+
+        for(DataSnapshot ds: dataSnapshot.getChildren()){
+
+            if(ds.getKey().equals(mContext.getString(R.string.database_all_users))) {
+
+                user.setFullName(
+                        ds.child(userID)
+                        .getValue(User.class)
+                        .getFullName()
+                );
+                user.setFullSurname(
+                        ds.child(userID)
+                        .getValue(User.class)
+                        .getFullSurname()
+                );
+
+                user.setBirthDate(
+                        ds.child(userID)
+                                .getValue(User.class)
+                                .getBirthDate()
+                );
+
+            }
+
+        }
+
+
+        return new UserInfoProvider(user);
+    }
 }

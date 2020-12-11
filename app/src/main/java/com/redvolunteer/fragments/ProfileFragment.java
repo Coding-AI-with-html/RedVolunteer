@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +31,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
-import com.redvolunteer.pojo.UserSettings;
+import com.redvolunteer.dataModels.UserModeAsynclmlp;
+import com.redvolunteer.utils.auth.Auth20FirebaseHandlerlmpl;
+import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
 import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseUserDao;
+import com.redvolunteer.utils.persistence.firebasepersistence.UserInfoProvider;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
@@ -43,7 +45,9 @@ import java.util.Calendar;
 import com.redvolunteer.LoginAndRegister.Login;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.calendar.CalendarFormatter;
-import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
+
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 
 public class ProfileFragment extends Fragment {
 
@@ -72,12 +76,25 @@ public class ProfileFragment extends Fragment {
      */
     private UserViewModel mUserViewModel;
 
+    private FirebaseUserDao retrieveUser;
+
+    /**
+     * Firebase
+     */
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private String userID;
+    private Context mContext;
+
     /**
      * User showed in this layout
      * @param view
      * @param savedInstanceState
      */
     private User mShowedUSer;
+    FirebaseUserDao mUserInfoProvider;
 
     /**
      * Layout components
@@ -108,8 +125,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         bind(view);
-        fillFragments();
+        //fillFragments();
         super.onViewCreated(view, savedInstanceState);
+        setupFirebaseAuth();
 
     }
 
@@ -175,7 +193,7 @@ public class ProfileFragment extends Fragment {
                 mShowedUSer.setPhoto(tmpOldPicture);
                 mShowedUSer.setBirthDate(tmpOldBirthDate);
 
-                fillFragments();
+                //fillFragments();
 
 
             }
@@ -201,7 +219,7 @@ public class ProfileFragment extends Fragment {
 
                         mShowedUSer.setBirthDate(cal.getTime().getTime());
 
-                        fillFragments();
+                        //fillFragments();
                     }
                 },   cal
                 .get(Calendar.YEAR), cal.get(Calendar.MONTH),
@@ -260,7 +278,6 @@ public class ProfileFragment extends Fragment {
         this.mUserViewModel = mFragListener.getUserViewModel();
         //retrieve the user from the local store
         mShowedUSer = mUserViewModel.retrieveCachedUser();
-
         //this.mHelpRequestViewModel = mFragListener.getHelpRequestViewModel();
     }
 
@@ -275,26 +292,69 @@ public class ProfileFragment extends Fragment {
      * loads UI with selected user
      */
 
-    private void fillFragments(){
+    private void fillFragments(UserInfoProvider userInfoProvider){
 
+        User user = userInfoProvider.getUser();
 
         if(mShowedUSer != null){
             //mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
-            mUserName.setText(mShowedUSer.getFullName());
-            mUserSurname.setText(mShowedUSer.getFullSurname());
+            mUserName.setText(user.getFullName());
+            mUserSurname.setText(user.getFullSurname());
+
 
             //if the user has not his birth date
 
-            if(mShowedUSer.getBirthDate() == 0){
-                mBirthDate.setText(R.string.alert_no_age);
+            //if(mShowedUSer.getBirthDate() == 0){
+               // mBirthDate.setText(R.string.alert_no_age);
 
-            } else {
-                mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDate()));
+            //} else {
+               // mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDate()));
 
-            }
-            userBio.setText(mShowedUSer.getBiography());
+            //}
+            //userBio.setText(mShowedUSer.getBiography());
         }
 
+    }
+
+    private void setupFirebaseAuth(){
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference();
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+
+                if (user != null) {
+                    // User is signed in
+
+                } else {
+                    // User is signed out
+                }
+                // ...
+            }
+        };
+
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //retrieve user information from the database
+                fillFragments(retrieveUser.getUserInfo(dataSnapshot));
+
+                //retrieve images for the user in question
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Nullable
@@ -348,8 +408,7 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         //result of image capture
-        /**
-         *
+
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && requestCode == RESULT_OK) {
 
@@ -360,7 +419,7 @@ public class ProfileFragment extends Fragment {
             mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
 
         }
-         */
+
 
 
 
@@ -377,6 +436,8 @@ public class ProfileFragment extends Fragment {
         super.onStop();
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
+
+
 
 }
 
