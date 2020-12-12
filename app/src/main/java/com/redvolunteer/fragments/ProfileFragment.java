@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
+import com.redvolunteer.dataModels.FIrebaseUserInfoProviderMethod;
 import com.redvolunteer.dataModels.UserModeAsynclmlp;
 import com.redvolunteer.utils.auth.Auth20FirebaseHandlerlmpl;
 import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
@@ -94,7 +96,7 @@ public class ProfileFragment extends Fragment {
      * @param savedInstanceState
      */
     private User mShowedUSer;
-    FirebaseUserDao mUserInfoProvider;
+    FIrebaseUserInfoProviderMethod mUserInfoProvider;
 
     /**
      * Layout components
@@ -127,7 +129,6 @@ public class ProfileFragment extends Fragment {
         bind(view);
         //fillFragments();
         super.onViewCreated(view, savedInstanceState);
-        setupFirebaseAuth();
 
     }
 
@@ -277,8 +278,9 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.mUserViewModel = mFragListener.getUserViewModel();
         //retrieve the user from the local store
-        mShowedUSer = mUserViewModel.retrieveCachedUser();
+        //mShowedUSer = mUserViewModel.retrieveCachedUser();
         //this.mHelpRequestViewModel = mFragListener.getHelpRequestViewModel();
+        setupFirebaseAuth();
     }
 
 
@@ -294,9 +296,10 @@ public class ProfileFragment extends Fragment {
 
     private void fillFragments(UserInfoProvider userInfoProvider){
 
+        Log.d(TAG, "fillFragments: " + userInfoProvider.getUser().getFullSurname());
         User user = userInfoProvider.getUser();
 
-        if(mShowedUSer != null){
+
             //mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
             mUserName.setText(user.getFullName());
             mUserSurname.setText(user.getFullSurname());
@@ -312,7 +315,6 @@ public class ProfileFragment extends Fragment {
 
             //}
             //userBio.setText(mShowedUSer.getBiography());
-        }
 
     }
 
@@ -344,7 +346,7 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 //retrieve user information from the database
-                fillFragments(retrieveUser.getUserInfo(dataSnapshot));
+                fillFragments(mUserInfoProvider.getUserInfo(dataSnapshot));
 
                 //retrieve images for the user in question
 
@@ -360,7 +362,13 @@ public class ProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_user_profile, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        mContext = getActivity();
+        mUserInfoProvider = new FIrebaseUserInfoProviderMethod(getActivity());
+        //setupFirebaseAuth();
+        return view;
+
 
     }
 
@@ -435,6 +443,15 @@ public class ProfileFragment extends Fragment {
     public void onStop() {
         super.onStop();
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
 

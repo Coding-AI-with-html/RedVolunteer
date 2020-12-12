@@ -1,6 +1,9 @@
 package com.redvolunteer.utils.persistence.firebasepersistence;
 
 import android.content.Context;
+import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +31,7 @@ import io.reactivex.functions.Consumer;
 
 public class FirebaseUserDao implements RemoteUserDao {
 
+    private static final String TAG = "FirebaseUserDao";
 
     /**
      * ref to firebase
@@ -36,7 +40,7 @@ public class FirebaseUserDao implements RemoteUserDao {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
-    private String userID;
+    private String userUID;
     private Context mContext;
 
 
@@ -146,37 +150,5 @@ public class FirebaseUserDao implements RemoteUserDao {
 }
 
 
-    @Override
-    public UserInfoProvider getUserInfo(DataSnapshot dataSnapshot) {
 
-        User user = new User();
-
-        for(DataSnapshot ds: dataSnapshot.getChildren()){
-
-            if(ds.getKey().equals(mContext.getString(R.string.database_all_users))) {
-
-                user.setFullName(
-                        ds.child(userID)
-                        .getValue(User.class)
-                        .getFullName()
-                );
-                user.setFullSurname(
-                        ds.child(userID)
-                        .getValue(User.class)
-                        .getFullSurname()
-                );
-
-                user.setBirthDate(
-                        ds.child(userID)
-                                .getValue(User.class)
-                                .getBirthDate()
-                );
-
-            }
-
-        }
-
-
-        return new UserInfoProvider(user);
-    }
 }

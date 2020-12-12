@@ -25,7 +25,6 @@ public interface RemoteUserDao {
      */
     Flowable<Map<String, User>> loadByIds(List<String> userIDs);
 
-    UserInfoProvider getUserInfo(DataSnapshot dataSnapshot);
 
 
     /**
