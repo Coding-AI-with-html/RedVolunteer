@@ -9,7 +9,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
-import com.redvolunteer.utils.persistence.firebasepersistence.UserInfoProvider;
 
 public class FIrebaseUserInfoProviderMethod {
     private static final String TAG = "FIrebaseUserInfoProvider";

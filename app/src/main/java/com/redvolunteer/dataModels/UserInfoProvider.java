@@ -1,4 +1,4 @@
-package com.redvolunteer.utils.persistence.firebasepersistence;
+package com.redvolunteer.dataModels;
 
 
 import com.redvolunteer.pojo.User;

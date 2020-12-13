@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,12 +33,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
+import com.redvolunteer.RedVolunteerApplication;
 import com.redvolunteer.dataModels.FIrebaseUserInfoProviderMethod;
-import com.redvolunteer.dataModels.UserModeAsynclmlp;
-import com.redvolunteer.utils.auth.Auth20FirebaseHandlerlmpl;
 import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
 import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseUserDao;
-import com.redvolunteer.utils.persistence.firebasepersistence.UserInfoProvider;
+import com.redvolunteer.dataModels.UserInfoProvider;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
@@ -46,10 +46,6 @@ import java.util.Calendar;
 
 import com.redvolunteer.LoginAndRegister.Login;
 import com.redvolunteer.utils.NetworkCheker;
-import com.redvolunteer.utils.calendar.CalendarFormatter;
-
-import io.reactivex.Flowable;
-import io.reactivex.functions.Consumer;
 
 public class ProfileFragment extends Fragment {
 
@@ -78,15 +74,15 @@ public class ProfileFragment extends Fragment {
      */
     private UserViewModel mUserViewModel;
 
-    private FirebaseUserDao retrieveUser;
+
 
     /**
      * Firebase
      */
+    private DatabaseReference dataRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference myRef;
     private String userID;
     private Context mContext;
 
@@ -95,8 +91,7 @@ public class ProfileFragment extends Fragment {
      * @param view
      * @param savedInstanceState
      */
-    private User mShowedUSer;
-    FIrebaseUserInfoProviderMethod mUserInfoProvider;
+    private User mShowedUSer = new User();
 
     /**
      * Layout components
@@ -127,7 +122,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         bind(view);
-        //fillFragments();
+        fillFragments();
         super.onViewCreated(view, savedInstanceState);
 
     }
@@ -278,9 +273,8 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.mUserViewModel = mFragListener.getUserViewModel();
         //retrieve the user from the local store
-        //mShowedUSer = mUserViewModel.retrieveCachedUser();
         //this.mHelpRequestViewModel = mFragListener.getHelpRequestViewModel();
-        setupFirebaseAuth();
+
     }
 
 
@@ -294,81 +288,46 @@ public class ProfileFragment extends Fragment {
      * loads UI with selected user
      */
 
-    private void fillFragments(UserInfoProvider userInfoProvider){
-
-        Log.d(TAG, "fillFragments: " + userInfoProvider.getUser().getFullSurname());
-        User user = userInfoProvider.getUser();
-
-
-            //mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
-            mUserName.setText(user.getFullName());
-            mUserSurname.setText(user.getFullSurname());
-
-
-            //if the user has not his birth date
-
-            //if(mShowedUSer.getBirthDate() == 0){
-               // mBirthDate.setText(R.string.alert_no_age);
-
-            //} else {
-               // mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDate()));
-
-            //}
-            //userBio.setText(mShowedUSer.getBiography());
-
-    }
-
-    private void setupFirebaseAuth(){
+    private void fillFragments(){
 
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        myRef = mFirebaseDatabase.getReference();
+        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Help_seekers));
+        if(mAuth.getCurrentUser() != null){
+            userID = mAuth.getCurrentUser().getUid();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
+            DatabaseReference userInfo = dataRef.child(userID);
+            userInfo.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                   String userName = dataSnapshot.child("Name").getValue().toString();
+                    mUserName.setText(userName);
+                    String userSurname = dataSnapshot.child("Surname").getValue().toString();
+                    mUserSurname.setText(userSurname);
+                    String birthday = dataSnapshot.child("Birthday").getValue().toString();
+                    mBirthDate.setText(birthday);
 
 
-                if (user != null) {
-                    // User is signed in
-
-                } else {
-                    // User is signed out
                 }
-                // ...
-            }
-        };
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+        }
 
-                //retrieve user information from the database
-                fillFragments(mUserInfoProvider.getUserInfo(dataSnapshot));
 
-                //retrieve images for the user in question
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        mContext = getActivity();
-        mUserInfoProvider = new FIrebaseUserInfoProviderMethod(getActivity());
-        //setupFirebaseAuth();
-        return view;
-
+       return inflater.inflate(R.layout.fragment_user_profile, container, false);
 
     }
 
@@ -390,6 +349,7 @@ public class ProfileFragment extends Fragment {
         super.onDetach();
     mFragListener = null;
     }
+
 
 
     @Override
@@ -438,21 +398,6 @@ public class ProfileFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
     }
 
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
 
 
 

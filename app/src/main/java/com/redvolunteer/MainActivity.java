@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
@@ -29,9 +31,15 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
     private static final String TAG = "MainActivity";
 
-    //firebase stuff
+    /**
+     * firebase
+     */
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener FAuthListener;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference myRef;
+    private String userID;
+
     /**
      *
      * @param savedInstanceState
@@ -94,19 +102,17 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mUserViewModel = getUserViewModel();
 
 
         if(!mUserViewModel.isAuth()){
             signOut();
         }
-
-
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Started main Activity");
         bindLayoutComponents();
         setFragments();
+
     }
 
     private void bindLayoutComponents(){
@@ -240,12 +246,8 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     }
 
 
-
-
-
-
     private void signOut(){
-        mAuth.signOut();
+        mUserViewModel.signOut();
         Intent intent = new Intent(MainActivity.this, Login.class);
         startActivity(intent);
 
@@ -256,6 +258,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         if(this.mUserViewModel == null)
             mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
             return mUserViewModel;
+
 
     }
 
