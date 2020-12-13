@@ -24,8 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,11 +31,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
-import com.redvolunteer.RedVolunteerApplication;
-import com.redvolunteer.dataModels.FIrebaseUserInfoProviderMethod;
+import com.redvolunteer.utils.calendar.CalendarFormatter;
 import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
-import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseUserDao;
-import com.redvolunteer.dataModels.UserInfoProvider;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
@@ -297,17 +292,14 @@ public class ProfileFragment extends Fragment {
             userID = mAuth.getCurrentUser().getUid();
 
             DatabaseReference userInfo = dataRef.child(userID);
-            userInfo.addValueEventListener(new ValueEventListener() {
+            userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                   String userName = dataSnapshot.child("Name").getValue().toString();
-                    mUserName.setText(userName);
-                    String userSurname = dataSnapshot.child("Surname").getValue().toString();
-                    mUserSurname.setText(userSurname);
-                    String birthday = dataSnapshot.child("Birthday").getValue().toString();
-                    mBirthDate.setText(birthday);
 
+                    Log.d(TAG, "onDataChange: " + dataSnapshot);
+                    mUserName.setText(dataSnapshot.child("Name").getValue().toString());
+                    mUserSurname.setText(dataSnapshot.child("Surname").getValue().toString());
 
                 }
 

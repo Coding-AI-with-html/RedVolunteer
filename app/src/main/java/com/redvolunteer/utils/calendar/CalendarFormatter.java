@@ -31,9 +31,10 @@ public class CalendarFormatter {
 
     /**
      * it formats a Date in order to retrieve a String containing the date in English format
+     * @param dateMilis
      */
 
-    public static String getDate(long dateMilis){
+    public static String getDate(String dateMilis){
         return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, DATA_LOCALE).format(new Date(dateMilis));
 
     }
