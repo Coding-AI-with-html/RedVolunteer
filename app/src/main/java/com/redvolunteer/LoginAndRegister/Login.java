@@ -120,6 +120,7 @@ public class Login extends AppCompatActivity {
                                     if(task.isSuccessful()){
                                         try {
                                             startActivity(new Intent(Login.this, MainActivity.class));
+                                            finish();
 
                                         } catch (Exception e){
                                             Log.d(TAG, "onComplete: NullPointerException" + e.getMessage());

@@ -300,7 +300,7 @@ public class ProfileFragment extends Fragment {
                     Log.d(TAG, "onDataChange: " + dataSnapshot);
                     mUserName.setText(dataSnapshot.child("Name").getValue().toString());
                     mUserSurname.setText(dataSnapshot.child("Surname").getValue().toString());
-
+                    mBirthDate.setText(dataSnapshot.child("BirthDay").getValue().toString());
                 }
 
                 @Override

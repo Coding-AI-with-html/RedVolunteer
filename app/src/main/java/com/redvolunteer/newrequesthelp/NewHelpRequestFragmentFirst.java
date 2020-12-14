@@ -99,6 +99,8 @@ public class NewHelpRequestFragmentFirst extends Fragment {
                 }
             }
         });
+
+
     }
 
 
