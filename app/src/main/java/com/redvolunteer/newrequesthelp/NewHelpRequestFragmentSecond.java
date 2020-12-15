@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -26,6 +27,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -41,6 +43,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -59,6 +62,8 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
     private static final String TAG = "NewHelpRequestFragmentS";
     private  static final int LOCATION_PERMISSION = 1;
+
+    private static final int REQUEST_CODE = 101;
 
     /**
      * Request check seetings
@@ -91,8 +96,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        provideUserLocation();
-        mContext = NewHelpRequestFragmentSecond.this;
+        //provideUserLocation();
 
 
     }
@@ -141,7 +145,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         switch (requestCode){
             case REQUEST_CHECK_SETTINGS:
                 if(resultCode == RESULT_OK)
-                    enableGoogleApi();
+
                 else {
                     Toast.makeText(getContext(), "Turite ijungti navigacija", Toast.LENGTH_LONG).show();
                 }
@@ -157,106 +161,30 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         return inflater.inflate(R.layout.fragment_new_help_request_page_two, container, false);
     }
 
-    /**
-     * ask the user to Enable the GPs
-     */
-    @SuppressLint("MissingPermission")
-    public void enableGoogleApi(){
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void fetchLastLocation()
+    {
 
-        LocationRequest mLocationReq = new LocationRequest();
-        mLocationReq.setInterval(10000);
-        mLocationReq.setFastestInterval(5000);
-        mLocationReq.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        if (ActivityCompat.checkSelfPermission(getContext(),android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(),android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-        LocationSettingsRequest.Builder LocBuilder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationReq);
-        LocBuilder.setAlwaysShow(true);
-
-        SettingsClient client = LocationServices.getSettingsClient(getContext());
-        final Task<LocationSettingsResponse> task = client.checkLocationSettings(LocBuilder.build());
-        task.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            ActivityCompat.requestPermissions(this,new String[]
+                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            return;
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        Task<Location> locationTask = task.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-
-
-                LocationCallback callback = new LocationCallback(){
-
-                    @Override
-                    public void onLocationResult(LocationResult locationResult) {
-
-                        for(Location location: locationResult.getLocations()){
-
-                            RequestLocation loc = new RequestLocation();
-                            loc.setLatitude(loc.getLatitude());
-                            loc.setLongitude(location.getLongitude());
-                            List<Address> addresses;
-
-                            geocoder = new Geocoder(getContext(), Locale.getDefault());
-
-                            try {
-                                addresses = geocoder.getFromLocation(loc.getLatitude(),loc.getLongitude(),1);
-
-                                String address = addresses.get(0).getAddressLine(0);
-                                String country = addresses.get(0).getCountryName();
-                                Log.d(TAG, "onLocationResult:Adresas "+ address + "Salis"+ country);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-
-                        }
-
-                    }
-                };
-
-                FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-                LocationRequest  locRequest = new LocationRequest();
-                locRequest.setInterval(10000);
-                locRequest.setFastestInterval(5000);
-                locRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-
-                fusedLocationProviderClient.requestLocationUpdates(locRequest,
-                        callback,
-                        null);
-                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-
-
-                        if(location != null){
-
-                            Log.d(TAG, "onSuccess: Location Getting suscesfully  ");
-                        }
-                    }
-                });
-            }
-        });
-
-        task.addOnFailureListener(getActivity(), new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-                int StatusCode = ((ApiException)e).getStatusCode();
-                switch (StatusCode){
-
-                    case CommonStatusCodes
-                            .RESOLUTION_REQUIRED:
-
-                        try{
-
-                            ResolvableApiException resolvableApiException = (ResolvableApiException) e;
-                            resolvableApiException.startResolutionForResult(getActivity(),
-                                    REQUEST_CHECK_SETTINGS);
-                        }
-                        catch (IntentSender.SendIntentException sendException){
-
-                        }
-                        break;
-
-
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    currentLocation = location;
+                    SupportMapFragment supportMapFragment = (SupportMapFragment)
+                            getSupportFragmentManager().findFragmentById(R.id.map);
+                    assert supportMapFragment != null;
+                    supportMapFragment.getMapAsync(MapsMainActivity.this);
                 }
             }
         });
-
     }
 
     @Override
