@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 
 import com.redvolunteer.ConfirmAddress;
+import com.redvolunteer.MapsActivity;
 import com.redvolunteer.R;
 
 public class NewHelpRequestFragmentSecond extends Fragment {
@@ -118,7 +119,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent myIntent = new Intent(getContext(), ConfirmAddress.class);
+                Intent myIntent = new Intent(getActivity(), MapsActivity.class);
                 getActivity().startActivity(myIntent);
 
             }

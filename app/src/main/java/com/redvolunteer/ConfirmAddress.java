@@ -70,7 +70,7 @@ public class ConfirmAddress extends DialogFragment implements
         SelectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),myAddress.getText().toString(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),myAddress.getText().toString(),Toast.LENGTH_LONG).show();
                 getFragmentManager().beginTransaction().remove(mapFragment).commit();
                 dismiss();
             }

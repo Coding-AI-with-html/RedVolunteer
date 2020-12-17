@@ -38,12 +38,11 @@
         <activity android:name=".LoginAndRegister.Login"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
-        <activity android:name=".ConfirmAddress"
+        <activity android:name=".MapsActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".LoginAndRegister.RegisterX"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
-
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
