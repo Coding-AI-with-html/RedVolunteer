@@ -1,21 +1,13 @@
 package com.redvolunteer.newrequesthelp;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,36 +19,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.redvolunteer.MapsActivity;
+
+import com.redvolunteer.ConfirmAddress;
 import com.redvolunteer.R;
-import com.redvolunteer.pojo.RequestLocation;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.app.Activity.RESULT_OK;
 
 public class NewHelpRequestFragmentSecond extends Fragment {
 
@@ -81,7 +50,8 @@ public class NewHelpRequestFragmentSecond extends Fragment {
      */
     private TextView mRequestLocationLabel;
     LinearLayout mapChose;
-    NewHelpRequestFragmentSecond mContext;
+    Context context;
+    View myView;
 
 
     /**
@@ -138,71 +108,29 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode){
-            case REQUEST_CHECK_SETTINGS:
-                if(resultCode == RESULT_OK)
-
-                else {
-                    Toast.makeText(getContext(), "Turite ijungti navigacija", Toast.LENGTH_LONG).show();
-                }
-                break;
-        }
-
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_new_help_request_page_two, container, false);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void fetchLastLocation()
-    {
-
-        if (ActivityCompat.checkSelfPermission(getContext(),android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(),android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
-            return;
-        }
-        Task<Location> task = fusedLocationProviderClient.getLastLocation();
-        Task<Location> locationTask = task.addOnSuccessListener(new OnSuccessListener<Location>() {
+        myView = inflater.inflate(R.layout.fragment_new_help_request_page_two, container, false);
+        context = myView.getContext();
+        mapChose = (LinearLayout) myView.findViewById(R.id.new_help_request_map);
+        mapChose.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Location location) {
-                if (location != null) {
-                    currentLocation = location;
-                    SupportMapFragment supportMapFragment = (SupportMapFragment)
-                            getSupportFragmentManager().findFragmentById(R.id.map);
-                    assert supportMapFragment != null;
-                    supportMapFragment.getMapAsync(MapsMainActivity.this);
-                }
+            public void onClick(View view) {
+
+                Intent myIntent = new Intent(getContext(), ConfirmAddress.class);
+                getActivity().startActivity(myIntent);
+
             }
+
+
+
+
         });
+        return myView;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-
-            case LOCATION_PERMISSION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    enableGoogleApi();
-                } else {
-                    Toast.makeText(getContext(), "Ijunkite navigacija!", Toast.LENGTH_LONG).show();
-                }
-                break;
-            }
-        }
-    }
 
     private void provideUserLocation(){
 
@@ -217,7 +145,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
 
             } else {
-                enableGoogleApi();
+
             }
 
 

@@ -32,6 +32,7 @@
     <string name="database_all_users">AllUsers</string>
     <string name="database_Help_seekers">Help_Seekers</string>
     <string name="gps_not_available">Lokacija neijungta</string>
+    <string name="go_to_picker_activity">Go to place picker activity</string>
 
 
     <string-array name="gender">

@@ -38,7 +38,7 @@
         <activity android:name=".LoginAndRegister.Login"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
-        <activity android:name=".MapsActivity"
+        <activity android:name=".ConfirmAddress"
             android:screenOrientation="portrait"/>
         <activity android:name=".LoginAndRegister.RegisterX"
             android:screenOrientation="portrait"
