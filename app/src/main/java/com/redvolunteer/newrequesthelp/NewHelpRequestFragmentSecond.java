@@ -119,7 +119,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent myIntent = new Intent(getActivity(), MapsActivity.class);
+                Intent myIntent = new Intent(getContext(), MapsActivity.class);
                 getActivity().startActivity(myIntent);
 
             }

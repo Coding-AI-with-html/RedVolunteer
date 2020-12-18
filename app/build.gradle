@@ -52,8 +52,8 @@ dependencies {
     //rxandroid for data
     implementation 'io.reactivex.rxjava2:rxjava:2.1.6'
     //location
-    implementation 'com.google.android.gms:play-services-maps:16.1.0'
-    implementation 'com.google.android.gms:play-services-places:16.1.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.google.android.libraries.places:places:2.4.0'
 
 
 
