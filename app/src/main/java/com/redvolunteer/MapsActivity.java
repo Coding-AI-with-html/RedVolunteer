@@ -1,18 +1,8 @@
 package com.redvolunteer;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.annotation.SuppressLint;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,13 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,15 +39,15 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
+
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
+    // New variables for Current Place Picker
+    private static final String TAG = "MapsActivity";
     ListView lstPlaces;
     private PlacesClient mPlacesClient;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -75,9 +69,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String[] mLikelyPlaceAddresses;
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
-
-    //to the addres and etc
-    Geocoder geocoder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,11 +196,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Prompt the user for permission.
         getLocationPermission();
-        // Initialize the SDK
-        Places.initialize(getApplicationContext(), getString(R.string.google_api_key));
-
-        // Create a new PlacesClient instance
-        PlacesClient placesClient = Places.createClient(this);
 
     }
 
@@ -228,7 +214,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @SuppressWarnings("MissingPermission") final FindCurrentPlaceRequest request =
                 FindCurrentPlaceRequest.builder(placeFields).build();
         @SuppressLint("MissingPermission") Task<FindCurrentPlaceResponse> placeResponse = mPlacesClient.findCurrentPlace(request);
-        placeResponse.addOnCompleteListener(this,
+        ((Task) placeResponse).addOnCompleteListener(this,
                 new OnCompleteListener<FindCurrentPlaceResponse>() {
                     @Override
                     public void onComplete(@NonNull Task<FindCurrentPlaceResponse> task) {
@@ -301,21 +287,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         if (location != null) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = location;
-                            List<Address> addresses;
-                            geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
-                            try {
-                                addresses = geocoder.getFromLocation(mLastKnownLocation.getLongitude(),mLastKnownLocation.getLatitude(),1);
-
-                                String addres = addresses.get(0).getAddressLine(0);
-                                String city = addresses.get(0).getLocality();
-                                String country = addresses.get(0).getCountryName();
-                                String postalCode = addresses.get(0).getPostalCode();
-
-                                Log.d(TAG, "onSuccess: " + addres + "MIESTAS: " + city + "SALIS: " + country + "Pastas:"+ postalCode );
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             Log.d(TAG, "Latitude: " + mLastKnownLocation.getLatitude());
                             Log.d(TAG, "Longitude: " + mLastKnownLocation.getLongitude());
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
@@ -398,3 +369,4 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 }
+

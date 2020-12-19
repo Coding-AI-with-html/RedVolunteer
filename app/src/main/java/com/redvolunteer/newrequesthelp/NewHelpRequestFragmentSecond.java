@@ -118,10 +118,26 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         mapChose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent myIntent = new Intent(getContext(), MapsActivity.class);
-                getActivity().startActivity(myIntent);
-
+                Intent intent = new PlacePicker.IntentBuilder()
+                        .setLatLong(40.748672, -73.985628)  // Initial Latitude and Longitude the Map will load into
+                        .showLatLong(true)  // Show Coordinates in the Activity
+                        .setMapZoom(12.0f)  // Map Zoom Level. Default: 14.0
+                        .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
+                        .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
+                        .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
+                        .setMarkerImageImageColor(R.color.colorPrimary)
+                        .setFabColor(R.color.fabColor)
+                        .setPrimaryTextColor(R.color.colorPrimaryDark) // Change text color of Shortened Address
+                        .setSecondaryTextColor(R.color.secondaryTextColor) // Change text color of full Address
+                        .setBottomViewColor(R.color.bottomViewColor) // Change Address View Background Color (Default: White)
+                        .setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
+                        .setMapType(MapType.NORMAL)
+                        .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
+                        .onlyCoordinates(true)  //Get only Coordinates from Place Picker
+                        .hideLocationButton(true)   //Hide Location Button (Default: false)
+                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
+                        .build(this)
+                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
             }
 
 
@@ -129,6 +145,16 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
         });
         return myView;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 
