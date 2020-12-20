@@ -27,6 +27,12 @@ import androidx.fragment.app.Fragment;
 import com.redvolunteer.ConfirmAddress;
 import com.redvolunteer.MapsActivity;
 import com.redvolunteer.R;
+import com.sucho.placepicker.AddressData;
+import com.sucho.placepicker.Constants;
+import com.sucho.placepicker.MapType;
+import com.sucho.placepicker.PlacePicker;
+
+import static com.sucho.placepicker.Constants.GOOGLE_API_KEY;
 
 public class NewHelpRequestFragmentSecond extends Fragment {
 
@@ -126,17 +132,17 @@ public class NewHelpRequestFragmentSecond extends Fragment {
                         .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
                         .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
                         .setMarkerImageImageColor(R.color.colorPrimary)
-                        .setFabColor(R.color.fabColor)
+                        .setFabColor(R.color.colorAccent)
                         .setPrimaryTextColor(R.color.colorPrimaryDark) // Change text color of Shortened Address
-                        .setSecondaryTextColor(R.color.secondaryTextColor) // Change text color of full Address
-                        .setBottomViewColor(R.color.bottomViewColor) // Change Address View Background Color (Default: White)
-                        .setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
-                        .setMapType(MapType.NORMAL)
+                        .setSecondaryTextColor(R.color.mainColorRed) // Change text color of full Address
+                        .setBottomViewColor(R.color.browser_actions_text_color) // Change Address View Background Color (Default: White)
+                        .setMapRawResourceStyle()  //Set Map Style (https://mapstyle.withgoogle.com/)
+                        .setMapType(MapType.SATELLITE)
                         .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
                         .onlyCoordinates(true)  //Get only Coordinates from Place Picker
                         .hideLocationButton(true)   //Hide Location Button (Default: false)
                         .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
-                        .build(this)
+                        .build(getActivity());
                 startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
             }
 
@@ -146,8 +152,10 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         });
         return myView;
     }
+
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == Constants.PLACE_PICKER_REQUEST) {
             if (resultCode == Activity.RESULT_OK && data != null) {
                 AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
@@ -159,32 +167,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
 
 
-    private void provideUserLocation(){
-
-        String provider = Settings.Secure.getString(getContext().getApplicationContext().getContentResolver(),
-                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-
-        if(!provider.equals("")){
-
-            if(ContextCompat.checkSelfPermission(getContext().getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) !=
-            PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions((Activity) getContext(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION);
-
-
-            } else {
-
-            }
-
-
-
-        } else {
-            Toast.makeText(getContext(), R.string.gps_not_available, Toast.LENGTH_LONG).show();
-
-
-        }
-
-
-    }
 
 
 
