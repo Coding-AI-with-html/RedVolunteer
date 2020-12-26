@@ -1,13 +1,9 @@
 package com.redvolunteer.newrequesthelp;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,29 +11,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-
-import com.redvolunteer.ConfirmAddress;
 import com.redvolunteer.MapsActivity;
 import com.redvolunteer.R;
-import com.sucho.placepicker.AddressData;
-import com.sucho.placepicker.Constants;
-import com.sucho.placepicker.MapType;
-import com.sucho.placepicker.PlacePicker;
-
-import static com.sucho.placepicker.Constants.GOOGLE_API_KEY;
 
 public class NewHelpRequestFragmentSecond extends Fragment {
 
     private static final String TAG = "NewHelpRequestFragmentS";
-    private  static final int LOCATION_PERMISSION = 1;
+    private static final int LOCATION_PERMISSION = 1;
 
     private static final int REQUEST_CODE = 101;
 
@@ -66,7 +51,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
      */
     private boolean positionSelected = false;
 
-    public NewHelpRequestFragmentSecond(){
+    public NewHelpRequestFragmentSecond() {
         //Required empty constructor
     }
 
@@ -74,7 +59,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //provideUserLocation();
-
 
     }
 
@@ -124,46 +108,18 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         mapChose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new PlacePicker.IntentBuilder()
-                        .setLatLong(40.748672, -73.985628)  // Initial Latitude and Longitude the Map will load into
-                        .showLatLong(true)  // Show Coordinates in the Activity
-                        .setMapZoom(12.0f)  // Map Zoom Level. Default: 14.0
-                        .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
-                        .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
-                        .setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
-                        .setMarkerImageImageColor(R.color.colorPrimary)
-                        .setFabColor(R.color.colorAccent)
-                        .setPrimaryTextColor(R.color.colorPrimaryDark) // Change text color of Shortened Address
-                        .setSecondaryTextColor(R.color.mainColorRed) // Change text color of full Address
-                        .setBottomViewColor(R.color.browser_actions_text_color) // Change Address View Background Color (Default: White)
-                        .setMapRawResourceStyle()  //Set Map Style (https://mapstyle.withgoogle.com/)
-                        .setMapType(MapType.SATELLITE)
-                        .setPlaceSearchBar(true, GOOGLE_API_KEY) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
-                        .onlyCoordinates(true)  //Get only Coordinates from Place Picker
-                        .hideLocationButton(true)   //Hide Location Button (Default: false)
-                        .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
-                        .build(getActivity());
-                startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST);
+
+                Intent myIntent = new Intent(getContext(), MapsActivity.class);
+                getActivity().startActivity(myIntent);
+                
+
             }
-
-
-
-
         });
         return myView;
+
     }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                AddressData addressData = data.getParcelableExtra(Constants.ADDRESS_INTENT);
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
 
 
 

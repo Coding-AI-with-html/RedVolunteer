@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.MainActivity;
+import com.redvolunteer.MapsActivity;
 import com.redvolunteer.newrequesthelp.NewRequestHelpActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
@@ -99,7 +100,7 @@ public class RequestWallFragment extends Fragment {
         layout.findViewById(R.id.new_request_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), NewRequestHelpActivity.class));
+                startActivity(new Intent(getContext(), MapsActivity.class));
             }
         });
     }
