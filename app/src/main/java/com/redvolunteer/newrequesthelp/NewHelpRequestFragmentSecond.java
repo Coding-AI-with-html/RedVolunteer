@@ -2,8 +2,12 @@ package com.redvolunteer.newrequesthelp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,34 +20,45 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.redvolunteer.MapsActivity;
 import com.redvolunteer.R;
+import com.redvolunteer.pojo.RequestLocation;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
+import static android.app.Activity.RESULT_OK;
 
 public class NewHelpRequestFragmentSecond extends Fragment {
 
     private static final String TAG = "NewHelpRequestFragmentS";
-    private static final int LOCATION_PERMISSION = 1;
-
-    private static final int REQUEST_CODE = 101;
+    /**
+     * Place picker constant
+     */
+    private static final int PLACE_PICKER_REQUEST = 1;
 
     /**
      * Request check seetings
      */
     public static final int REQUEST_CHECK_SETTINGS = 2;
+    /**
+     * Location retrieved
+     */
+    private RequestLocation mRetrievedLocation;
 
 
     private NewHelpRequestFragmentListener mListener;
     /**
-     * for Geeting address
-     */
-    Geocoder geocoder;
-    /**
      * layout
      */
     private TextView mRequestLocationLabel;
-    LinearLayout mapChose;
-    Context context;
-    View myView;
+    WifiManager wifiManager;
+    Location location;
 
 
     /**
@@ -58,8 +73,8 @@ public class NewHelpRequestFragmentSecond extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //provideUserLocation();
-
+        //RequestLocation mUserLocation = mListener.getHelpRequestCreatorLocation();
+        wifiManager= (WifiManager) this.getContext().getSystemService(Context.WIFI_SERVICE);
     }
 
     @Override
@@ -77,6 +92,8 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
         ImageView mBackButtonToFirst = (ImageView) view.findViewById(R.id.new_help_request_page_back_button);
         Button buttonFinish = (Button) view.findViewById(R.id.new_help_request_button_finish);
+        LinearLayout mapChosing = (LinearLayout) view.findViewById(R.id.new_help_request_map);
+        mRequestLocationLabel  = (TextView) view.findViewById(R.id.position_label);
 
 
         mBackButtonToFirst.setOnClickListener(new View.OnClickListener() {
@@ -96,31 +113,84 @@ public class NewHelpRequestFragmentSecond extends Fragment {
                 }
             }
         });
+        mapChosing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Disable Wifi
+                wifiManager.setWifiEnabled(false);
+                openPlacePicker();
+            }
+        });
 
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        myView = inflater.inflate(R.layout.fragment_new_help_request_page_two, container, false);
-        context = myView.getContext();
-        mapChose = (LinearLayout) myView.findViewById(R.id.new_help_request_map);
-        mapChose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        return inflater.inflate(R.layout.fragment_new_help_request_page_two, container, false);
 
-                Intent myIntent = new Intent(getContext(), MapsActivity.class);
-                getActivity().startActivity(myIntent);
-                
-
-            }
-        });
-        return myView;
 
     }
 
 
+    private void openPlacePicker() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
 
+            //Enable Wifi
+            wifiManager.setWifiEnabled(true);
+
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.d("Exception",e.getMessage());
+
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.d("Exception",e.getMessage());
+
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+
+                Place place = PlacePicker.getPlace(getContext(), data);
+
+                /**
+                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                List<Address> addressList = null;
+                try {
+                    addressList = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+                    String addres = addressList.get(0).getAddressLine(0);
+                    mRequestLocationLabel.setText(place.getAddress().toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                 */
+
+                mRetrievedLocation = new RequestLocation(place.getLatLng().latitude, place.getLatLng().longitude);
+                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                try {
+
+                    List<Address> addressList = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+                    String addres = addressList.get(0).getAddressLine(0);
+                    mRequestLocationLabel.setText(addres.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+               //mRetrievedLocation.setName(place.getAddress().toString());
+                //Log.d(TAG, "onActivityResult: " + place.getAddress().toString());
+                //mRequestLocationLabel.setText(place.getAddress().toString());
+
+                positionSelected = true;
+
+            }
+        }
+    }
 
 
 

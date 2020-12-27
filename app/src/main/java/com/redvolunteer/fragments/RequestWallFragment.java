@@ -100,7 +100,7 @@ public class RequestWallFragment extends Fragment {
         layout.findViewById(R.id.new_request_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getContext(), MapsActivity.class));
+                startActivity(new Intent(getContext(), NewRequestHelpActivity.class));
             }
         });
     }
