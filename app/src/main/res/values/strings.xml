@@ -34,6 +34,12 @@
     <string name="database_Help_seekers">Help_Seekers</string>
     <string name="gps_not_available">Lokacija neijungta</string>
     <string name="go_to_picker_activity">Go to place picker activity</string>
+    <string name="join_request_label_btn">Parasyti asmeniui</string>
+    <string name="edit_description_label_btn"> Pakeisti Uzklausos aprasyma</string>
+    <string name="accept_edit_label_btn">Isaugoti pakeitimus</string>
+    <string name="landmark_icon_descr">Landmark icon</string>
+    <string name="view_on_map_label">Perziureti uzklausos lokacija</string>
+    <string name="right_button">Right button</string>
 
 
     <string-array name="gender">
