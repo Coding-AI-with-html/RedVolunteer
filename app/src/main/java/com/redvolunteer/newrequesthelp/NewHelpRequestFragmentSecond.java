@@ -1,5 +1,6 @@
 package com.redvolunteer.newrequesthelp;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -26,6 +27,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.redvolunteer.MapsActivity;
 import com.redvolunteer.R;
+import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 
 import java.io.IOException;
@@ -58,8 +60,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
      */
     private TextView mRequestLocationLabel;
     WifiManager wifiManager;
-    Location location;
-
 
     /**
      * To check if all fields are not empty
@@ -109,6 +109,15 @@ public class NewHelpRequestFragmentSecond extends Fragment {
             @Override
             public void onClick(View view) {
                 if(isFormFilled()){
+
+                    RequestHelp requestHelp = mListener.getHelpRequest();
+                    requestHelp.setRequestLocation(mRetrievedLocation);
+
+                    mListener.finish(requestHelp);
+
+                }
+                else {
+                    showRetrieveErrorPopupDialog();
 
                 }
             }
@@ -160,18 +169,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
                 Place place = PlacePicker.getPlace(getContext(), data);
 
-                /**
-                Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-                List<Address> addressList = null;
-                try {
-                    addressList = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
-                    String addres = addressList.get(0).getAddressLine(0);
-                    mRequestLocationLabel.setText(place.getAddress().toString());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                 */
-
                 mRetrievedLocation = new RequestLocation(place.getLatLng().latitude, place.getLatLng().longitude);
                 Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
                 try {
@@ -182,9 +179,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-               //mRetrievedLocation.setName(place.getAddress().toString());
-                //Log.d(TAG, "onActivityResult: " + place.getAddress().toString());
-                //mRequestLocationLabel.setText(place.getAddress().toString());
 
                 positionSelected = true;
 
@@ -226,5 +220,15 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         return isFilled;
     }
 
+    private void showRetrieveErrorPopupDialog() {
+
+        // there was an error, show a popup message
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.form_not_completely_filled_popup)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button, null);
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
 }

@@ -5,13 +5,20 @@ import android.app.Application;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.redvolunteer.dataModels.HelpRequestModellmpl;
 import com.redvolunteer.dataModels.UserModeAsynclmlp;
 import com.redvolunteer.utils.auth.Auth20FirebaseHandlerlmpl;
 import com.redvolunteer.utils.auth.Auth20Handler;
+import com.redvolunteer.utils.persistence.LocalRequestDao;
 import com.redvolunteer.utils.persistence.LocalUserDao;
+import com.redvolunteer.utils.persistence.RemoteRequestDao;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
+import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseHelpRequestDao;
 import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseUserDao;
 import com.redvolunteer.utils.persistence.sharedpreferencespersistence.LocalUserDaolmpl;
+import com.redvolunteer.utils.persistence.sqlitelocalpersistence.LocalSQLiteRequestDao;
+import com.redvolunteer.utils.requestutils.DistanceManager;
+import com.redvolunteer.utils.requestutils.DistanceManagerlimp;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.dataModels.RequestHelpModel;
@@ -34,12 +41,16 @@ public class RedVolunteerApplication extends Application {
         FirebaseApp.initializeApp(this);
 
         RemoteUserDao remoteUserDao = new FirebaseUserDao(FirebaseDatabase.getInstance(), getString(R.string.database_all_users));
+        RemoteRequestDao remoteRequestDao = new FirebaseHelpRequestDao(FirebaseDatabase.getInstance(), getString(R.string.firebase_request_store_name));
         Auth20Handler loginHandler = new Auth20FirebaseHandlerlmpl(FirebaseAuth.getInstance(), remoteUserDao);
 
         LocalUserDao localUserDao = new LocalUserDaolmpl(this);
+        LocalRequestDao localRequestDao = new LocalSQLiteRequestDao(this);
 
-
+        //Utilities
+        DistanceManager distanceManager = new DistanceManagerlimp();
         mUserModel = new UserModeAsynclmlp(localUserDao, loginHandler, remoteUserDao);
+        mRequestHelpModel = new HelpRequestModellmpl(remoteRequestDao, remoteUserDao, mUserModel, localRequestDao, distanceManager);
     }
 
 

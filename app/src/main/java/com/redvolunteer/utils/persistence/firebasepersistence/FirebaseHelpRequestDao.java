@@ -9,13 +9,17 @@ import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.utils.persistence.RemoteRequestDao;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 public class FirebaseHelpRequestDao implements RemoteRequestDao {
 
@@ -50,7 +54,7 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
             public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> FlowEmitter) throws Exception {
 
                 mRequestStore
-                        .orderByChild("adminID")  //its necessary to access the childer
+                        .orderByChild("adminID")  //its necessary to access the children
                         .equalTo(adminID)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -71,6 +75,39 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
                             }
                         });
 
+            }
+        }, BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<RequestHelp> LoadRequestById(String requestID) {
+        return Flowable.create(new FlowableOnSubscribe<RequestHelp>() {
+            @Override
+            public void subscribe(@NonNull FlowableEmitter<RequestHelp> FlowableEmitter) throws Exception {
+
+                mRequestStore
+                        .orderByKey()
+                        .equalTo(requestID)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                                RequestHelp retrieved;
+                                try {
+                                    DataSnapshot requestWrapper = snapshot.getChildren().iterator().next();
+                                    retrieved = requestWrapper.getValue(RequestHelp.class);
+
+                                } catch (NoSuchElementException e){
+                                    retrieved = new RequestHelp();
+                                }
+                                FlowableEmitter.onNext(retrieved);
+                            }
+
+                            @Override
+                            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                                //required thing, but it cannot happen;
+                            }
+                        });
             }
         }, BackpressureStrategy.BUFFER);
     }
@@ -102,7 +139,34 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
         this.mRequestStore.child(requestToUpdate.getId()).child(DESCRIPTION_FIELD).setValue(requestToUpdate.getDescription());
     }
 
+    @Override
+    public Flowable<List<RequestHelp>> LoadRequestByIds(final List<String> requestID) {
+        return Flowable.create(new FlowableOnSubscribe<List<RequestHelp>>() {
+            @Override
+            public void subscribe(final FlowableEmitter<List<RequestHelp>> FlowEmitter) throws Exception {
 
+                final List<RequestHelp> retrievedRequestHelps = new ArrayList<>();
+
+                final Set<String> uniqueID = new HashSet<>(requestID);
+
+                for(String requestID: uniqueID){
+
+                    LoadRequestById(requestID).subscribe(new Consumer<RequestHelp>() {
+                        @Override
+                        public void accept(RequestHelp requestHelp) throws Exception {
+
+                            retrievedRequestHelps.add(requestHelp);
+
+
+                            if(retrievedRequestHelps.size() == uniqueID.size()){
+                                FlowEmitter.onNext(retrievedRequestHelps);
+                            }
+                        }
+                    });
+                }
+            }
+        }, BackpressureStrategy.BUFFER);
+    }
 
 
     private class LoadRequestAsync implements FlowableOnSubscribe<List<RequestHelp>>{

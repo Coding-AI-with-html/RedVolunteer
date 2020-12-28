@@ -95,6 +95,8 @@ public class NewRequestHelpActivity extends AppCompatActivity implements NewHelp
 
     @Override
     public void finish(RequestHelp newHelpRequest) {
+
+        this.newHelpRequest = newHelpRequest;
         MainViewModel.createNewHelpRequest(newHelpRequest);
 
         startActivity(new Intent(this, MainActivity.class));

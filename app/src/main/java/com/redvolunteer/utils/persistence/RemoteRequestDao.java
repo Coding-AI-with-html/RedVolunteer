@@ -20,6 +20,10 @@ public interface RemoteRequestDao {
      */
     Flowable<List<RequestHelp>> loadRequestByAdmin(String adminID);
 
+    /**
+     * Loads requestHelp based on its id
+     */
+    Flowable<RequestHelp> LoadRequestById(String requestID);
 
     /**
      * Saves new help request
@@ -27,4 +31,5 @@ public interface RemoteRequestDao {
     RequestHelp save(RequestHelp requestToStore);
 
 
+    Flowable<List<RequestHelp>> LoadRequestByIds(List<String> requestID);
 }
