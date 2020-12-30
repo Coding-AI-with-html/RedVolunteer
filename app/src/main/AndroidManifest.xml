@@ -40,6 +40,9 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="Your Api Key" />
         </activity>
+        <activity android:name=".LoginAndRegister.RegisterVolunteer"
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+            android:screenOrientation="portrait"/>
         <activity android:name=".LoginAndRegister.Login"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>

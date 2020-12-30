@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.utils.NetworkCheker;
@@ -55,7 +62,6 @@ public class RequestDescriptionActivity extends AppCompatActivity {
     private TextView mRequestPlace;
     private TextView mRequestCity;
     private LinearLayout mOpenMapButton;
-    private Button mAcceptRequest;
     private Button mModifyRequest;
     private Button mAcceptModifyRequest;
     private Button mAcceptHelpRequest;
@@ -125,9 +131,10 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
     private void showLayout(){
 
+        //remove spinner dialog as when download is complected
         popupDialogProgress.dismiss();
 
-        setContentView(R.layout.activity_new_help_request);
+        setContentView(R.layout.activity_request_help_description);
 
         this.bindComponents();
 
@@ -135,9 +142,23 @@ public class RequestDescriptionActivity extends AppCompatActivity {
     }
 
     private void bindComponents(){
+        this.mRequestName = (TextView) findViewById(R.id.request_title_txt);
+        this.mRequestDescription = (EditText) findViewById(R.id.request_description_txt);
+        this.mRequestPlace = (TextView) findViewById(R.id.place_name_txt);
+        this.mRequestCity = (TextView) findViewById(R.id.city_name_txt);
+        this.mOpenMapButton = (LinearLayout) findViewById(R.id.open_map_btn);
+        this.mAcceptHelpRequest  = (Button) findViewById(R.id.accept_request_btn);
+        this.mModifyRequest = (Button) findViewById(R.id.modify_request_btn);
+        this.mAcceptModifyRequest = (Button) findViewById(R.id.accept_modification_btn);
 
+        ImageView mBackButton = (ImageView) findViewById(R.id.request_description_backbutton);
 
-
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            }
+        });
 
 
     }
@@ -198,12 +219,14 @@ public class RequestDescriptionActivity extends AppCompatActivity {
  private void setRequestActionButtons(){
 
 
+     String UserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         mAcceptHelpRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 // retrieves user(volunteer) id and moves to the message box with requestCreator
-                mUserViewModel.retrieveCachedUser().getId();
+                mUserViewModel.retrieveUserByID(UserId);
             }
         });
 
@@ -256,23 +279,44 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
             mModifyRequest.setVisibility(View.GONE);
 
-            if(isLoggedUserIsVolunteer()){
-                mAcceptHelpRequest.setVisibility(View.GONE);
-
-            } else {
-                mAcceptHelpRequest.setVisibility(View.VISIBLE);
-            }
+            isLoggedUserIsVolunteer();
         }
 
 
  }
 
- private boolean isLoggedUserIsVolunteer(){
 
-        String loggedUserId = mUserViewModel.retrieveCachedUser().getId();
+private void isLoggedUserIsVolunteer(){
 
-        return true;
+      String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+      DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+
+       database.child(getString(R.string.database_Volunteers))
+                .child(userID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        if(dataSnapshot.exists()){
+
+                            mAcceptHelpRequest.setVisibility(View.VISIBLE);
+                        }
+                        else {
+                                mAcceptHelpRequest.setVisibility(View.GONE);
+
+                            }
+                    }
+
+                    @Override
+                    public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
  }
+
  private boolean checkIfUserIsAdmin(){
 
         boolean isAdmin = false;
@@ -301,11 +345,10 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
     private void refresh(){
 
-
         Intent refresh = new Intent(this, RequestDescriptionActivity.class);
         Bundle oldExtras = getIntent().getExtras();
         if(oldExtras != null){
-            //refresh.putExtra(getIntent().getExtras());
+            refresh.putExtras(getIntent().getExtras());
 
             startActivity(refresh);
         }

@@ -55,47 +55,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
                     android:orientation="horizontal">
 
-
-                    <!-- nameitle and posted on -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/event_title_txt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="24sp" />
-
                         <!-- event operations buttons -->
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="4dp"
-                                android:layout_marginRight="4dp"
-                                android:text="sukurtas: " />
-
-                            <TextView
-                                android:id="@+id/event_date_posted"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-
+                    <TextView
+                        android:id="@+id/request_title_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -106,7 +74,7 @@
                     android:padding="15dp">
 
                     <Button
-                        android:id="@+id/join_event_btn"
+                        android:id="@+id/accept_request_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_positive_event_button"
@@ -116,7 +84,7 @@
 
 
                     <Button
-                        android:id="@+id/modify_event_btn"
+                        android:id="@+id/modify_request_btn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_primary"
@@ -138,14 +106,14 @@
 
                 <!-- main description -->
                 <EditText
-                    android:id="@+id/event_description_txt"
+                    android:id="@+id/request_description_txt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:enabled="false"
                     android:hint="Parasykite aprasyma cia!"
                     android:inputType="textMultiLine"
-                    android:paddingBottom="20dp"
+                    android:paddingBottom="65dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
                     android:paddingStart="20dp"
@@ -212,6 +180,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:textColor="@color/colorPrimaryDark"
                             android:text="@string/view_on_map_label"
                             android:textSize="12sp" />
 
