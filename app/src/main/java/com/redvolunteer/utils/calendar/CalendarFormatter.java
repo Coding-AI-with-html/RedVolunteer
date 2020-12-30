@@ -34,7 +34,7 @@ public class CalendarFormatter {
      * @param dateMilis
      */
 
-    public static String getDate(String dateMilis){
+    public static String getDate(long dateMilis){
         return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, DATA_LOCALE).format(new Date(dateMilis));
 
     }

@@ -132,7 +132,7 @@ public class RegisterVolunteer extends AppCompatActivity {
         mBirthdayVolunteer = (EditText) findViewById(R.id.Volunteer_birth_date);
         phoneNumberVolunteer = (EditText) findViewById(R.id.Volunteer_phone);
         registerVolunteer = (Button) findViewById(R.id.register_V);
-        login = (Button) findViewById(R.id.go_to_login);
+        login = (Button) findViewById(R.id.go_to_loginV);
         addHelpSeeker = (Button) findViewById(R.id.register_helpseeker_from_volunteer);
         progBarV = (ProgressBar) findViewById(R.id.Volunteer_register_progressbar);
 
@@ -202,6 +202,12 @@ public class RegisterVolunteer extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
+        registerVolunteer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RegisterNewVolunteer();
+            }
+        });
         addHelpSeeker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -238,12 +244,6 @@ public class RegisterVolunteer extends AppCompatActivity {
                 mBirthdayVolunteer.setHint(date);
             }
         };
-        registerVolunteer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                RegisterNewVolunteer();
-            }
-        });
     }
 
     private void setupFirebaseAuth(){
@@ -267,27 +267,27 @@ public class RegisterVolunteer extends AppCompatActivity {
 
     private void RegisterNewVolunteer(){
 
-        String Vname = mNameVolunteer.getText().toString().trim();
-        String Vsurname = mSurnameVolunteer.getText().toString().trim();
-        String Vemail = mEmailVolunteer.getText().toString().trim();
-        String Vpassword = mPasswordVolunteer.getText().toString().trim();
-        String VphoneNum = phoneNumberVolunteer.getText().toString().trim();
-        String Vgender = mGenderVolunteer.getSelectedItem().toString();
-        String VbirthDate = mBirthdayVolunteer.getHint().toString();
+        String Name = mNameVolunteer.getText().toString().trim();
+        String Surname = mSurnameVolunteer.getText().toString().trim();
+        String email = mEmailVolunteer.getText().toString().trim();
+        String password = mPasswordVolunteer.getText().toString().trim();
+        String PhoneNum = phoneNumberVolunteer.getText().toString().trim();
+        String Gender = mGenderVolunteer.getSelectedItem().toString();
+        String BirthDate = mBirthdayVolunteer.getHint().toString();
 
-        if(ValidateUtils.isEmpty(Vname) ) {
+        if(ValidateUtils.isEmpty(Name) ) {
             Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo varda!", Toast.LENGTH_SHORT).show();
             return;
         }
         //REGEX SURNAME INPUT
-        if(ValidateUtils.isEmpty(Vsurname)){
+        if(ValidateUtils.isEmpty(Surname)){
             Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo pavarde", Toast.LENGTH_SHORT).show();
             return;
         }
 
 
         //REGEX EMAIL INPUT
-        if(ValidateUtils.isEmpty(Vemail)){
+        if(ValidateUtils.isEmpty(email)){
             Toast.makeText(getApplicationContext(), "Pamirsote irasyti savo e-pasta!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -295,30 +295,31 @@ public class RegisterVolunteer extends AppCompatActivity {
         //REGEX PASSWORD
 
         //REGEX PHONE-NUMBER
-        if(ValidateUtils.isNumeric(VphoneNum)){
-            if(ValidateUtils.isPhone(VphoneNum)){
+        if(ValidateUtils.isNumeric(PhoneNum)){
+            if(ValidateUtils.isPhone(PhoneNum)){
                 return;
             }
         }
-        if(Vgender.equals("Pasirinkite lyti")){
+        if(Gender.equals("Pasirinkite lyti")){
             Toast.makeText(getApplicationContext(), "Turi pasirinkti lyti!", Toast.LENGTH_SHORT).show();
             return;
         }
-        if(VbirthDate.equals("Pasirinkite gimimo data")){
+        if(BirthDate.equals("Pasirinkite gimimo data")){
             Toast.makeText(getApplicationContext(), "Pasirinkite gimimo data", Toast.LENGTH_SHORT).show();
             return;
         }
 
         progBarV.setVisibility(View.VISIBLE);
         Fdata = FirebaseDatabase.getInstance();
-        DataRefs = Fdata.getReference();
+        DataRefs = Fdata.getReference().child("Volunteers");
 
-        mFirebaseAuth.signInWithEmailAndPassword(Vemail, Vpassword)
+        mFirebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(RegisterVolunteer.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
                         if(!task.isSuccessful()){
-                            Log.d(TAG, "onComplete:  FOunded match in Volunteers ");
+                            Log.d(TAG, "onComplete: "+ task.getException().getMessage());
                             progBarV.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "Tokia paskyra jau yra, prisijunkite!", Toast.LENGTH_SHORT).show();
 
@@ -327,15 +328,15 @@ public class RegisterVolunteer extends AppCompatActivity {
                             progBarV.setVisibility(View.GONE);
                             String userID = mFirebaseAuth.getCurrentUser().getUid();
 
-                            DataRefs.child("Volunteers").child(userID).child(userID.toString()).push();
+                            DataRefs.child(userID).child(userID.toString()).push();
 
                             Fdata.getReference("Volunteers"+"/"+userID.toString()).setValue(userID.toString());
-                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Name").setValue(Vname);
-                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Surname").setValue(Vsurname);
-                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Email").setValue(Vemail);
-                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Phone_Number").setValue(VphoneNum);
-                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Gender").setValue(Vgender);
-                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/BirthDay").setValue(VbirthDate);
+                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Name").setValue(Name);
+                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Surname").setValue(Surname);
+                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Email").setValue(email);
+                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Phone_Number").setValue(PhoneNum);
+                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/Gender").setValue(Gender);
+                            Fdata.getReference("Volunteers"+"/"+userID.toString()+"/BirthDay").setValue(BirthDate);
                             Fdata.getReference("AllUsers"+"/"+userID.toString()).setValue("Volunteer");
 
                             startActivity(new Intent(RegisterVolunteer.this, MainActivity.class));

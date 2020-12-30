@@ -241,7 +241,7 @@ prisidedate prie savanoriu"
                     android:layout_height="match_parent">
                     <TableRow>
                         <Button
-                            android:id="@+id/go_to_login"
+                            android:id="@+id/go_to_loginV"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Prisijungti"

@@ -9,6 +9,8 @@
     <string name="recconnecting_request">No internet connection. Once reconnected it could take a while to recontact the server</string>
     <string name="description_input_label">Type a description about what help you need!</string>
     <string name="type_here_hint">Type here!</string>
+    <string name="birth_date_label">Gimimo data:</string>
+    <string name="biography_label">Biografija</string>
     <string name="create_request_button_label">Create Request!</string>
     <string name="create_help_request_move_forward">Eiti Toliau!</string>
     <string name="form_not_completely_filled_popup">Visi langeliai turi buti uzpildyti</string>

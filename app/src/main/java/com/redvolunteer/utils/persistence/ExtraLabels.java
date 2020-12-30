@@ -11,7 +11,7 @@ public class ExtraLabels {
     /**
      * User related extras
      */
-    private static final String USER_ID = "request";
+    public static final String USER_ID = "request";
 
     public ExtraLabels() {
     }

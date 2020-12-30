@@ -296,11 +296,30 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
+                    if(dataSnapshot.exists()){
+                        Log.d(TAG, "onDataChange: " + dataSnapshot);
+                        mUserName.setText(dataSnapshot.child("Name").getValue().toString());
+                        mUserSurname.setText(dataSnapshot.child("Surname").getValue().toString());
+                        mBirthDate.setText(dataSnapshot.child("BirthDay").getValue().toString());
+                    }
+                  else {
+                        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Volunteers));
+                        DatabaseReference userInfoProvider= dataRef.child(userID);
+                        userInfoProvider.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                mUserName.setText(snapshot.child("Name").getValue().toString());
+                                mUserSurname.setText(snapshot.child("Surname").getValue().toString());
+                                mBirthDate.setText(snapshot.child("BirthDay").getValue().toString());
+                            }
 
-                    Log.d(TAG, "onDataChange: " + dataSnapshot);
-                    mUserName.setText(dataSnapshot.child("Name").getValue().toString());
-                    mUserSurname.setText(dataSnapshot.child("Surname").getValue().toString());
-                    mBirthDate.setText(dataSnapshot.child("BirthDay").getValue().toString());
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                    }
                 }
 
                 @Override

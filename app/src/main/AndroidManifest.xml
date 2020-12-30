@@ -41,7 +41,7 @@
                 android:value="Your Api Key" />
         </activity>
         <activity android:name=".LoginAndRegister.RegisterVolunteer"
-            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+            android:theme="@style/Theme.MaterialComponents.DayNight"
             android:screenOrientation="portrait"/>
         <activity android:name=".LoginAndRegister.Login"
             android:screenOrientation="portrait"

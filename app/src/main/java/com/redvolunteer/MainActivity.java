@@ -128,7 +128,6 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
             @Override
             public void onClick(View view) {
                 fragmentTransaction(WALL_FRAGMENT);
-                mTopBarLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -136,7 +135,6 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
             @Override
             public void onClick(View view) {
                 fragmentTransaction(PROFILE_FRAGMENT);
-                mTopBarLayout.setVisibility(View.GONE);
             }
         });
 
@@ -144,7 +142,6 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
             @Override
             public void onClick(View view) {
                 fragmentTransaction(MESSAGES_FRAGMENT);
-                mTopBarLayout.setVisibility(View.GONE);
             }
         });
 

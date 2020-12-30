@@ -347,7 +347,7 @@ public class RegisterX extends AppCompatActivity {
                                     Fdata.getReference("Help_Seekers"+"/"+userUID.toString()+"/BirthDay").setValue(birthDate);
                                     Fdata.getReference("AllUsers"+"/"+userUID.toString()).setValue("Help_Seeker");
 
-                                    startActivity(new Intent(RegisterX.this, MainActivity.class));
+                                    startMainActivity();
                                     finish();
                                 }
 
