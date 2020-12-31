@@ -10,6 +10,8 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -17,6 +19,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,8 +29,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.MainActivity;
+import com.redvolunteer.RequestDescriptionActivity;
+import com.redvolunteer.adapters.HelpRequestWallAdapter;
 import com.redvolunteer.newrequesthelp.NewRequestHelpActivity;
 import com.redvolunteer.R;
+import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.dataModels.RequestHelpModel;
@@ -36,6 +42,8 @@ import com.redvolunteer.pojo.RequestHelp;
 import org.reactivestreams.Subscription;
 
 import java.util.List;
+
+import io.reactivex.FlowableSubscriber;
 
 public class RequestWallFragment extends Fragment {
 
@@ -57,17 +65,22 @@ public class RequestWallFragment extends Fragment {
      * Reference to the Activity
      *
      */
-    private FragmentInteractionListener mActivity;
+    private FragmentInteractionListener mListener;
 
     /**
      * User Created Help Requests
      */
     private ListView mUserRequestsList;
 
+
+    /**
+     * ListView for Volunteer
+     */
+    private ListView mVolunteerListView;
     /**
      * Main View Model
      */
-    private HelpRequestViewModel mHelpRequestViewModel;
+    private HelpRequestViewModel mMainViewModel;
 
     /**
      * User View Model
@@ -89,6 +102,16 @@ public class RequestWallFragment extends Fragment {
      */
     private RequestHelpModel RetrievedUserHelpRequest;
 
+    /**
+     * Request Wall Adapter
+     */
+    HelpRequestWallAdapter mAdapter;
+
+    /**
+     * retrieved Request
+     */
+    private List<RequestHelp> retrievedRequests;
+
     public RequestWallFragment(){
         //Requires empty public constructor
 
@@ -105,40 +128,28 @@ public class RequestWallFragment extends Fragment {
     private void bind(View view){
         this.SetupToolbar(view);
 
-    }
-    /**
-     * Checking if user is HelpSeeker, or Volunteer, if Volunteer, needs New_request_Button be not visible
-     */
-    private void ifUserIsVolunteer(){
-        ImageView newRequestBut;
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Volunteers));
-        if(mAuth.getCurrentUser() != null) {
-            userID = mAuth.getCurrentUser().getUid();
+        mNoRequestShow = (LinearLayout) view.findViewById(R.layout.no_available_request_label);
 
-            DatabaseReference userInfo = dataRef.child(userID);
-            userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
+        mVolunteerListView = (ListView) view.findViewById(R.id.request_list);
+        mVolunteerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    if(snapshot.exists()){
+                RequestHelp selected = mAdapter.getItem(i);
 
+                // send the requestID
+                Intent intent = new Intent(getActivity(), RequestDescriptionActivity.class);
+                intent.putExtra(ExtraLabels.REQUEST, selected.getId());
+                startActivity(intent);
 
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-
-
-        }
-
-
-
+            }
+        });
+        view.findViewById(R.id.new_request_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startActivity(new Intent(getActivity(), NewRequestHelpActivity.class));
+            }
+        });
     }
 
     /**
@@ -166,6 +177,7 @@ public class RequestWallFragment extends Fragment {
                     if(snapshot.exists()){
 
                         layout.findViewById(R.id.new_request_button).setVisibility(View.GONE);
+
                     }
                 }
 
@@ -191,9 +203,73 @@ public class RequestWallFragment extends Fragment {
     private void initializeListView(final List<RequestHelp> helpList){
 
 
-
     }
 
+    private void handleAdapter(List<RequestHelp> requestsForHelp){
+        if(requestsForHelp.size() !=0) {
+            retrievedRequests = requestsForHelp;
+            mUserRequestsList.setVisibility(View.VISIBLE);
+            mNoRequestShow.setVisibility(View.GONE);
+            if(mAdapter == null){
+                mAdapter = new HelpRequestWallAdapter(retrievedRequests, getActivity());
+                mVolunteerListView.setAdapter(mAdapter);
+            } else
+                mAdapter.setHelpList(retrievedRequests);
+                mAdapter.notifyDataSetChanged();
+
+                mVolunteerListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                    }
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        int visibleElementCount = firstVisibleItem + visibleItemCount;
+                        if (visibleElementCount == totalItemCount && totalItemCount != 0) {
+                            mMainViewModel.getNewRequests().subscribe(new FlowableSubscriber<List<RequestHelp>>() {
+                                @Override
+                                public void onSubscribe(Subscription subscription) {
+                                    subscription.request(1L);
+                                    if (requestRetrieveSubscription != null) {
+                                        requestRetrieveSubscription.cancel();
+                                    }
+                                    requestRetrieveSubscription = subscription;
+                                }
+
+                                @Override
+                                public void onNext(List<RequestHelp> requestsH) {
+                                    if (requestsH.size() != 0) {
+                                        retrievedRequests.addAll(requestsH);
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable throwable) {
+
+                                }
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                        }
+                    }
+
+                });
+        } else {
+            mVolunteerListView.setVisibility(View.GONE);
+
+        }
+    }
+
+
+
+    private void UserStateChecker(){
+
+
+    }
     /**@Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -250,12 +326,36 @@ public class RequestWallFragment extends Fragment {
         }
     }
 */
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof FragmentInteractionListener){
+            mListener = (FragmentInteractionListener) context;
+
+        } else {
+            throw new RuntimeException(context.toString()
+                    + "must implement FragmentInteractionListener");
+        }
+    }
+
     /**
      * Show's whait spinner
      */
     private void ShowWhaitSpinner() {
 
         this.popupDialogProgress = ProgressDialog.show(getActivity(), null, getString(R.string.loading_popup_message_spinner), true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     /**
@@ -310,12 +410,6 @@ public class RequestWallFragment extends Fragment {
         alertDialog.show();
 
     }
-
-
-
-
-
-
 
 
 }

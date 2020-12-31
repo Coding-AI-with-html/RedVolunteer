@@ -16,11 +16,16 @@ public interface RequestHelpModel {
     *Returns created help request, its for
      */
     Flowable<List<RequestHelp>> getUserHelpRequests();
+    /**
+     * Returns request the user may subscribe. It sorts them based on the user location
+     */
+    Flowable<List<RequestHelp>> getNewRequests();
 
     /**
      * set the location of the user
      */
     void setLocation(RequestLocation location);
+
 
     /**
      * Store new HelpRequest

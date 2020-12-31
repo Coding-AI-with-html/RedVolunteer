@@ -34,6 +34,10 @@ public class HelpRequestViewModel {
 
     public void updateHelpRequest(RequestHelp requestHelp){
         mRequestHelpModel.storeHelpRequest(requestHelp);
+
+    }
+    public Flowable<List<RequestHelp>> getNewRequests(){
+        return mRequestHelpModel.getNewRequests();
     }
 
 

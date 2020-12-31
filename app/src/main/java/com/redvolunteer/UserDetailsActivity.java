@@ -1,13 +1,18 @@
 package com.redvolunteer;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +25,8 @@ import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.UserViewModel;
 
 import org.reactivestreams.Subscription;
+
+import java.util.Locale;
 
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.annotations.NonNull;
@@ -78,7 +85,7 @@ public class UserDetailsActivity  extends AppCompatActivity {
                     mRetrievedUser = user;
                     //show layout content with user info
                     //this is an different operation in order to download info first
-                    showLayout();
+                    setLayout();
                 }
 
                 @Override
@@ -101,9 +108,10 @@ public class UserDetailsActivity  extends AppCompatActivity {
 
     private void setLayout(){
 
-
-
-
+        stopSpinner();
+        setContentView(R.layout.activity_user_details);
+        bindActivityComponents();
+        filLActivity(); //user info
     }
 
     /**
@@ -112,8 +120,57 @@ public class UserDetailsActivity  extends AppCompatActivity {
     private void bindActivityComponents(){
 
         mUserPIc = (ImageView) findViewById(R.id.requestor_image);
-        mUserName = (TextView) findViewById(R.id.request_creator);
-        mBirthDate = (TextView) findViewById(R.id);
+        mUserName = (TextView) findViewById(R.id.retrieved_user_name);
+        mUserSurname = (TextView) findViewById(R.id.retrieved_user_surname);
+        mBirthDate = (TextView) findViewById(R.id.retrieved_birth_date);
+        mUserBio = (TextView) findViewById(R.id.retrieved_user_bio);
+
+        ImageView mBackButtonToMain = (ImageView) findViewById(R.id.user_details_backbutton);
+        mBackButtonToMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        //contact button on top-bar
+        ImageView mContactButton = (ImageView) findViewById(R.id.user_contact_button);
+        if(mRetrievedUser.getId().equals(mUserViewModel.retrieveCachedUser().getId())){
+
+            mContactButton.setVisibility(View.GONE);
+        }
+        mContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+                //send email to the user
+                String[] TO = {mRetrievedUser.getEmail()};
+
+
+                //create an email intent specifying the header
+                // not possible to specify the sender
+                emailIntent.setData(Uri.parse(getString(R.string.mail_uri_protocol)));
+                emailIntent.setType(getString(R.string.email_content_type));
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.contact_email_object) );
+
+                @SuppressLint("StringFormatMatches") String fillMailBody = String.format(
+                        Locale.ENGLISH,
+                        getString(R.string.message_mail_user),
+                        mRetrievedUser.getFullName(),
+                        mUserViewModel.retrieveCachedUser().getFullName());
+                emailIntent.putExtra(Intent.EXTRA_TEXT, fillMailBody);
+
+                try {
+                    startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_picker_title)));
+                } catch (ActivityNotFoundException ex){
+                    Toast.makeText(getApplicationContext(), getString(R.string.toast_email_user_agent_not_installed), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
 
     }
@@ -150,7 +207,7 @@ public class UserDetailsActivity  extends AppCompatActivity {
         AlertDialog.Builder builder =new AlertDialog.Builder(getApplicationContext());
         builder.setMessage(R.string.error_message_download_resources)
                 .setCancelable(false)
-                .setPositiveButton("GERAI", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));

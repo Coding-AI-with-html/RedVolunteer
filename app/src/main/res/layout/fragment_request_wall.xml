@@ -1,5 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.redvolunteer.fragments.RequestWallFragment">
+
+
+    <!--Toolbar -->
+    <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/helpRequestList_top_bar"
     android:layout_width="match_parent"
@@ -7,7 +14,6 @@
     android:layout_alignParentTop="true"
     android:gravity="top"
     android:background="@color/mainlyColor">
-    <!--Toolbar -->
 
     <ImageView
         android:layout_width="250dp"
@@ -30,28 +36,39 @@
         android:src="@drawable/ic_new_event_plus"
         android:layout_centerHorizontal="true"/>
 
+</RelativeLayout>
+
     <LinearLayout
-        android:id="@+id/no_help_request_label"
+        android:id="@+id/no_available_request_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="You don't asked for help"
+            android:text="@string/no_request_around_label"
             android:textAlignment="center" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Press + to ask for volunteer help"
+            android:text="@string/add_request_suggestion_label"
             android:textAlignment="center" />
     </LinearLayout>
 
+
+
+    <ListView
+        android:visibility="gone"
+        android:id="@+id/request_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/helpRequestList_top_bar"
+        android:divider="@color/cardview_light_background"
+        android:dividerHeight="10dp" />
 
 
 </RelativeLayout>

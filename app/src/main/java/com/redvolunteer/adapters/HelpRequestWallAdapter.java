@@ -10,8 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.redvolunteer.R;
+import com.redvolunteer.UserDetailsActivity;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
+import com.redvolunteer.utils.persistence.ExtraLabels;
 
 import java.util.List;
 
@@ -22,6 +24,11 @@ public class HelpRequestWallAdapter extends BaseAdapter {
 
     private List<RequestHelp> helpList;
     private Context context;
+
+    public HelpRequestWallAdapter(List<RequestHelp> helpList, Context context) {
+        this.helpList = helpList;
+        this.context = context;
+    }
 
     public void setHelpList(List<RequestHelp> requestHelps){
         if(!this.helpList.equals(requestHelps)){
@@ -35,7 +42,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public RequestHelp getItem(int position) {
 
         if(position >= helpList.size())
             throw  new IllegalArgumentException(position + "exceeds" + helpList.size());
@@ -69,17 +76,20 @@ public class HelpRequestWallAdapter extends BaseAdapter {
         View.OnClickListener showUserClicked = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent showUserDetails = new Intent(context, User);
+                Intent showUserDetails = new Intent(context, UserDetailsActivity.class);
+                showUserDetails.putExtra(ExtraLabels.USER_ID, reqHelp.getHelpRequestCreatorID());
+
+                context.startActivity(showUserDetails);
             }
-        }
+        };
 
+        holder.mUserImage.setOnClickListener(showUserClicked);
+        holder.mRequestor.setOnClickListener(showUserClicked);
 
-
-
-
-
-        return null;
+        return convertedview;
     }
+
+
 
 
 
