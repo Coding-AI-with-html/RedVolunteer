@@ -53,10 +53,13 @@ public class HelpRequestModellmpl implements RequestHelpModel {
     private RequestLocation currentLocation;
 
     /**
-     * DAO operates on the Users stored on the remote database
+     * DAO operates on the Requests stored on the remote database
      */
     private RemoteRequestDao remoteRequestDao;
 
+    /**
+     * Dao operates on the User on the remote database
+     */
     private RemoteUserDao remoteUserDao;
 
     /**
@@ -95,6 +98,10 @@ public class HelpRequestModellmpl implements RequestHelpModel {
         return Flowable.create(new FillRequestDetails(), BackpressureStrategy.BUFFER);
     }
 
+    @Override
+    public Flowable<List<RequestHelp>> getNewRequests() {
+        return Flowable.create(new FillRequestDetails(), BackpressureStrategy.BUFFER);
+    }
     @Override
     public Flowable<List<RequestHelp>> getUserHelpRequests() {
 
@@ -191,4 +198,5 @@ public class HelpRequestModellmpl implements RequestHelpModel {
                     });
         }
     }
+
 }

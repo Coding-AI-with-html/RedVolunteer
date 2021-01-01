@@ -2,20 +2,44 @@ package com.redvolunteer;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.redvolunteer.pojo.RequestLocation;
+import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
@@ -32,19 +56,19 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     private static final String TAG = "MainActivity";
 
     /**
-     * firebase
-     */
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference myRef;
-    private String userID;
-
-    /**
      *
      * @param savedInstanceState
      */
     private Context MainContext = MainActivity.this;
+
+    /**
+     *Location Permission constant
+     */
+    private static  final int LOCATION_PERMISSION = 1;
+    /**
+     * Request check settings
+     */
+    public static final int REQUEST_CHECK_SETTINGS = 2;
 
     /**
      * User View Model
@@ -52,23 +76,28 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     private UserViewModel mUserViewModel;
 
     /**
+     * Help Request View Model
+     */
+    private HelpRequestViewModel mHelpRequestViewModel;
+
+    /**
      * Help request who created user fragment
      */
     private RequestWallFragment mainFragment = new RequestWallFragment();
     /**
- * User Messages Fragment
- */
-private UserMessageFragment myMessageFragment = new UserMessageFragment();
+     * User Messages Fragment
+     */
+    private UserMessageFragment myMessageFragment = new UserMessageFragment();
 
-/**
- * Profile fragment
- */
-private ProfileFragment profileFragment = new ProfileFragment();
+    /**
+     * Profile fragment
+     */
+    private ProfileFragment profileFragment = new ProfileFragment();
 
-/**
- * Stack used to manage Fragment states(back button)
- */
-private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
+    /**
+     * Stack used to manage Fragment states(back button)
+     */
+    private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     /**
      * maps fragments
      */
@@ -93,19 +122,15 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     private LinearLayout mMyRequestButton;
     private LinearLayout mMyRequestButtonPressed;
 
-    /**
-    *TopBar Layout
-     */
-    private RelativeLayout mTopBarLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserViewModel = getUserViewModel();
+        mHelpRequestViewModel = getHelpRequestViewModel();
 
 
-        if(!mUserViewModel.isAuth()){
+        if (!mUserViewModel.isAuth()) {
             signOut();
         }
         setContentView(R.layout.activity_main);
@@ -113,16 +138,18 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         bindLayoutComponents();
         setFragments();
 
+        //find user location
+        provideLocation();
+
     }
 
-    private void bindLayoutComponents(){
+    private void bindLayoutComponents() {
         mWallButtonPressed = (LinearLayout) findViewById(R.id.button_wall_pressed);
         mWallButton = (LinearLayout) findViewById(R.id.button_wall_not_pressed);
         mProfileButton = (LinearLayout) findViewById(R.id.profile_button_not_pressed);
         mProfileButtonPressed = (LinearLayout) findViewById(R.id.profile_button_pressed);
         mMyRequestButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
         mMyRequestButtonPressed = (LinearLayout) findViewById(R.id.myrequest_button_pressed);
-        mTopBarLayout = (RelativeLayout) findViewById(R.id.helpRequestList_top_bar);
 
         mWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +179,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
      * Intaliazes fragments
      * @param
      */
-    private void setFragments(){
+    private void setFragments() {
 
         this.fragmentMap = new HashMap<>();
         fragmentMap.put(WALL_FRAGMENT, mainFragment);
@@ -175,7 +202,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
      *change fragments
      * @param
      */
-    public void fragmentTransaction(Fragment fragment){
+    public void fragmentTransaction(Fragment fragment) {
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -189,15 +216,15 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
     }
 
 
-    public void fragmentTransaction(String fragmentID){
+    public void fragmentTransaction(String fragmentID) {
 
-        if(fragmentID.equals(WALL_FRAGMENT)){
+        if (fragmentID.equals(WALL_FRAGMENT)) {
             openWall();
         }
-        if(fragmentID.equals(MESSAGES_FRAGMENT)){
+        if (fragmentID.equals(MESSAGES_FRAGMENT)) {
             openMyRequests();
         }
-        if(fragmentID.equals(PROFILE_FRAGMENT)){
+        if (fragmentID.equals(PROFILE_FRAGMENT)) {
             openProfile();
         }
 
@@ -209,7 +236,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
      * Modify top and bottom bar according to the wall fragments
      */
 
-    private void openWall(){
+    private void openWall() {
 
         mWallButtonPressed.setVisibility(View.VISIBLE);
         mWallButton.setVisibility(View.GONE);
@@ -220,7 +247,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
     }
 
-    private void openMyRequests(){
+    private void openMyRequests() {
 
         mWallButtonPressed.setVisibility(View.GONE);
         mWallButton.setVisibility(View.VISIBLE);
@@ -231,7 +258,7 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
     }
 
-    private void openProfile(){
+    private void openProfile() {
 
         mWallButtonPressed.setVisibility(View.GONE);
         mWallButton.setVisibility(View.VISIBLE);
@@ -240,6 +267,136 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
         mMyRequestButton.setVisibility(View.VISIBLE);
         mMyRequestButtonPressed.setVisibility(View.GONE);
 
+    }
+
+    /**
+     * Ask user to enable the GPS
+     */
+    public void enableGoogleApiClient() {
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(mLocationRequest);
+        builder.setAlwaysShow(true);
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        final Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+
+
+                LocationCallback callback = new LocationCallback() {
+
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
+
+                        for (Location location : locationResult.getLocations()) {
+
+                            RequestLocation loc = new RequestLocation();
+                            loc.setLatitude(location.getLatitude());
+                            loc.setLongitude(location.getLongitude());
+                            mHelpRequestViewModel.setLocation(loc);
+                        }
+                    }
+                };
+
+
+                FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+                LocationRequest locationRequest = new LocationRequest();
+                locationRequest.setInterval(10000);
+                locationRequest.setFastestInterval(5000);
+                locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+
+                //retrieve the new location
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest,
+                        callback, null);
+
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+
+                        if(location != null){
+                            RequestLocation loc = new RequestLocation();
+                            loc.setLatitude(location.getLatitude());
+                            loc.setLongitude(location.getLongitude());
+                            mHelpRequestViewModel.setLocation(loc);
+                        }
+
+                        fragmentTransaction(WALL_FRAGMENT);
+                    }
+                });
+            }
+        });
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+               int statusCode = ((ApiException)e).getStatusCode();
+               switch (statusCode) {
+                   case CommonStatusCodes
+                           .RESOLUTION_REQUIRED:
+                       try {
+                           ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                           resolvableApiException.startResolutionForResult(getParent(),
+                                   REQUEST_CHECK_SETTINGS);
+                       } catch (IntentSender.SendIntentException sendIntentException){
+                           //Ignoring error
+                       }
+                       break;
+               }
+            }
+        });
+    }
+
+    /**
+     * CHeck for location Permission from user and retrieves it
+     */
+    public void provideLocation(){
+
+
+        String provider = Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+        if(!provider.equals("")){
+
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED){
+
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION);
+            } else {
+                enableGoogleApiClient();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.gps_not_available, Toast.LENGTH_SHORT).show();
+
+            fragmentTransaction(WALL_FRAGMENT);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // position retrieval
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                if (resultCode == RESULT_OK)
+                    enableGoogleApiClient();
+                else {
+                    fragmentTransaction(WALL_FRAGMENT);
+                    Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
     }
 
 
@@ -258,6 +415,11 @@ private LinkedList<androidx.fragment.app.Fragment> stack = new LinkedList<>();
 
 
     }
-
-
+    @Override
+    public HelpRequestViewModel getHelpRequestViewModel(){
+        if(mHelpRequestViewModel == null){
+            mHelpRequestViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
+        }
+        return mHelpRequestViewModel;
+    }
 }

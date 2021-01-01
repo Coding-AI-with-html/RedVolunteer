@@ -18,7 +18,7 @@ public class DistanceManagerlimp implements DistanceManager {
 
         for(DistanceHolder holder: wrapped){
 
-            if(!(holder.distance> distanceKmFiller)){
+            if(!(holder.distance > distanceKmFiller)){
                 orderedList.add(holder.requestHelp);
             }
         }

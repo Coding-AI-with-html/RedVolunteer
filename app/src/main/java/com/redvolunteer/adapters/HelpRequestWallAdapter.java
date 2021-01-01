@@ -90,10 +90,6 @@ public class HelpRequestWallAdapter extends BaseAdapter {
     }
 
 
-
-
-
-
     private static class HelpRequestViewHolder {
         private ImageView mUserImage;
         private TextView mRequestTitle;
@@ -109,10 +105,6 @@ public class HelpRequestWallAdapter extends BaseAdapter {
             this.mRequestor = (TextView) row.findViewById(R.id.request_creator);
         }
     }
-
-
-
-
 
 
 

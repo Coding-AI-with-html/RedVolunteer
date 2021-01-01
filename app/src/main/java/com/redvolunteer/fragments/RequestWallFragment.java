@@ -33,6 +33,7 @@ import com.redvolunteer.RequestDescriptionActivity;
 import com.redvolunteer.adapters.HelpRequestWallAdapter;
 import com.redvolunteer.newrequesthelp.NewRequestHelpActivity;
 import com.redvolunteer.R;
+import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
@@ -62,6 +63,11 @@ public class RequestWallFragment extends Fragment {
     private Subscription requestRetrieveSubscription;
 
     /**
+     * Rx java subcription
+     */
+    private Subscription mMotherRequestHelpSubscription;
+
+    /**
      * Reference to the Activity
      *
      */
@@ -71,7 +77,6 @@ public class RequestWallFragment extends Fragment {
      * User Created Help Requests
      */
     private ListView mUserRequestsList;
-
 
     /**
      * ListView for Volunteer
@@ -98,11 +103,6 @@ public class RequestWallFragment extends Fragment {
     private LinearLayout mNoRequestShow;
 
     /**
-     * Retrieved User HelpRequest
-     */
-    private RequestHelpModel RetrievedUserHelpRequest;
-
-    /**
      * Request Wall Adapter
      */
     HelpRequestWallAdapter mAdapter;
@@ -114,9 +114,8 @@ public class RequestWallFragment extends Fragment {
 
     public RequestWallFragment(){
         //Requires empty public constructor
-
-
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -125,10 +124,16 @@ public class RequestWallFragment extends Fragment {
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    mMainViewModel = mListener.getHelpRequestViewModel();
+    }
+
     private void bind(View view){
         this.SetupToolbar(view);
 
-        mNoRequestShow = (LinearLayout) view.findViewById(R.layout.no_available_request_label);
+        mNoRequestShow = (LinearLayout) view.findViewById(R.id.no_available_request_text);
 
         mVolunteerListView = (ListView) view.findViewById(R.id.request_list);
         mVolunteerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -150,6 +155,46 @@ public class RequestWallFragment extends Fragment {
                 getActivity().startActivity(new Intent(getActivity(), NewRequestHelpActivity.class));
             }
         });
+    }
+
+    private void FetchHelpRequests(){
+
+        if(NetworkCheker.getInstance().isNetworkAvailable(getContext())) {
+
+            ShowWhaitSpinner();
+            mMainViewModel
+                    .getRequests()
+                    .subscribe(new FlowableSubscriber<List<RequestHelp>>() {
+                        @Override
+                        public void onSubscribe(Subscription subscription) {
+                            subscription.request(Long.MAX_VALUE);
+
+                            requestRetrieveSubscription = subscription;
+                        }
+
+                        @Override
+                        public void onNext(List<RequestHelp> requestHelps) {
+                            StopWhaitSpinner();
+                            handleAdapter(requestHelps);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            StopWhaitSpinner();
+                            ShowRetrievedErrorPopupDialog();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
+
+        } else {
+            ShowNoInternetConnection();
+        }
+
     }
 
     /**
@@ -177,7 +222,6 @@ public class RequestWallFragment extends Fragment {
                     if(snapshot.exists()){
 
                         layout.findViewById(R.id.new_request_button).setVisibility(View.GONE);
-
                     }
                 }
 
@@ -231,10 +275,10 @@ public class RequestWallFragment extends Fragment {
                                 @Override
                                 public void onSubscribe(Subscription subscription) {
                                     subscription.request(1L);
-                                    if (requestRetrieveSubscription != null) {
-                                        requestRetrieveSubscription.cancel();
+                                    if (mMotherRequestHelpSubscription != null) {
+                                        mMotherRequestHelpSubscription.cancel();
                                     }
-                                    requestRetrieveSubscription = subscription;
+                                    mMotherRequestHelpSubscription = subscription;
                                 }
 
                                 @Override
@@ -260,6 +304,7 @@ public class RequestWallFragment extends Fragment {
                 });
         } else {
             mVolunteerListView.setVisibility(View.GONE);
+            mNoRequestShow.setVisibility(View.VISIBLE);
 
         }
     }
@@ -268,8 +313,16 @@ public class RequestWallFragment extends Fragment {
 
     private void UserStateChecker(){
 
-
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            FetchHelpRequests();
+        }
+    }
+
     /**@Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -356,6 +409,16 @@ public class RequestWallFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(requestRetrieveSubscription != null)
+            requestRetrieveSubscription.cancel();
+        if(mMotherRequestHelpSubscription != null){
+            mMotherRequestHelpSubscription.cancel();
+        }
     }
 
     /**

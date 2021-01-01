@@ -80,7 +80,7 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
     }
 
     @Override
-    public Flowable<RequestHelp> LoadRequestById(String requestID) {
+    public Flowable<RequestHelp> LoadRequestById(final String requestID) {
         return Flowable.create(new FlowableOnSubscribe<RequestHelp>() {
             @Override
             public void subscribe(@NonNull FlowableEmitter<RequestHelp> FlowableEmitter) throws Exception {

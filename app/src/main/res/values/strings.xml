@@ -38,12 +38,14 @@
     <string name="facebook_error_credential_string">Ops, klaida su programeles serveriu!</string>
     <string name="redVolunteer_logo">RedVolunteer Logo</string>
     <string name="hint_resource">Pasirinkite lyti</string>
+    <string name="location_permission_notallowed_toast">Hey, mes gerbiame jusu privatuma, todel pasirinksime numatyta lokacija kuri yra Kaunas</string>
+
     <string name="database_user_settings">User_Settings</string>
     <string name="database_all_users">AllUsers</string>
     <string name="database_Volunteers">Volunteers</string>
     <string name="firebase_request_store_name">Request_Store</string>
     <string name="database_Help_seekers">Help_Seekers</string>
-    <string name="gps_not_available">Lokacija neijungta</string>
+    <string name="gps_not_available">Jusu pozicija nera priieinama!</string>
     <string name="go_to_picker_activity">Go to place picker activity</string>
     <string name="join_request_label_btn">Parasyti asmeniui</string>
     <string name="edit_description_label_btn"> Pakeisti Uzklausos aprasyma</string>
