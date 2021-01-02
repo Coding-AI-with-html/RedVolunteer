@@ -1,5 +1,8 @@
 package com.redvolunteer.utils.persistence.firebasepersistence;
 
+import android.service.autofill.Dataset;
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,6 +26,7 @@ import io.reactivex.functions.Consumer;
 
 public class FirebaseHelpRequestDao implements RemoteRequestDao {
 
+    private static final String TAG = "FirebaseHelpRequestDao";
     /**
      * Description field in the Request Store
      */
@@ -84,7 +88,6 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
         return Flowable.create(new FlowableOnSubscribe<RequestHelp>() {
             @Override
             public void subscribe(@NonNull FlowableEmitter<RequestHelp> FlowableEmitter) throws Exception {
-
                 mRequestStore
                         .orderByKey()
                         .equalTo(requestID)
@@ -192,45 +195,46 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
         }
 
         @Override
-        public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> FlowEmitter) throws Exception {
+        public void subscribe(final FlowableEmitter<List<RequestHelp>> e) throws Exception {
 
             mRequestStore.orderByKey();
-
             if(mAnchor != 0){
                 mRequestStore.limitToFirst(mAnchor);
             } else {
                 mRequestStore.limitToFirst(mNumberResult);
             }
 
-            mRequestStore.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@androidx.annotation.NonNull DataSnapshot Datasnapshot) {
+            mRequestStore
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
-                    List<RequestHelp> firebaseRequests = new ArrayList<>();
+                            List<RequestHelp> firebaseRequests = new ArrayList<>();
 
-                    for(DataSnapshot snapshot: Datasnapshot.getChildren()){
-                        RequestHelp wrapper = snapshot.getValue(RequestHelp.class);
-                        firebaseRequests.add(wrapper);
-                    }
+                            for(DataSnapshot ds: snapshot.getChildren()){
+                                RequestHelp wrapper = ds.getValue(RequestHelp.class);
+                                firebaseRequests.add(wrapper);
+                            }
 
+                            if(mAnchor != 0){
 
-                    if(mAnchor != 0){
+                                if(mAnchor > firebaseRequests.size()){
+                                    mAnchor = firebaseRequests.size();
+                                }
+                                firebaseRequests = firebaseRequests.subList(mAnchor, firebaseRequests.size());
+                            }
 
-                        if(mAnchor > firebaseRequests.size()){
-                            mAnchor = firebaseRequests.size();
+                            e.onNext(firebaseRequests);
+                            Log.d(TAG, "onDataChange: " + firebaseRequests);
+
                         }
 
-                        firebaseRequests = firebaseRequests.subList(mAnchor, firebaseRequests.size());
-                    }
-                    FlowEmitter.onNext(firebaseRequests);
-                }
+                        @Override
+                        public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
 
-                @Override
-                public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-                    //required but not needed
-                }
-            });
-
+                            //not needed, but required
+                        }
+                    });
         }
     }
 }

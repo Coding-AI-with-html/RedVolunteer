@@ -1,12 +1,14 @@
 package com.redvolunteer;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -55,11 +57,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
     private static final String TAG = "MainActivity";
 
-    /**
-     *
-     * @param savedInstanceState
-     */
-    private Context MainContext = MainActivity.this;
 
     /**
      *Location Permission constant
@@ -175,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
     }
 
+
     /**
      * Intaliazes fragments
      * @param
@@ -198,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
     }
 
+
     /**
      *change fragments
      * @param
@@ -215,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
     }
 
-
     public void fragmentTransaction(String fragmentID) {
 
         if (fragmentID.equals(WALL_FRAGMENT)) {
@@ -231,6 +229,77 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         fragmentTransaction(fragmentMap.get(fragmentID));
     }
 
+    @SuppressLint("MissingSuperCall")
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        //super.onSaveInstanceState(savedInstanceState);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if(stack.isEmpty() || stack.pop() instanceof RequestWallFragment)
+            super.onBackPressed();
+        else {
+
+            Fragment oldFrag = stack.pop();
+
+            String switchFragmentID = null;
+
+            if(oldFrag == mainFragment){
+                switchFragmentID = WALL_FRAGMENT;
+            } else if(oldFrag == myMessageFragment){
+                switchFragmentID = MESSAGES_FRAGMENT;
+            } else if(oldFrag == profileFragment){
+                switchFragmentID = PROFILE_FRAGMENT;
+            }
+
+            fragmentTransaction(switchFragmentID);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // position retrieval
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                if (resultCode == RESULT_OK)
+                    enableGoogleApiClient();
+                else {
+                    fragmentTransaction(WALL_FRAGMENT);
+                    Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
+    /**
+     * Signs out user
+     */
+    private void signOut(){
+        mUserViewModel.signOut();
+        Intent intent = new Intent(MainActivity.this, Login.class);
+        startActivity(intent);
+
+    }
+
+    @Override
+    public UserViewModel getUserViewModel() {
+        if(this.mUserViewModel == null)
+            mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
+        return mUserViewModel;
+
+
+    }
+    @Override
+    public HelpRequestViewModel getHelpRequestViewModel(){
+        if(mHelpRequestViewModel == null){
+            mHelpRequestViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
+        }
+        return mHelpRequestViewModel;
+    }
 
     /**
      * Modify top and bottom bar according to the wall fragments
@@ -270,6 +339,31 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     }
 
     /**
+     * CHeck for location Permission from user and retrieves it
+     */
+    public void provideLocation(){
+
+
+        String provider = Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+
+        if(!provider.equals("")){
+
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED){
+
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION);
+            } else {
+                enableGoogleApiClient();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.gps_not_available, Toast.LENGTH_SHORT).show();
+
+            fragmentTransaction(WALL_FRAGMENT);
+        }
+    }
+
+    /**
      * Ask user to enable the GPS
      */
     public void enableGoogleApiClient() {
@@ -286,18 +380,15 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         SettingsClient client = LocationServices.getSettingsClient(this);
         final Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
         task.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
 
 
                 LocationCallback callback = new LocationCallback() {
-
                     @Override
                     public void onLocationResult(LocationResult locationResult) {
-                        super.onLocationResult(locationResult);
-
                         for (Location location : locationResult.getLocations()) {
-
                             RequestLocation loc = new RequestLocation();
                             loc.setLatitude(location.getLatitude());
                             loc.setLongitude(location.getLongitude());
@@ -314,11 +405,10 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
                 locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
 
                 //retrieve the new location
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
+
                 fusedLocationProviderClient.requestLocationUpdates(locationRequest,
-                        callback, null);
+                        callback,
+                        null);
 
                 fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
@@ -357,69 +447,21 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         });
     }
 
-    /**
-     * CHeck for location Permission from user and retrieves it
-     */
-    public void provideLocation(){
-
-
-        String provider = Settings.Secure.getString(getApplicationContext().getContentResolver(),
-                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-
-        if(!provider.equals("")){
-
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED){
-
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION);
-            } else {
-                enableGoogleApiClient();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), R.string.gps_not_available, Toast.LENGTH_SHORT).show();
-
-            fragmentTransaction(WALL_FRAGMENT);
-        }
-    }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        // position retrieval
-        switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS:
-                if (resultCode == RESULT_OK)
+        switch (requestCode){
+            case LOCATION_PERMISSION: {
+                if(grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     enableGoogleApiClient();
-                else {
-                    fragmentTransaction(WALL_FRAGMENT);
-                    Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_SHORT).show();
                 }
                 break;
+            }
         }
-    }
-
-
-    private void signOut(){
-        mUserViewModel.signOut();
-        Intent intent = new Intent(MainActivity.this, Login.class);
-        startActivity(intent);
-
-    }
-
-    @Override
-    public UserViewModel getUserViewModel() {
-        if(this.mUserViewModel == null)
-            mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
-            return mUserViewModel;
-
-
-    }
-    @Override
-    public HelpRequestViewModel getHelpRequestViewModel(){
-        if(mHelpRequestViewModel == null){
-            mHelpRequestViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
-        }
-        return mHelpRequestViewModel;
     }
 }

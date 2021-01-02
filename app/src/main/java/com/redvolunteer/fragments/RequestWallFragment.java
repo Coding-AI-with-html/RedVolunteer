@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ import io.reactivex.FlowableSubscriber;
 
 public class RequestWallFragment extends Fragment {
 
+    private static final String TAG = "RequestWallFragment";
     /**
      * firebase
      */
@@ -130,6 +132,48 @@ public class RequestWallFragment extends Fragment {
     mMainViewModel = mListener.getHelpRequestViewModel();
     }
 
+
+    private void FetchHelpRequests(){
+
+        if(NetworkCheker.getInstance().isNetworkAvailable(getContext())) {
+
+            ShowWhaitSpinner();
+            mMainViewModel
+                    .getRequests()
+                    .subscribe(new FlowableSubscriber<List<RequestHelp>>() {
+                        @Override
+                        public void onSubscribe(Subscription subscription) {
+                            subscription.request(Long.MAX_VALUE);
+
+                            requestRetrieveSubscription = subscription;
+                        }
+
+                        @Override
+                        public void onNext(List<RequestHelp> requestHelps) {
+                            StopWhaitSpinner();
+                            Log.d(TAG, "onNext: " + requestHelps);
+                            handleAdapter(requestHelps);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            StopWhaitSpinner();
+                            ShowRetrievedErrorPopupDialog();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
+
+        } else {
+            ShowNoInternetConnection();
+        }
+
+    }
+
     private void bind(View view){
         this.SetupToolbar(view);
 
@@ -155,46 +199,6 @@ public class RequestWallFragment extends Fragment {
                 getActivity().startActivity(new Intent(getActivity(), NewRequestHelpActivity.class));
             }
         });
-    }
-
-    private void FetchHelpRequests(){
-
-        if(NetworkCheker.getInstance().isNetworkAvailable(getContext())) {
-
-            ShowWhaitSpinner();
-            mMainViewModel
-                    .getRequests()
-                    .subscribe(new FlowableSubscriber<List<RequestHelp>>() {
-                        @Override
-                        public void onSubscribe(Subscription subscription) {
-                            subscription.request(Long.MAX_VALUE);
-
-                            requestRetrieveSubscription = subscription;
-                        }
-
-                        @Override
-                        public void onNext(List<RequestHelp> requestHelps) {
-                            StopWhaitSpinner();
-                            handleAdapter(requestHelps);
-                        }
-
-                        @Override
-                        public void onError(Throwable t) {
-                            StopWhaitSpinner();
-                            ShowRetrievedErrorPopupDialog();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-
-
-        } else {
-            ShowNoInternetConnection();
-        }
-
     }
 
     /**
@@ -285,6 +289,7 @@ public class RequestWallFragment extends Fragment {
                                 public void onNext(List<RequestHelp> requestsH) {
                                     if (requestsH.size() != 0) {
                                         retrievedRequests.addAll(requestsH);
+                                        Log.d(TAG, "onNext: " + retrievedRequests);
                                         mAdapter.notifyDataSetChanged();
                                     }
                                 }
@@ -310,10 +315,11 @@ public class RequestWallFragment extends Fragment {
     }
 
 
-
-    private void UserStateChecker(){
+    /**
+    private void initiliazeListView(final List<RequestHelp> requestHelps){
 
     }
+     */
 
     @Override
     public void onHiddenChanged(boolean hidden) {

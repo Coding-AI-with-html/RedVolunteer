@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.RequestHelp;
+import com.redvolunteer.pojo.RequestLocation;
 
 public class NewHelpRequestFragmentFirst extends Fragment {
 

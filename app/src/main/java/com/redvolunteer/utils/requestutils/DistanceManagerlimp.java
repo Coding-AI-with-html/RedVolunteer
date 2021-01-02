@@ -50,13 +50,12 @@ public class DistanceManagerlimp implements DistanceManager {
         final int R = 6371; //radius of the earth;
 
         double latDistance = Math.toRadians(requestLocation.getLatitude() - center.getLatitude());
-        double lotDistance = Math.toRadians(requestLocation.getLongitude() - center.getLongitude());
-        double a = Math.sin(latDistance/ 2) * Math.sin(latDistance/2)
-                + Math.sin(lotDistance / 2) * Math.sin(lotDistance/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
+        double lonDistance = Math.toRadians(requestLocation.getLongitude() - center.getLongitude());
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(center.getLatitude())) * Math.cos(Math.toRadians(requestLocation.getLatitude()))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
-
     }
 
 

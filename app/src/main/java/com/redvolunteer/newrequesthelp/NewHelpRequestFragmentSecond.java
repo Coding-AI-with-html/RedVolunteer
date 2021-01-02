@@ -25,8 +25,10 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.redvolunteer.R;
+import com.redvolunteer.RedVolunteerApplication;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
+import com.redvolunteer.viewmodels.UserViewModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -57,6 +59,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
      * layout
      */
     private TextView mRequestLocationLabel;
+    private UserViewModel mUserViewModel;
     WifiManager wifiManager;
 
     /**
@@ -71,7 +74,8 @@ public class NewHelpRequestFragmentSecond extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //RequestLocation mUserLocation = mListener.getHelpRequestCreatorLocation();
+        RequestLocation mUserLocation = mListener.getHelpRequestCreatorLocation();
+        this.mUserViewModel = ((RedVolunteerApplication) getActivity().getApplication()).getUserViewModel();
         wifiManager= (WifiManager) this.getContext().getSystemService(Context.WIFI_SERVICE);
     }
 
