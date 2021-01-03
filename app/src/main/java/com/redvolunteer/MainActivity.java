@@ -36,6 +36,7 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -56,7 +57,7 @@ import com.redvolunteer.LoginAndRegister.Login;
 public class MainActivity extends AppCompatActivity implements FragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      *Location Permission constant
@@ -120,9 +121,11 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     private LinearLayout mMyRequestButtonPressed;
 
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mUserViewModel = getUserViewModel();
         mHelpRequestViewModel = getHelpRequestViewModel();
 
@@ -366,6 +369,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     /**
      * Ask user to enable the GPS
      */
+    @SuppressLint("MissingPermission")
     public void enableGoogleApiClient() {
 
         LocationRequest mLocationRequest = new LocationRequest();
@@ -380,7 +384,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         SettingsClient client = LocationServices.getSettingsClient(this);
         final Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
         task.addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
-            @SuppressLint("MissingPermission")
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
 
@@ -418,6 +421,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
                             RequestLocation loc = new RequestLocation();
                             loc.setLatitude(location.getLatitude());
                             loc.setLongitude(location.getLongitude());
+                            Log.d(TAG, "onSuccess: "+ loc);
                             mHelpRequestViewModel.setLocation(loc);
                         }
 
