@@ -12,8 +12,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -22,11 +24,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.internal.ConnectionCallbacks;
+import com.google.android.gms.common.api.internal.OnConnectionFailedListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -57,7 +63,6 @@ import com.redvolunteer.LoginAndRegister.Login;
 public class MainActivity extends AppCompatActivity implements FragmentInteractionListener {
 
     private static final String TAG = "MainActivity";
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     /**
      *Location Permission constant
@@ -68,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
      */
     public static final int REQUEST_CHECK_SETTINGS = 2;
 
+    /**
+     * Location Manager, because GoogleApClient not working properly
+    */
+    //LocationManager locationManager;
     /**
      * User View Model
      */
@@ -125,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mUserViewModel = getUserViewModel();
         mHelpRequestViewModel = getHelpRequestViewModel();
 
@@ -278,6 +286,8 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         }
     }
 
+
+
     /**
      * Signs out user
      */
@@ -366,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         }
     }
 
+
     /**
      * Ask user to enable the GPS
      */
@@ -398,58 +409,73 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
                             mHelpRequestViewModel.setLocation(loc);
                         }
                     }
+
+
                 };
 
 
-                FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
+                FusedLocationProviderClient fuserLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
                 LocationRequest locationRequest = new LocationRequest();
                 locationRequest.setInterval(10000);
                 locationRequest.setFastestInterval(5000);
                 locationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
 
-                //retrieve the new location
-
-                fusedLocationProviderClient.requestLocationUpdates(locationRequest,
+                // retrieve new location
+                fuserLocationClient.requestLocationUpdates(locationRequest,
                         callback,
                         null);
 
-                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                // parallely get last known location, to have info as soon as possible
+                fuserLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
 
-                        if(location != null){
+                        if (location != null) {
                             RequestLocation loc = new RequestLocation();
                             loc.setLatitude(location.getLatitude());
                             loc.setLongitude(location.getLongitude());
-                            Log.d(TAG, "onSuccess: "+ loc);
+                            Log.d(TAG, "onSuccess: " + loc);
                             mHelpRequestViewModel.setLocation(loc);
                         }
 
+
+
                         fragmentTransaction(WALL_FRAGMENT);
+
                     }
                 });
+
+
             }
         });
         task.addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
 
-               int statusCode = ((ApiException)e).getStatusCode();
-               switch (statusCode) {
-                   case CommonStatusCodes
-                           .RESOLUTION_REQUIRED:
-                       try {
-                           ResolvableApiException resolvableApiException = (ResolvableApiException) e;
-                           resolvableApiException.startResolutionForResult(getParent(),
-                                   REQUEST_CHECK_SETTINGS);
-                       } catch (IntentSender.SendIntentException sendIntentException){
-                           //Ignoring error
-                       }
-                       break;
-               }
+
+                int statusCode = ((ApiException) e).getStatusCode();
+                switch (statusCode) {
+                    case CommonStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied, but this can be fixed
+                        // by showing the user a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            ResolvableApiException resolvable = (ResolvableApiException) e;
+                            resolvable.startResolutionForResult(getParent(),
+                                    REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException sendEx) {
+                            // Ignore the error.
+                        }
+                        break;
+                }
             }
         });
     }
+
+
+
+
 
 
     @Override
@@ -460,7 +486,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             case LOCATION_PERMISSION: {
                 if(grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    enableGoogleApiClient();
+                    //enableGoogleApiClient();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_SHORT).show();
                 }
@@ -468,4 +494,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             }
         }
     }
+
+
 }

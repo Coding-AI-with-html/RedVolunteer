@@ -58,7 +58,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
     public View getView(int position, View convertedview, ViewGroup parent) {
 
         if(convertedview ==null){
-            convertedview = LayoutInflater.from(parent.getContext()).inflate(R.layout.mainview_help_request_list, parent, false);
+            convertedview = LayoutInflater.from(context).inflate(R.layout.mainview_help_request_list, parent, false);
         }
         HelpRequestViewHolder holder = (HelpRequestViewHolder) convertedview.getTag();
         if(holder == null){
@@ -70,7 +70,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
 
         holder.mRequestTitle.setText(reqHelp.getName());
         holder.mReqLocation.setText(reqHelp.getRequestLocation().getName());
-        holder.mUserImage.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(reqHelp.getHelpRequestCreator().getPhoto()));
+        //holder.mUserImage.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(reqHelp.getHelpRequestCreator().getPhoto()));
         holder.mRequestor.setText(reqHelp.getHelpRequestCreator().getFullName());
 
         View.OnClickListener showUserClicked = new View.OnClickListener() {

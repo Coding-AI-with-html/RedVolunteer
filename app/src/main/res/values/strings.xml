@@ -44,6 +44,7 @@
     <string name="database_all_users">AllUsers</string>
     <string name="database_Volunteers">Volunteers</string>
     <string name="firebase_request_store_name">Request_Store</string>
+    <string name="request_description_top_label">Request description</string>
     <string name="database_Help_seekers">Help_Seekers</string>
     <string name="gps_not_available">Jusu pozicija nera priieinama!</string>
     <string name="go_to_picker_activity">Go to place picker activity</string>

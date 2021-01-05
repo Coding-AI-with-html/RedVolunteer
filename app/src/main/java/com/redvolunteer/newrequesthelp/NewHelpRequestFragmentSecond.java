@@ -24,6 +24,7 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.firebase.auth.FirebaseAuth;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
 import com.redvolunteer.pojo.RequestHelp;
@@ -44,6 +45,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
      */
     private static final int PLACE_PICKER_REQUEST = 1;
 
+    private FirebaseAuth mAuth;
     /**
      * Request check seetings
      */
@@ -110,9 +112,11 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         buttonFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mAuth = mAuth.getInstance();
                 if(isFormFilled()){
-
+                    String userUID = mAuth.getCurrentUser().getUid();
                     RequestHelp requestHelp = mListener.getHelpRequest();
+                    requestHelp.setHelpRequestCreatorID(userUID);
                     requestHelp.setRequestLocation(mRetrievedLocation);
 
                     mListener.finish(requestHelp);
@@ -177,6 +181,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
 
                     List<Address> addressList = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
                     String addres = addressList.get(0).getAddressLine(0);
+                    mRetrievedLocation.setName(addres.toString());
                     mRequestLocationLabel.setText(addres.toString());
                 } catch (IOException e) {
                     e.printStackTrace();

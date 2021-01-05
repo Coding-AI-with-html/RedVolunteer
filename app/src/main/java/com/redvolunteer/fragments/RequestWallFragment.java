@@ -132,6 +132,43 @@ public class RequestWallFragment extends Fragment {
     mMainViewModel = mListener.getHelpRequestViewModel();
     }
 
+    /**
+     * Setup Toolbar and /**
+     *      * Checking if user is HelpSeeker, or Volunteer, if Volunteer, needs New_request_Button be not visible
+     */
+    private void SetupToolbar(View layout){
+        layout.findViewById(R.id.new_request_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), NewRequestHelpActivity.class));
+            }
+        });
+
+        mAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Volunteers));
+        if(mAuth.getCurrentUser() != null) {
+            userID = mAuth.getCurrentUser().getUid();
+            DatabaseReference userInfo = dataRef.child(userID);
+            userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    if(snapshot.exists()){
+
+                        layout.findViewById(R.id.new_request_button).setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+    }
+
 
     private void FetchHelpRequests(){
 
@@ -201,42 +238,14 @@ public class RequestWallFragment extends Fragment {
         });
     }
 
-    /**
-     * Setup Toolbar and /**
-     *      * Checking if user is HelpSeeker, or Volunteer, if Volunteer, needs New_request_Button be not visible
-     */
-    private void SetupToolbar(View layout){
-        layout.findViewById(R.id.new_request_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), NewRequestHelpActivity.class));
-            }
-        });
-
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Volunteers));
-        if(mAuth.getCurrentUser() != null) {
-            userID = mAuth.getCurrentUser().getUid();
-            DatabaseReference userInfo = dataRef.child(userID);
-            userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                    if(snapshot.exists()){
-
-                        layout.findViewById(R.id.new_request_button).setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            FetchHelpRequests();
         }
-
     }
+
 
     @Nullable
     @Override
@@ -244,14 +253,6 @@ public class RequestWallFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_request_wall, container, false);
     }
 
-    /**
-     * Initialize the ListView with helpRequest
-     */
-
-    private void initializeListView(final List<RequestHelp> helpList){
-
-
-    }
 
     private void handleAdapter(List<RequestHelp> requestsForHelp){
         if(requestsForHelp.size() !=0) {
@@ -321,13 +322,6 @@ public class RequestWallFragment extends Fragment {
     }
      */
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(!hidden){
-            FetchHelpRequests();
-        }
-    }
 
     /**@Override
     public void onHiddenChanged(boolean hidden) {

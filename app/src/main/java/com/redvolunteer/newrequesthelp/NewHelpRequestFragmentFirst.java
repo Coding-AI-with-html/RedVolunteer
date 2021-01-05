@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
@@ -26,7 +27,6 @@ public class NewHelpRequestFragmentFirst extends Fragment {
      * Activity Reference
      */
     private NewHelpRequestFragmentListener mListener;
-
 
     /**
      * Layout

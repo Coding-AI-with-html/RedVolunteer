@@ -40,7 +40,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
     /**
      * Numbers of HelRequest requested
      */
-    private static final int NUMBER_HELP_REQUESTED = 3;
+    private static final int NUMBER_HELP_REQUESTED = 20;
 
     /**
      * Coordinates of Kaunas
@@ -139,7 +139,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
     }
 
     @Override
-    public RequestLocation getUserLocation() {
+    public synchronized RequestLocation getUserLocation() {
 
         RequestLocation location = currentLocation;
 

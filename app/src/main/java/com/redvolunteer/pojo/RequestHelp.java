@@ -20,6 +20,7 @@ public class RequestHelp implements Comparable<RequestHelp> {
      */
     private User helpRequestCreator;
 
+
     /**
      * User ID of the admin
      */
@@ -61,7 +62,6 @@ public class RequestHelp implements Comparable<RequestHelp> {
     public void setRequestLocation(RequestLocation requestLocation) {
         this.requestLocation = requestLocation;
     }
-
     @Exclude
     public User getHelpRequestCreator() {
         return helpRequestCreator;
