@@ -188,7 +188,6 @@ public class RequestWallFragment extends Fragment {
                         @Override
                         public void onNext(List<RequestHelp> requestHelps) {
                             StopWhaitSpinner();
-                            Log.d(TAG, "onNext: " + requestHelps);
                             handleAdapter(requestHelps);
                         }
 
@@ -200,7 +199,6 @@ public class RequestWallFragment extends Fragment {
 
                         @Override
                         public void onComplete() {
-
                         }
                     });
 
@@ -256,8 +254,9 @@ public class RequestWallFragment extends Fragment {
 
     private void handleAdapter(List<RequestHelp> requestsForHelp){
         if(requestsForHelp.size() !=0) {
+            Log.d(TAG, "handleAdapter: " + requestsForHelp);
             retrievedRequests = requestsForHelp;
-            mUserRequestsList.setVisibility(View.VISIBLE);
+            mVolunteerListView.setVisibility(View.VISIBLE);
             mNoRequestShow.setVisibility(View.GONE);
             if(mAdapter == null){
                 mAdapter = new HelpRequestWallAdapter(retrievedRequests, getActivity());

@@ -74,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     public static final int REQUEST_CHECK_SETTINGS = 2;
 
     /**
-     * Location Manager, because GoogleApClient not working properly
-    */
-    //LocationManager locationManager;
-    /**
      * User View Model
      */
     private UserViewModel mUserViewModel;
@@ -130,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     private LinearLayout mMyRequestButtonPressed;
 
 
-    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -277,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 if (resultCode == RESULT_OK)
-                    enableGoogleApiClient();
+                    provideLocation();
                 else {
                     fragmentTransaction(WALL_FRAGMENT);
                     Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_LONG).show();
@@ -434,7 +429,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
                             RequestLocation loc = new RequestLocation();
                             loc.setLatitude(location.getLatitude());
                             loc.setLongitude(location.getLongitude());
-                            Log.d(TAG, "onSuccess: " + loc);
                             mHelpRequestViewModel.setLocation(loc);
                         }
 
@@ -475,9 +469,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
 
 
-
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -486,7 +477,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             case LOCATION_PERMISSION: {
                 if(grantResults.length > 0
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    //enableGoogleApiClient();
+                    enableGoogleApiClient();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_SHORT).show();
                 }
@@ -494,6 +485,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             }
         }
     }
+
 
 
 }

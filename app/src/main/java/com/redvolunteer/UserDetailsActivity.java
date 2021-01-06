@@ -119,7 +119,7 @@ public class UserDetailsActivity  extends AppCompatActivity {
      */
     private void bindActivityComponents(){
 
-        mUserPIc = (ImageView) findViewById(R.id.requestor_image);
+        mUserPIc = (ImageView) findViewById(R.id.retrieved_profile_user_pic);
         mUserName = (TextView) findViewById(R.id.retrieved_user_name);
         mUserSurname = (TextView) findViewById(R.id.retrieved_user_surname);
         mBirthDate = (TextView) findViewById(R.id.retrieved_birth_date);

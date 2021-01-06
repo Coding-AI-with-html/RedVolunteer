@@ -4,6 +4,7 @@ import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DistanceManagerlimp implements DistanceManager {
@@ -14,9 +15,9 @@ public class DistanceManagerlimp implements DistanceManager {
 
         List<RequestHelp> orderedList = new ArrayList<>();
         List<DistanceHolder> wrapped = this.getSortableList(center, requestHelpsToSort);
+        Collections.sort(wrapped);
 
-
-        for(DistanceHolder holder: wrapped){
+        for(DistanceHolder holder : wrapped){
 
             if(!(holder.distance > distanceKmFiller)){
                 orderedList.add(holder.requestHelp);

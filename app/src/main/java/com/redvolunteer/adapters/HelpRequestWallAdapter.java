@@ -2,6 +2,7 @@ package com.redvolunteer.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.List;
 * This Class is responsible to populate HelpRequest in the selected listView
  */
 public class HelpRequestWallAdapter extends BaseAdapter {
+    private static final String TAG = "HelpRequestWallAdapter";
 
     private List<RequestHelp> helpList;
     private Context context;
@@ -57,7 +59,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertedview, ViewGroup parent) {
 
-        if(convertedview ==null){
+        if(convertedview == null){
             convertedview = LayoutInflater.from(context).inflate(R.layout.mainview_help_request_list, parent, false);
         }
         HelpRequestViewHolder holder = (HelpRequestViewHolder) convertedview.getTag();
@@ -67,7 +69,6 @@ public class HelpRequestWallAdapter extends BaseAdapter {
         }
 
         final RequestHelp reqHelp = helpList.get(position);
-
         holder.mRequestTitle.setText(reqHelp.getName());
         holder.mReqLocation.setText(reqHelp.getRequestLocation().getName());
         //holder.mUserImage.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(reqHelp.getHelpRequestCreator().getPhoto()));
@@ -83,7 +84,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
             }
         };
 
-        holder.mUserImage.setOnClickListener(showUserClicked);
+        //holder.mUserImage.setOnClickListener(showUserClicked);
         holder.mRequestor.setOnClickListener(showUserClicked);
 
         return convertedview;
@@ -99,7 +100,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
         public HelpRequestViewHolder(View row) {
 
 
-            this.mUserImage = (ImageView) row.findViewById(R.id.requestor_image);
+            //this.mUserImage = (ImageView) row.findViewById(R.id.requestor_image);
             this.mRequestTitle = (TextView) row.findViewById(R.id.request_title);
             this.mReqLocation = (TextView) row.findViewById(R.id.request_location);
             this.mRequestor = (TextView) row.findViewById(R.id.request_creator);

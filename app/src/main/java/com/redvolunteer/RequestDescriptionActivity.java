@@ -54,6 +54,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
     private Subscription requestRetrieve;
 
 
+
     /**
      * View Components
      */

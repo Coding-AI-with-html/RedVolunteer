@@ -1,5 +1,7 @@
 package com.redvolunteer.dataModels;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -26,7 +28,7 @@ import io.reactivex.functions.Consumer;
 
 public class HelpRequestModellmpl implements RequestHelpModel {
 
-
+    private static final String TAG = "HelpRequestModellmpl";
     /**
      * Firebase
      */
@@ -143,9 +145,8 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
         RequestLocation location = currentLocation;
 
-        if(currentLocation == null){
+        if(currentLocation == null)
             location = KAUNAS_POSITION_CENTER;
-        }
         return location;
     }
 
@@ -159,7 +160,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
 
         @Override
-        public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> Flowemitter) throws Exception {
+        public void subscribe(final FlowableEmitter<List<RequestHelp>> Flowemitter) throws Exception {
             remoteRequestDao
                     .loadNewRequests(NUMBER_HELP_REQUESTED, anchorID)
                     .subscribe(new Consumer<List<RequestHelp>>() {
@@ -183,6 +184,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
                                     for(RequestHelp retrievedRequests: requestHelps){
                                         creatorIDs.add(retrievedRequests.getHelpRequestCreatorID());
+                                        Log.d(TAG, "accept: " + creatorIDs);
                                     }
 
 
