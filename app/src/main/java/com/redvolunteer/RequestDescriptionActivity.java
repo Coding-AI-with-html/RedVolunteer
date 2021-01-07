@@ -379,7 +379,7 @@ private void isLoggedUserIsVolunteer(){
             this.popupDialogProgress.dismiss();
         }
 
-        Context context;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
         builder.setMessage(R.string.error_message_download_resources)
                 .setCancelable(false)
@@ -400,7 +400,6 @@ private void isLoggedUserIsVolunteer(){
             this.popupDialogProgress.dismiss();
         }
 
-        Context context;
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setMessage(R.string.recconnecting_request)
                 .setCancelable(false)

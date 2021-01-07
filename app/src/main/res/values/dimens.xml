@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="loginbutton_height">55sp</dimen>
+    <dimen name="loginbutton_width">270sp</dimen>
+    <dimen name="main_default_margin">15dp</dimen>
+    <dimen name="mainview_bold_headline">13sp</dimen>
+    <dimen name="main_view_regular_headline">11sp</dimen>
+    <dimen name="mainview_bold_title">19sp</dimen>
+</resources>

@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
      */
     private UserViewModel mUserViewModel;
 
+    private FirebaseAuth mAuth;
     /**
      * Help Request View Model
      */
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         super.onCreate(savedInstanceState);
         mUserViewModel = getUserViewModel();
         mHelpRequestViewModel = getHelpRequestViewModel();
-
+        mAuth = FirebaseAuth.getInstance();
 
         if (!mUserViewModel.isAuth()) {
             signOut();
@@ -143,6 +144,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
 
         //find user location
         provideLocation();
+
 
     }
 

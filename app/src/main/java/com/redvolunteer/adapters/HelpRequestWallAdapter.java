@@ -10,6 +10,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.redvolunteer.R;
 import com.redvolunteer.UserDetailsActivity;
 import com.redvolunteer.pojo.RequestHelp;
@@ -58,6 +61,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertedview, ViewGroup parent) {
+
 
         if(convertedview == null){
             convertedview = LayoutInflater.from(context).inflate(R.layout.mainview_help_request_list, parent, false);

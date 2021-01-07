@@ -1,5 +1,12 @@
 package com.redvolunteer.dataModels;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.auth.Auth20Handler;
 import com.redvolunteer.utils.persistence.LocalUserDao;
@@ -15,6 +22,11 @@ import io.reactivex.functions.Consumer;
 public class UserModeAsynclmlp implements UserModel {
 
 
+    private DatabaseReference dataRef;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private String userID;
     private final LocalUserDao localUserDao;
 
     private Auth20Handler loginHandler;
@@ -57,6 +69,7 @@ public class UserModeAsynclmlp implements UserModel {
 
     @Override
     public User GetLocalUser() {
+
         return localUserDao.load();
     }
 

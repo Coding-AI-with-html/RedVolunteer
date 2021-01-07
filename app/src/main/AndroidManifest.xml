@@ -61,7 +61,6 @@
 
         <activity android:name=".newrequesthelp.NewRequestHelpActivity"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
             <meta-data
                 android:name="com.google.android.geo.API_KEY"

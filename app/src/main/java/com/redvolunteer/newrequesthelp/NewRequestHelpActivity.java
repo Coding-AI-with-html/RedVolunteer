@@ -7,6 +7,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -21,8 +25,12 @@ import java.util.LinkedList;
 public class NewRequestHelpActivity extends AppCompatActivity implements NewHelpRequestFragmentListener {
     private static final String TAG = "NewRequestHelpActivity";
 
-
-
+    private DatabaseReference dataRef;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private String userID;
+    private String userName;
     /**
      * Request being craited
      */
@@ -54,6 +62,7 @@ public class NewRequestHelpActivity extends AppCompatActivity implements NewHelp
         setContentView(R.layout.activity_new_help_request);
         MainViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
         mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
+
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -104,8 +113,11 @@ public class NewRequestHelpActivity extends AppCompatActivity implements NewHelp
 
     @Override
     public User getHelpRequestCreator() {
-        return mUserViewModel.retrieveCachedUser();
+
+       return mUserViewModel.retrieveCachedUser();
     }
+
+
 
     @Override
     public RequestLocation getHelpRequestCreatorLocation() {

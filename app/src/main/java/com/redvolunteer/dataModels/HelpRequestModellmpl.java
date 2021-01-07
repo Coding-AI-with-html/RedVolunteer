@@ -37,6 +37,8 @@ public class HelpRequestModellmpl implements RequestHelpModel {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private String userID;
+
+
     private static final int DISTANCE_FILTER = 10;
 
     /**

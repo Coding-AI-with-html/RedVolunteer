@@ -15,6 +15,8 @@ public interface LocalUserDao {
      */
     User load();
 
+
+
     /**
      * Deletes all local user infos
      */

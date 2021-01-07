@@ -81,6 +81,18 @@ public class RequestHelp implements Comparable<RequestHelp> {
     }
 
     @Override
+    public String toString() {
+        return "RequestHelp{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", requestLocation=" + requestLocation +
+                ", helpRequestCreator=" + helpRequestCreator +
+                ", helpRequestCreatorID='" + helpRequestCreatorID + '\'' +
+                '}';
+    }
+
+    @Override
     public int compareTo(RequestHelp requestHelp) {
         return 0;
     }
