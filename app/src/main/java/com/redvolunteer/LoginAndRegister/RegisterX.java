@@ -3,6 +3,7 @@ package com.redvolunteer.LoginAndRegister;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -75,6 +76,10 @@ public class RegisterX extends AppCompatActivity {
     private CallbackManager fbCallBackManager;
 
     /**
+     * Firebase authentication manager
+     */
+    private FirebaseAuth mAuth;
+    /**
      * Handle to register with WM
      */
     private UserViewModel mUserViewModel;
@@ -132,6 +137,7 @@ public class RegisterX extends AppCompatActivity {
 
         bindLayoutComponents();
     this.bindFacebookButton();
+
 
     }
 
@@ -387,7 +393,7 @@ public class RegisterX extends AppCompatActivity {
 
     private void bindFacebookButton(){
 
-        fbRegister = (Button) findViewById(R.id.facebook_register_btn);
+        fbRegister = (Button) findViewById(R.id.facebook_register_btn_help);
 
 
         LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookRegisterRequestCallBack());
@@ -429,6 +435,7 @@ public class RegisterX extends AppCompatActivity {
         @Override
         public void onError(FacebookException error) {
             stopSpinner();
+            Log.d(TAG, "onError: " + error);
             Toast.makeText(getApplicationContext(), R.string.facebook_login_error_string, Toast.LENGTH_LONG).show();
         }
     }

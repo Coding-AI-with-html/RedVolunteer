@@ -19,6 +19,7 @@ import com.redvolunteer.utils.persistence.sharedpreferencespersistence.LocalUser
 import com.redvolunteer.utils.persistence.sqlitelocalpersistence.LocalSQLiteRequestDao;
 import com.redvolunteer.utils.requestutils.DistanceManager;
 import com.redvolunteer.utils.requestutils.DistanceManagerlimp;
+import com.redvolunteer.utils.userhandling.DefaultUSerFiller;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.dataModels.RequestHelpModel;
@@ -40,7 +41,7 @@ public class RedVolunteerApplication extends Application {
 
         FirebaseApp.initializeApp(this);
 
-        RemoteUserDao remoteUserDao = new FirebaseUserDao(FirebaseDatabase.getInstance(), getString(R.string.database_all_users));
+        RemoteUserDao remoteUserDao = new FirebaseUserDao(FirebaseDatabase.getInstance(), getString(R.string.database_Help_seekers));
         RemoteRequestDao remoteRequestDao = new FirebaseHelpRequestDao(FirebaseDatabase.getInstance(), getString(R.string.firebase_request_store_name));
         Auth20Handler loginHandler = new Auth20FirebaseHandlerlmpl(FirebaseAuth.getInstance(), remoteUserDao);
 
@@ -48,6 +49,7 @@ public class RedVolunteerApplication extends Application {
         LocalRequestDao localRequestDao = new LocalSQLiteRequestDao(this);
 
         //Utilities
+        DefaultUSerFiller.getInstance().init(this);
         DistanceManager distanceManager = new DistanceManagerlimp();
         mUserModel = new UserModeAsynclmlp(localUserDao, loginHandler, remoteUserDao);
         mRequestHelpModel = new HelpRequestModellmpl(remoteRequestDao, remoteUserDao, mUserModel, localRequestDao, distanceManager);

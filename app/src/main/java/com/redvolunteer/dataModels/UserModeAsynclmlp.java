@@ -22,15 +22,18 @@ import io.reactivex.functions.Consumer;
 public class UserModeAsynclmlp implements UserModel {
 
 
-    private DatabaseReference dataRef;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase mFirebaseDatabase;
-    private String userID;
+    /**
+     * Dao to operates on the Users stored locally
+     */
     private final LocalUserDao localUserDao;
 
+    /**
+     * Login handler
+     */
     private Auth20Handler loginHandler;
-
+    /**
+     * Dao to operates on the Users stored on the remote database
+     */
     private final RemoteUserDao remoteUserStore;
 
 

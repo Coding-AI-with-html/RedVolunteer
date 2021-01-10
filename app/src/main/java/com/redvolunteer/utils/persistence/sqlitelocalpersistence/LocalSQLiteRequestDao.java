@@ -33,8 +33,8 @@ public class LocalSQLiteRequestDao implements LocalRequestDao {
      * Creation command for the table
      */
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE" +RequestEntry.TABLE_NAME + "(" +
-                    RequestEntry._ID + "INTEGER PRIMARY KEY AUNINCREMENT NOT NULL," +
+            "CREATE TABLE " +RequestEntry.TABLE_NAME + "(" +
+                    RequestEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                     RequestEntry.COLUMN_REQUEST_NAME + "TEXT," +
                     RequestEntry.COLUMN_DESCRIPTION + "TEXT," +
                     RequestEntry.COLUMN_LONGITUDE + "REAL," +
@@ -45,7 +45,7 @@ public class LocalSQLiteRequestDao implements LocalRequestDao {
      * DEletion command for the whole store
      */
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS" + RequestEntry.TABLE_NAME;
+            "DROP TABLE IF EXISTS " + RequestEntry.TABLE_NAME;
 
     /**
      * Columns required to retrieve the request
@@ -248,22 +248,5 @@ public class LocalSQLiteRequestDao implements LocalRequestDao {
             onUpgrade(sqLiteDatabase, oldVersion, newVersion);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

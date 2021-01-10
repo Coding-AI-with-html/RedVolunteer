@@ -2,7 +2,7 @@ package com.redvolunteer.pojo;
 
 import com.google.firebase.database.Exclude;
 
-public class RequestHelp implements Comparable<RequestHelp> {
+public class RequestHelp  {
 
     private String id;
 
@@ -18,9 +18,8 @@ public class RequestHelp implements Comparable<RequestHelp> {
     /**
      * User Who created help request
      */
+
     private User helpRequestCreator;
-
-
     /**
      * User ID of the admin
      */
@@ -90,10 +89,5 @@ public class RequestHelp implements Comparable<RequestHelp> {
                 ", helpRequestCreator=" + helpRequestCreator +
                 ", helpRequestCreatorID='" + helpRequestCreatorID + '\'' +
                 '}';
-    }
-
-    @Override
-    public int compareTo(RequestHelp requestHelp) {
-        return 0;
     }
 }

@@ -2,15 +2,19 @@ package com.redvolunteer.newrequesthelp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -20,17 +24,22 @@ import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
+
+import io.reactivex.Flowable;
 
 public class NewRequestHelpActivity extends AppCompatActivity implements NewHelpRequestFragmentListener {
     private static final String TAG = "NewRequestHelpActivity";
 
+
     private DatabaseReference dataRef;
     private FirebaseAuth mAuth;
+    private User userINfo;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
-    private String userID;
-    private String userName;
+    private Flowable<User> userID;
     /**
      * Request being craited
      */
@@ -114,10 +123,8 @@ public class NewRequestHelpActivity extends AppCompatActivity implements NewHelp
     @Override
     public User getHelpRequestCreator() {
 
-       return mUserViewModel.retrieveCachedUser();
+        return  mUserViewModel.retrieveCachedUser();
     }
-
-
 
     @Override
     public RequestLocation getHelpRequestCreatorLocation() {

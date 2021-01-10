@@ -263,7 +263,7 @@ prisiregistruokit"
             android:layout_height="146dp">
 
             <Button
-                android:id="@+id/facebook_register_btn"
+                android:id="@+id/facebook_register_btn_help"
                 android:layout_width="185dp"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -296,7 +296,7 @@ prisiregistruokit"
                 android:textAllCaps="false"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/facebook_register_btn"
+                app:layout_constraintEnd_toStartOf="@+id/facebook_register_btn_help"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

@@ -53,7 +53,7 @@ public class Auth20FirebaseHandlerlmpl implements Auth20Handler {
                             FireUSer.sendEmailVerification();
 
                             userLogged.setId(FireUSer.getUid());
-                            userLogged.setFullName(FireUSer.getDisplayName());
+                            userLogged.setName(FireUSer.getDisplayName());
                             userLogged.setEmail(FireUSer.getEmail());
 
                             userLogged = DefaultUSerFiller.getInstance().fillNEwUserWithDefaultsValues(userLogged);

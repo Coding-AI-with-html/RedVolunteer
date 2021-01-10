@@ -1,6 +1,6 @@
 package com.redvolunteer.pojo;
 
-import java.util.List;
+import java.time.LocalDate;
 
 /**
  * User pojo
@@ -13,12 +13,12 @@ public class User {
      */
     private String id;
 
-    private String fullName;
-    private String fullSurname;
-    private String email;
+    private String Name;
+    private String Surname;
+    private String Email;
     private String biography;
-    private long phone_number;
-    private String gender;
+    private long Phone_Number;
+    private String Gender;
 
     /**
      * Encoded user pic
@@ -29,12 +29,14 @@ public class User {
      * Birth date in the unix second format
      */
 
-    private long BirthDate;
+    private long BirthDay;
 
+    /**
+     * Constructor for creating new User
+     */
     /**
      * List of the ID's of the volunters who gonna help
      */
-
     public String getId() {
         return id;
     }
@@ -43,28 +45,28 @@ public class User {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getName() {
+        return Name;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setName(String name) {
+        Name = name;
     }
 
-    public String getFullSurname() {
-        return fullSurname;
+    public String getSurname() {
+        return Surname;
     }
 
-    public void setFullSurname(String fullSurname) {
-        this.fullSurname = fullSurname;
+    public void setSurname(String surname) {
+        Surname = surname;
     }
 
     public String getEmail() {
-        return email;
+        return Email;
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        Email = email;
     }
 
     public String getBiography() {
@@ -75,6 +77,22 @@ public class User {
         this.biography = biography;
     }
 
+    public long getPhone_Number() {
+        return Phone_Number;
+    }
+
+    public void setPhone_Number(long phone_Number) {
+        Phone_Number = phone_Number;
+    }
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        Gender = gender;
+    }
+
     public String getPhoto() {
         return photo;
     }
@@ -83,42 +101,26 @@ public class User {
         this.photo = photo;
     }
 
-    public long getBirthDate() {
-        return BirthDate;
+    public long getBirthDay() {
+        return BirthDay;
     }
 
-    public void setBirthDate(long birthDate) {
-        BirthDate = birthDate;
-    }
-
-    public long getPhone_number() {
-        return phone_number;
-    }
-
-    public void setPhone_number(long phone_number) {
-        this.phone_number = phone_number;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setBirthDay(long birthDay) {
+        BirthDay = birthDay;
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", fullSurname='" + fullSurname + '\'' +
-                ", email='" + email + '\'' +
+                ", Name='" + Name + '\'' +
+                ", Surname='" + Surname + '\'' +
+                ", Email='" + Email + '\'' +
                 ", biography='" + biography + '\'' +
-                ", phone_number=" + phone_number +
-                ", gender='" + gender + '\'' +
+                ", Phone_Number=" + Phone_Number +
+                ", Gender='" + Gender + '\'' +
                 ", photo='" + photo + '\'' +
-                ", BirthDate=" + BirthDate +
+                ", BirthDay=" + BirthDay +
                 '}';
     }
 }

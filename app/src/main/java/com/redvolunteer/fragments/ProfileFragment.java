@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment {
      * @param view
      * @param savedInstanceState
      */
-    private User mShowedUSer = new User();
+    private User mShowedUSer;
 
     /**
      * Layout components
@@ -156,9 +156,9 @@ public class ProfileFragment extends Fragment {
 
 
                 //copy the old info to perform rollback
-                tpmOldBiogaraphy = mShowedUSer.getBiography();
-                tmpOldBirthDate = mShowedUSer.getBirthDate();
-                tmpOldPicture = mShowedUSer.getPhoto();
+                //tpmOldBiogaraphy = mShowedUSer.getBiography();
+               // tmpOldBirthDate = mShowedUSer.getBirthDay();
+                //tmpOldPicture = mShowedUSer.getPhoto();
 
                 mUserPic.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -180,9 +180,9 @@ public class ProfileFragment extends Fragment {
 
                 resetInvisibleModificationComponents();
 
-                mShowedUSer.setBiography(tpmOldBiogaraphy);
-                mShowedUSer.setPhoto(tmpOldPicture);
-                mShowedUSer.setBirthDate(tmpOldBirthDate);
+                //mShowedUSer.setBiography(tpmOldBiogaraphy);
+                //mShowedUSer.setPhoto(tmpOldPicture);
+                //mShowedUSer.setBirthDay(tmpOldBirthDate);
 
                 //fillFragments();
 
@@ -208,7 +208,7 @@ public class ProfileFragment extends Fragment {
                         cal.set(Calendar.MONTH,month);
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                        mShowedUSer.setBirthDate(cal.getTime().getTime());
+                        //mShowedUSer.setBirthDay(cal.getTime().getTime());
 
                         //fillFragments();
                     }
@@ -234,7 +234,7 @@ public class ProfileFragment extends Fragment {
                     if (userBio.getText().toString().length() > 0) {
 
 
-                        mShowedUSer.setBiography(userBio.getText().toString());
+                        //mShowedUSer.setBiography(userBio.getText().toString());
                         mUserViewModel.UpdateUser(mShowedUSer);
                     } else {
                         Toast.makeText(getContext(), "You forgot your biography", Toast.LENGTH_LONG).show();
@@ -268,7 +268,8 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         this.mUserViewModel = mFragListener.getUserViewModel();
         //retrieve the user from the local store
-        //this.mHelpRequestViewModel = mFragListener.getHelpRequestViewModel();
+        mShowedUSer = mUserViewModel.retrieveCachedUser();
+        this.mHelpRequestViewModel = mFragListener.getHelpRequestViewModel();
 
     }
 
@@ -284,52 +285,22 @@ public class ProfileFragment extends Fragment {
      */
 
     private void fillFragments(){
+        if (mShowedUSer != null) {
+            //mUserPic.setImageBitmap(ImageBase64Marshaller.decodeBase64BitmapString(mShowedUSer.getPhoto()));
+            mUserName.setText(mShowedUSer.getName());
 
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Help_seekers));
-        if(mAuth.getCurrentUser() != null){
-            userID = mAuth.getCurrentUser().getUid();
+            // if the user has not specified his birth date
+            if (mShowedUSer.getBirthDay() == 0) {
+                mBirthDate.setText(R.string.alert_no_age);
+            } else {
+                mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDay()));
+            }
 
-            DatabaseReference userInfo = dataRef.child(userID);
-            userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    if(dataSnapshot.exists()){
-                        Log.d(TAG, "onDataChange: " + dataSnapshot);
-                        mUserName.setText(dataSnapshot.child("Name").getValue().toString());
-                        mUserSurname.setText(dataSnapshot.child("Surname").getValue().toString());
-                        mBirthDate.setText(dataSnapshot.child("BirthDay").getValue().toString());
-                    }
-                  else {
-                        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Volunteers));
-                        DatabaseReference userInfoProvider= dataRef.child(userID);
-                        userInfoProvider.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                mUserName.setText(snapshot.child("Name").getValue().toString());
-                                mUserSurname.setText(snapshot.child("Surname").getValue().toString());
-                                mBirthDate.setText(snapshot.child("BirthDay").getValue().toString());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
+            //mUserBio.setText(mShowedUser.getBiography());
+        } else {
+            Toast.makeText(getContext(), "Useris is equal to null", Toast.LENGTH_LONG).show();
         }
+
 
 
     }
@@ -395,7 +366,7 @@ public class ProfileFragment extends Fragment {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mUserPic.setImageBitmap(imageBitmap);
 
-            mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
+            //mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
 
         }
 

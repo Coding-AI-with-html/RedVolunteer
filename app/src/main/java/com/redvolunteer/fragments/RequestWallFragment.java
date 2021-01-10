@@ -55,7 +55,6 @@ public class RequestWallFragment extends Fragment {
      */
     private DatabaseReference dataRef;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mFirebaseDatabase;
     private String userID;
     /**
@@ -123,6 +122,7 @@ public class RequestWallFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         bind(view);
         super.onViewCreated(view, savedInstanceState);
+
 
     }
 
@@ -315,11 +315,11 @@ public class RequestWallFragment extends Fragment {
     }
 
 
-    /**
-    private void initiliazeListView(final List<RequestHelp> requestHelps){
+
+    private void initializeListView(final List<RequestHelp> requestHelps){
 
     }
-     */
+
 
 
     /**@Override

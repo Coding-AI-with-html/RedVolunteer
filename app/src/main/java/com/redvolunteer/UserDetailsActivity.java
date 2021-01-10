@@ -159,8 +159,8 @@ public class UserDetailsActivity  extends AppCompatActivity {
                 @SuppressLint("StringFormatMatches") String fillMailBody = String.format(
                         Locale.ENGLISH,
                         getString(R.string.message_mail_user),
-                        mRetrievedUser.getFullName(),
-                        mUserViewModel.retrieveCachedUser().getFullName());
+                        mRetrievedUser.getName(),
+                        mUserViewModel.retrieveCachedUser().getName());
                 emailIntent.putExtra(Intent.EXTRA_TEXT, fillMailBody);
 
                 try {
@@ -176,11 +176,11 @@ public class UserDetailsActivity  extends AppCompatActivity {
     }
     private void filLActivity(){
 
-        mUserPIc.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mRetrievedUser.getPhoto()));
-        mUserName.setText(mRetrievedUser.getFullName());
-        mUserSurname.setText(mRetrievedUser.getFullSurname());
-        mBirthDate.setText(CalendarFormatter.getDate(mRetrievedUser.getBirthDate()));
-        mUserBio.setText(mRetrievedUser.getBiography());
+        //mUserPIc.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mRetrievedUser.getPhoto()));
+        mUserName.setText(mRetrievedUser.getName());
+        mUserSurname.setText(mRetrievedUser.getSurname());
+       // mBirthDate.setText(CalendarFormatter.getDate(mRetrievedUser.getBirthDay()));
+        //mUserBio.setText(mRetrievedUser.getBiography());
     }
 
     @Override

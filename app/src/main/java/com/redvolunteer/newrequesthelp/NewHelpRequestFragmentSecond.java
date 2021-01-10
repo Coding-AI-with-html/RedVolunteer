@@ -25,13 +25,22 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
+import com.redvolunteer.pojo.User;
 import com.redvolunteer.viewmodels.UserViewModel;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,23 +54,25 @@ public class NewHelpRequestFragmentSecond extends Fragment {
      */
     private static final int PLACE_PICKER_REQUEST = 1;
 
+    private DatabaseReference dataRef;
     private FirebaseAuth mAuth;
-    /**
-     * Request check seetings
-     */
-    public static final int REQUEST_CHECK_SETTINGS = 2;
+    private FirebaseDatabase mFirebaseDatabase;
     /**
      * Location retrieved
      */
     private RequestLocation mRetrievedLocation;
+    /**
+     * User View MOdel
+     */
+    private UserViewModel mUserViewMODel;
 
+    Object UserCreator = new User();
 
     private NewHelpRequestFragmentListener mListener;
     /**
      * layout
      */
     private TextView mRequestLocationLabel;
-    private UserViewModel mUserViewModel;
     WifiManager wifiManager;
 
     /**
@@ -77,7 +88,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RequestLocation mUserLocation = mListener.getHelpRequestCreatorLocation();
-        this.mUserViewModel = ((RedVolunteerApplication) getActivity().getApplication()).getUserViewModel();
         wifiManager= (WifiManager) this.getContext().getSystemService(Context.WIFI_SERVICE);
     }
 
@@ -112,6 +122,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
         buttonFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 mAuth = mAuth.getInstance();
                 if(isFormFilled()){
                     String userUID = mAuth.getCurrentUser().getUid();
@@ -166,7 +177,9 @@ public class NewHelpRequestFragmentSecond extends Fragment {
             e.printStackTrace();
         }
 
+
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

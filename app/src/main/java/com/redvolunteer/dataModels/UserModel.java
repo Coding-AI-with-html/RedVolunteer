@@ -1,5 +1,6 @@
 package com.redvolunteer.dataModels;
 
+import com.google.firebase.database.DataSnapshot;
 import com.redvolunteer.pojo.User;
 
 import io.reactivex.Flowable;
