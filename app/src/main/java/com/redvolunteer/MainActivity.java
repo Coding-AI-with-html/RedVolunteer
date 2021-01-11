@@ -137,8 +137,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         super.onCreate(savedInstanceState);
         mUserViewModel = getUserViewModel();
         mHelpRequestViewModel = getHelpRequestViewModel();
-        mUserViewModelVolunteer = getUserViewModelVolunteer();
-        mHelpRequestViewModelVolunteer = getHelpRequestViewModelVolunteer();
 
         if (!mUserViewModel.isAuth()) {
             signOut();
@@ -313,35 +311,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         }
         return mHelpRequestViewModel;
     }
-
-    /**
-     * Volunteer View Model
-     * @return
-     */
-    @Override
-    public UserViewModel getUserViewModelVolunteer() {
-
-        if(mUserViewModelVolunteer == null){
-            mUserViewModelVolunteer = ((RedVolunteerApplication) getApplication()).getUserViewModelVolunteer();
-        }
-        return mUserViewModelVolunteer;
-    }
-
-    /**
-     * Volunteer  Help Request View Model
-     * @return
-     */
-    @Override
-    public HelpRequestViewModel getHelpRequestViewModelVolunteer() {
-        if(mHelpRequestViewModelVolunteer == null){
-            mHelpRequestViewModelVolunteer = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModelVolunteer();
-        }
-        return mHelpRequestViewModelVolunteer;
-    }
-
-    /**
-     * Modify top and bottom bar according to the wall fragments
-     */
 
     private void openWall() {
 

@@ -43,6 +43,8 @@ dependencies {
 
     //facebook
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    //Google Sign in
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
     //circular image
     implementation 'com.mikhaellopez:circularimageview:3.0.2'
     //rxandroid for data

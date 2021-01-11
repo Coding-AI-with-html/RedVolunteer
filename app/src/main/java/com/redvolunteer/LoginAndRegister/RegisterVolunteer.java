@@ -67,7 +67,7 @@ public class RegisterVolunteer extends AppCompatActivity {
     /**
      * Handle to register with WM
      */
-    private UserViewModel mUserViewModelVolunteer;
+    private UserViewModel mUserViewModel;
 
     /**
     Firebase
@@ -112,7 +112,7 @@ public class RegisterVolunteer extends AppCompatActivity {
         if(!NetworkCheker.getInstance().isNetworkAvailable(this)){
             Toast.makeText(RegisterVolunteer.this, RegisterVolunteer.this.getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
         }
-        this.mUserViewModelVolunteer = ((RedVolunteerApplication) getApplication()).getUserViewModelVolunteer();
+        this.mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
 
         setupFirebaseAuth();
         setupFacebookRegister();
@@ -402,7 +402,7 @@ public class RegisterVolunteer extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
 
-                            mUserViewModelVolunteer.retireveUSerFromRemoteStore().subscribe(new Consumer<User>() {
+                            mUserViewModel.retireveUSerFromRemoteStore().subscribe(new Consumer<User>() {
                                 @Override
                                 public void accept(User user) throws Exception {
                                     startMainActivity();
@@ -422,7 +422,7 @@ public class RegisterVolunteer extends AppCompatActivity {
 
         stopSpinner();
 
-        if(this.mUserViewModelVolunteer.isAuth()){
+        if(this.mUserViewModel.isAuth()){
             startActivity(new Intent(this, MainActivity.class));
 
         } else {

@@ -2,6 +2,7 @@ package com.redvolunteer.LoginAndRegister;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
@@ -33,6 +34,15 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.auth.api.signin.internal.GoogleSignInOptionsExtensionParcelable;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.Builder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -40,6 +50,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -65,15 +76,24 @@ public class RegisterX extends AppCompatActivity {
 
     private static final String TAG = "RegisterX";
 
+
+    /**
+     * For registering with google credentials
+     */
+    private static final int GOOGLE_REQ_LOGIN_CODE = 1;
     /**
      * Facebook register
      */
     private Button fbRegister;
 
+    private Button GoogleRegister;
+
     /**
      * Handle callback
      */
     private CallbackManager fbCallBackManager;
+
+    private GoogleApiClient mGoogleApiClient;
 
     /**
      * Firebase authentication manager
@@ -84,7 +104,6 @@ public class RegisterX extends AppCompatActivity {
      */
     private UserViewModel mUserViewModel;
     //firebase
-    private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase Fdata;
     private DatabaseReference DataRefs;
 
@@ -130,12 +149,14 @@ public class RegisterX extends AppCompatActivity {
 
         setupFacebookRegister();
         setupFirebaseAuth();
+        setupGoogleLogin();
 
     setContentView(R.layout.register_helpseeker);
 
 
         bindLayoutComponents();
     this.bindFacebookButton();
+    this.BindGoogleButton();
 
 
     }
@@ -154,11 +175,10 @@ public class RegisterX extends AppCompatActivity {
         phoneNumber =(EditText) findViewById(R.id.registerX_phone);
         register = (Button) findViewById(R.id.register_helpseeker);
         login = (Button) findViewById(R.id.go_to_login);
-        addVolunter = (Button) findViewById(R.id.register_volunteer);
         progBar = (ProgressBar) findViewById(R.id.helpseeker_register_progressbar);
 
         final Spinner spinner =(Spinner) findViewById(R.id.registerX_gender);
-                //gender selector
+        //gender selector
         String[] genders = new String[]{
                 "Pasirinkite lyti",
                 "Vyras",
@@ -221,12 +241,6 @@ public class RegisterX extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
-        addVolunter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), RegisterVolunteer.class));
-            }
-        });
         mBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -268,7 +282,7 @@ public class RegisterX extends AppCompatActivity {
     }
 
     private void setupFirebaseAuth(){
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     /**
@@ -327,7 +341,7 @@ public class RegisterX extends AppCompatActivity {
 
                 DataRefs = Fdata.getReference();
 
-                mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+                mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(RegisterX.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -339,7 +353,7 @@ public class RegisterX extends AppCompatActivity {
                                 } else {
 
                                     progBar.setVisibility(View.GONE);
-                                    String userUID = mFirebaseAuth.getCurrentUser().getUid();
+                                    String userUID = mAuth.getCurrentUser().getUid();
 
                                     DataRefs.child("Help_Seekers").child(userUID).child(userUID.toString()).push();
 
@@ -365,19 +379,6 @@ public class RegisterX extends AppCompatActivity {
                         });
             }
 
-            private boolean checkIfUserAlreadyExist(String email, DataSnapshot dataSnapshot){
-
-        String userUID = mFirebaseAuth.getCurrentUser().getUid();
-        User user = new User();
-        userUID = mFirebaseAuth.getCurrentUser().getUid();
-        for(DataSnapshot ds: dataSnapshot.child(userUID).getChildren()){
-            user.setEmail(ds.getValue(User.class).getEmail());
-            if(user.getEmail().equals(email))
-                return true;
-        }
-        return false;
-    }
-
 
 
 
@@ -389,6 +390,8 @@ public class RegisterX extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         fbCallBackManager  = CallbackManager.Factory.create();
     }
+
+
 
     private void bindFacebookButton(){
 
@@ -415,6 +418,58 @@ public class RegisterX extends AppCompatActivity {
             }
         });
     }
+    private void setupGoogleLogin(){
+
+        GoogleSignInOptions Goptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        Context context;
+        Api api;
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                        Toast.makeText(RegisterX.this,
+                                "Prisijunkite prie interneto!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, Goptions)
+                .build();
+    }
+
+    private void BindGoogleButton(){
+
+        GoogleRegister = (Button) findViewById(R.id.google_login_btn);
+
+        GoogleRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+
+                if(NetworkCheker.getInstance().isNetworkAvailable(getApplicationContext())){
+                    Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                    startActivityForResult(signInIntent, GOOGLE_REQ_LOGIN_CODE);
+                } else {
+                    showNoInternetConnectionToast();
+                }
+            }
+        });
+
+
+
+    }
+
+    private void handleGoogleAccesTokenForFireBase(GoogleSignInAccount Googleaccount){
+        AuthCredential authCredential = GoogleAuthProvider.getCredential(Googleaccount.getIdToken(), null);
+        buildFirebaseUser(authCredential);
+    }
+
 
 
     private class FacebookRegisterRequestCallBack implements FacebookCallback<LoginResult> {
@@ -445,9 +500,21 @@ public class RegisterX extends AppCompatActivity {
         buildFirebaseUser(credential);
     }
 
+    private void googleLoginResultHandling(GoogleSignInResult resultGoogle){
+
+
+        if(resultGoogle.isSuccess()){
+            handleGoogleAccesTokenForFireBase(resultGoogle.getSignInAccount());
+        }
+         else {
+             stopSpinner();
+            Toast.makeText(this, R.string.facebook_login_error_string, Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void buildFirebaseUser(final AuthCredential credential){
 
-        mFirebaseAuth.signInWithCredential(credential)
+        mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -467,6 +534,21 @@ public class RegisterX extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        showWhaitSpinner();
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == GOOGLE_REQ_LOGIN_CODE) {
+            GoogleSignInResult GoogleRes = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            googleLoginResultHandling(GoogleRes);
+        } else {
+            // facebook request has NO USER DEFINED CODEs
+            fbCallBackManager.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void startMainActivity(){
@@ -501,13 +583,5 @@ public class RegisterX extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), R.string.no_internet_popup_label, Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        showWhaitSpinner();
-        super.onActivityResult(requestCode, resultCode, data);
-        // facebook request has NO USER DEFINED CODEs
-        fbCallBackManager.onActivityResult(requestCode, resultCode, data);
-    }
 
 }

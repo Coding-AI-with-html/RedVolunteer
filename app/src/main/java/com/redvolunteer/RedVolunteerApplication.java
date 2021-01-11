@@ -30,8 +30,8 @@ public class RedVolunteerApplication extends Application {
     /**
      * Handlers of the low level
      */
-    private UserModel mUserModel,mUserModelVol;
-    private RequestHelpModel mRequestHelpModel, RequestHelpModelVolunteer;
+    private UserModel mUserModel;
+    private RequestHelpModel mRequestHelpModel;
 
 
     @Override
@@ -42,10 +42,8 @@ public class RedVolunteerApplication extends Application {
         FirebaseApp.initializeApp(this);
 
         RemoteUserDao remoteUserDao = new FirebaseUserDao(FirebaseDatabase.getInstance(), getString(R.string.database_Help_seekers));
-        RemoteUserDao remoteUserVolunteer = new FirebaseUserDao(FirebaseDatabase.getInstance(), getString(R.string.database_Volunteers));
         RemoteRequestDao remoteRequestDao = new FirebaseHelpRequestDao(FirebaseDatabase.getInstance(), getString(R.string.firebase_request_store_name));
         Auth20Handler loginHandler = new Auth20FirebaseHandlerlmpl(FirebaseAuth.getInstance(), remoteUserDao);
-        Auth20Handler loginHandlerVol = new Auth20FirebaseHandlerlmpl(FirebaseAuth.getInstance(), remoteUserVolunteer);
 
         LocalUserDao localUserDao = new LocalUserDaolmpl(this);
         LocalRequestDao localRequestDao = new LocalSQLiteRequestDao(this);
@@ -54,9 +52,7 @@ public class RedVolunteerApplication extends Application {
         DefaultUSerFiller.getInstance().init(this);
         DistanceManager distanceManager = new DistanceManagerlimp();
         mUserModel = new UserModeAsynclmlp(localUserDao, loginHandler, remoteUserDao);
-        mUserModelVol = new UserModeAsynclmlp(localUserDao, loginHandlerVol, remoteUserVolunteer);
         mRequestHelpModel = new HelpRequestModellmpl(remoteRequestDao, remoteUserDao, mUserModel, localRequestDao, distanceManager);
-        RequestHelpModelVolunteer = new HelpRequestModellmpl(remoteRequestDao, remoteUserVolunteer, mUserModelVol, localRequestDao, distanceManager);
     }
 
 
@@ -70,10 +66,6 @@ public class RedVolunteerApplication extends Application {
     /**
      * Retrieve the user ViewModelVolunterr pf system
      */
-    public UserViewModel getUserViewModelVolunteer(){
-        return new UserViewModel(getmUserModelVol());
-    }
-
 
     /**
      * USer Model getter
@@ -83,22 +75,12 @@ public class RedVolunteerApplication extends Application {
         return mUserModel;
     }
 
-    private UserModel getmUserModelVol(){
-        return mUserModelVol;
-    }
-
     /**
      * Retrieve Help Request ViewModel on the system
      */
 
     public HelpRequestViewModel getHelpRequestViewModel(){
         return  new HelpRequestViewModel(getHelpRequestModel());
-    }
-    /**
-     * Retrieve Help Request ViewModel
-     */
-    public HelpRequestViewModel getHelpRequestViewModelVolunteer(){
-        return new HelpRequestViewModel(getRequestHelpModelVolunteer());
     }
 
     /**
@@ -108,8 +90,5 @@ public class RedVolunteerApplication extends Application {
         return mRequestHelpModel;
     }
 
-    private RequestHelpModel getRequestHelpModelVolunteer(){
-        return RequestHelpModelVolunteer;
-    }
 
 }
