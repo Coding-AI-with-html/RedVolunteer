@@ -87,7 +87,6 @@ public class RegisterX extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabase Fdata;
     private DatabaseReference DataRefs;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     /**
      * Checking inputs

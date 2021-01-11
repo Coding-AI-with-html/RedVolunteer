@@ -82,17 +82,12 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     /**
      * User View Model
      */
-    private UserViewModel mUserViewModel;
+    private UserViewModel mUserViewModel, mUserViewModelVolunteer;
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference dataRef;
-    private FirebaseDatabase mFirebaseDatabase;
-    private String userID;
-    private ValidateUtils utils;
     /**
      * Help Request View Model
      */
-    private HelpRequestViewModel mHelpRequestViewModel;
+    private HelpRequestViewModel mHelpRequestViewModel,mHelpRequestViewModelVolunteer;
 
     /**
      * Help request who created user fragment
@@ -142,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         super.onCreate(savedInstanceState);
         mUserViewModel = getUserViewModel();
         mHelpRequestViewModel = getHelpRequestViewModel();
-        mAuth = FirebaseAuth.getInstance();
+        mUserViewModelVolunteer = getUserViewModelVolunteer();
+        mHelpRequestViewModelVolunteer = getHelpRequestViewModelVolunteer();
 
         if (!mUserViewModel.isAuth()) {
             signOut();
@@ -252,23 +248,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         //super.onSaveInstanceState(savedInstanceState);
     }
-    private void getUserInfo(){
-        userID = mAuth.getCurrentUser().getUid();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Help_seekers));
-        DatabaseReference mUserInfo = dataRef.child(userID);
-        mUserInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -318,7 +297,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         mUserViewModel.signOut();
         Intent intent = new Intent(MainActivity.this, Login.class);
         startActivity(intent);
-
     }
 
     @Override
@@ -326,15 +304,39 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         if(this.mUserViewModel == null)
             mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
         return mUserViewModel;
-
-
     }
+
     @Override
     public HelpRequestViewModel getHelpRequestViewModel(){
         if(mHelpRequestViewModel == null){
             mHelpRequestViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
         }
         return mHelpRequestViewModel;
+    }
+
+    /**
+     * Volunteer View Model
+     * @return
+     */
+    @Override
+    public UserViewModel getUserViewModelVolunteer() {
+
+        if(mUserViewModelVolunteer == null){
+            mUserViewModelVolunteer = ((RedVolunteerApplication) getApplication()).getUserViewModelVolunteer();
+        }
+        return mUserViewModelVolunteer;
+    }
+
+    /**
+     * Volunteer  Help Request View Model
+     * @return
+     */
+    @Override
+    public HelpRequestViewModel getHelpRequestViewModelVolunteer() {
+        if(mHelpRequestViewModelVolunteer == null){
+            mHelpRequestViewModelVolunteer = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModelVolunteer();
+        }
+        return mHelpRequestViewModelVolunteer;
     }
 
     /**

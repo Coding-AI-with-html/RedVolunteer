@@ -132,7 +132,6 @@ public class ProfileFragment extends Fragment {
 
         mUserPic = (ImageView) view.findViewById(R.id.profile_user_pic);
         mUserName = (TextView) view.findViewById(R.id.user_name);
-        mUserSurname = (TextView) view.findViewById(R.id.user_nameSurname);
          mBirthDate = (TextView) view.findViewById(R.id.birth_date);
         userBio = (EditText) view.findViewById(R.id.user_bio);
         mEditButton = (ImageView) view.findViewById(R.id.edit_profile_button);
@@ -156,9 +155,9 @@ public class ProfileFragment extends Fragment {
 
 
                 //copy the old info to perform rollback
-                //tpmOldBiogaraphy = mShowedUSer.getBiography();
-               // tmpOldBirthDate = mShowedUSer.getBirthDay();
-                //tmpOldPicture = mShowedUSer.getPhoto();
+                tpmOldBiogaraphy = mShowedUSer.getBiography();
+               tmpOldBirthDate = mShowedUSer.getBirthDay();
+                tmpOldPicture = mShowedUSer.getPhoto();
 
                 mUserPic.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -180,11 +179,11 @@ public class ProfileFragment extends Fragment {
 
                 resetInvisibleModificationComponents();
 
-                //mShowedUSer.setBiography(tpmOldBiogaraphy);
-                //mShowedUSer.setPhoto(tmpOldPicture);
-                //mShowedUSer.setBirthDay(tmpOldBirthDate);
+                mShowedUSer.setBiography(tpmOldBiogaraphy);
+                mShowedUSer.setPhoto(tmpOldPicture);
+                mShowedUSer.setBirthDay(tmpOldBirthDate);
 
-                //fillFragments();
+                fillFragments();
 
 
             }
@@ -208,9 +207,9 @@ public class ProfileFragment extends Fragment {
                         cal.set(Calendar.MONTH,month);
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                        //mShowedUSer.setBirthDay(cal.getTime().getTime());
+                        mShowedUSer.setBirthDay(cal.getTime().getTime());
 
-                        //fillFragments();
+                        fillFragments();
                     }
                 },   cal
                 .get(Calendar.YEAR), cal.get(Calendar.MONTH),
@@ -234,7 +233,7 @@ public class ProfileFragment extends Fragment {
                     if (userBio.getText().toString().length() > 0) {
 
 
-                        //mShowedUSer.setBiography(userBio.getText().toString());
+                        mShowedUSer.setBiography(userBio.getText().toString());
                         mUserViewModel.UpdateUser(mShowedUSer);
                     } else {
                         Toast.makeText(getContext(), "You forgot your biography", Toast.LENGTH_LONG).show();
@@ -286,7 +285,7 @@ public class ProfileFragment extends Fragment {
 
     private void fillFragments(){
         if (mShowedUSer != null) {
-            //mUserPic.setImageBitmap(ImageBase64Marshaller.decodeBase64BitmapString(mShowedUSer.getPhoto()));
+            //mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
             mUserName.setText(mShowedUSer.getName());
 
             // if the user has not specified his birth date
@@ -296,9 +295,7 @@ public class ProfileFragment extends Fragment {
                 mBirthDate.setText(CalendarFormatter.getDate(mShowedUSer.getBirthDay()));
             }
 
-            //mUserBio.setText(mShowedUser.getBiography());
-        } else {
-            Toast.makeText(getContext(), "Useris is equal to null", Toast.LENGTH_LONG).show();
+            userBio.setText(mShowedUSer.getBiography());
         }
 
 
@@ -366,7 +363,7 @@ public class ProfileFragment extends Fragment {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mUserPic.setImageBitmap(imageBitmap);
 
-            //mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
+            mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
 
         }
 
@@ -379,9 +376,6 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
     }
-
-
-
 
 }
 

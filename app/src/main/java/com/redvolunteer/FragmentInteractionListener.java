@@ -13,4 +13,12 @@ public interface FragmentInteractionListener {
 
     HelpRequestViewModel getHelpRequestViewModel();
 
+    /**
+     * Volunteer View Model getter
+    */
+    UserViewModel getUserViewModelVolunteer();
+
+
+    HelpRequestViewModel getHelpRequestViewModelVolunteer();
+
 }

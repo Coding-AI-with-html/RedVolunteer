@@ -112,10 +112,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
         return Flowable.create(new FlowableOnSubscribe<List<RequestHelp>>() {
             @Override
             public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> FlowEmitter) throws Exception {
-                mAuth = FirebaseAuth.getInstance();
-                mFirebaseDatabase = FirebaseDatabase.getInstance();
-                dataRef = mFirebaseDatabase.getReference(String.valueOf(R.string.database_Help_seekers));
-                userID = mAuth.getCurrentUser().getUid();
+
 
                 remoteRequestDao
                         .loadRequestByAdmin(userID)

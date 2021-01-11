@@ -67,7 +67,7 @@ public class RegisterVolunteer extends AppCompatActivity {
     /**
      * Handle to register with WM
      */
-    private UserViewModel mUserViewModel;
+    private UserViewModel mUserViewModelVolunteer;
 
     /**
     Firebase
@@ -112,14 +112,16 @@ public class RegisterVolunteer extends AppCompatActivity {
         if(!NetworkCheker.getInstance().isNetworkAvailable(this)){
             Toast.makeText(RegisterVolunteer.this, RegisterVolunteer.this.getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
         }
-        this.mUserViewModel = ((RedVolunteerApplication) getApplicationContext()).getUserViewModel();
+        this.mUserViewModelVolunteer = ((RedVolunteerApplication) getApplication()).getUserViewModelVolunteer();
 
         setupFirebaseAuth();
+        setupFacebookRegister();
+
         setContentView(R.layout.register_volunteer);
 
 
         bindLayoutComponents();
-        //this.bindFacebookButton();
+        this.bindFacebookButton();
     }
 
     private void bindLayoutComponents(){
@@ -256,14 +258,31 @@ public class RegisterVolunteer extends AppCompatActivity {
         fbCallBackManager  = CallbackManager.Factory.create();
     }
 
-    /**private void bindFacebookButton(){
+   private void bindFacebookButton(){
 
-        fbRegister = (Button) findViewById(R.id.facebook_register_btnSecond);
-
+        fbRegister = (Button) findViewById(R.id.facebook_register_btn);
 
         LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookRegisterRequestCallBack());
+
+
+       fbRegister.setOnClickListener(new View.OnClickListener() {
+
+           final List<String> requestPermissions = Arrays.asList(
+                   "public_profile",
+                   "email"
+           );
+
+           @Override
+           public void onClick(View view) {
+
+               if(NetworkCheker.getInstance().isNetworkAvailable(getApplicationContext())){
+                   LoginManager.getInstance().logInWithReadPermissions(RegisterVolunteer.this, requestPermissions);
+               } else {
+                   ShowNoInternetConnectionToast();
+               }
+           }
+       });
     }
-     */
 
     private void RegisterNewVolunteer(){
 
@@ -365,6 +384,7 @@ public class RegisterVolunteer extends AppCompatActivity {
         public void onError(FacebookException error) {
             stopSpinner();
             Toast.makeText(getApplicationContext(), R.string.facebook_login_error_string, Toast.LENGTH_LONG).show();
+            Log.d(TAG, "onError: " + error);
         }
     }
 
@@ -382,7 +402,7 @@ public class RegisterVolunteer extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
 
-                            mUserViewModel.retireveUSerFromRemoteStore().subscribe(new Consumer<User>() {
+                            mUserViewModelVolunteer.retireveUSerFromRemoteStore().subscribe(new Consumer<User>() {
                                 @Override
                                 public void accept(User user) throws Exception {
                                     startMainActivity();
@@ -397,11 +417,12 @@ public class RegisterVolunteer extends AppCompatActivity {
 
     }
 
+
     private void startMainActivity(){
 
         stopSpinner();
 
-        if(this.mUserViewModel.isAuth()){
+        if(this.mUserViewModelVolunteer.isAuth()){
             startActivity(new Intent(this, MainActivity.class));
 
         } else {
@@ -427,5 +448,13 @@ public class RegisterVolunteer extends AppCompatActivity {
         stopSpinner();
 
         Toast.makeText(getApplicationContext(), R.string.no_internet_popup_label, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        showWhaitSpinner();
+        super.onActivityResult(requestCode, resultCode, data);
+
+        fbCallBackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
