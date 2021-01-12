@@ -46,18 +46,10 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"/>
 
-        <activity android:name=".LoginAndRegister.RegisterVolunteer"
-            android:theme="@style/Theme.MaterialComponents.DayNight"
-            android:screenOrientation="portrait"/>
-
         <activity android:name=".LoginAndRegister.Login"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
 
-
-        <activity android:name=".LoginAndRegister.RegisterX"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
 
         <activity android:name=".newrequesthelp.NewRequestHelpActivity"
             android:screenOrientation="portrait"

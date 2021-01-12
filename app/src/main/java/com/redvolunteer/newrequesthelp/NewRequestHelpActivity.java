@@ -34,12 +34,6 @@ public class NewRequestHelpActivity extends AppCompatActivity implements NewHelp
     private static final String TAG = "NewRequestHelpActivity";
 
 
-    private DatabaseReference dataRef;
-    private FirebaseAuth mAuth;
-    private User userINfo;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase mFirebaseDatabase;
-    private Flowable<User> userID;
     /**
      * Request being craited
      */

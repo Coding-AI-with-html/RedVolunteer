@@ -155,6 +155,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
         return remoteRequestDao.LoadRequestById(requestID);
     }
 
+
     private class FillRequestDetails implements FlowableOnSubscribe<List<RequestHelp>> {
 
 
@@ -183,8 +184,22 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
                                     for(RequestHelp retrievedRequests: requestHelps){
                                         creatorIDs.add(retrievedRequests.getHelpRequestCreatorID());
-                                        Log.d(TAG, "accept: " + creatorIDs);
+
                                     }
+
+
+                                    List<RequestHelp> finalRequestHelps = requestHelps;
+                                    remoteUserDao.loadByIds(creatorIDs).subscribe(new Consumer<Map<String, User>>() {
+                                        @Override
+                                        public void accept(Map< String, User> stringUserMap) throws Exception {
+
+                                            for (RequestHelp retrievedRequestHelps: finalRequestHelps) {
+                                                retrievedRequestHelps.setHelpRequestCreator(stringUserMap.get(retrievedRequestHelps.getHelpRequestCreatorID()));
+                                            }
+
+                                            Flowemitter.onNext(finalRequestHelps);
+                                        }
+                                    });
 
 
 

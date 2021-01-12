@@ -76,7 +76,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
         holder.mRequestTitle.setText(reqHelp.getName());
         holder.mReqLocation.setText(reqHelp.getRequestLocation().getName());
         //holder.mUserImage.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(reqHelp.getHelpRequestCreator().getPhoto()));
-        //holder.mRequestor.setText(reqHelp.getHelpRequestCreator().getName());
+        holder.mRequestor.setText(reqHelp.getHelpRequestCreator().getName());
 
         View.OnClickListener showUserClicked = new View.OnClickListener() {
             @Override

@@ -89,64 +89,10 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login_activity);
 
         this.bindFacebookButton();
-        bindLoginComponents();
     }
 
-    private void bindLoginComponents(){
-        mEmail = (EditText) findViewById(R.id.LoginEmailAddress);
-        mPassword = (EditText) findViewById(R.id.PasswordLogin);
-        mProgBar = (ProgressBar) findViewById(R.id.ProgBar);
-
-        mProgBar.setVisibility(View.GONE);
-
-        Button mLoginBtn = (Button) findViewById(R.id.btnLogin);
-        mLoginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String email = mEmail.getText().toString();
-                String password = mPassword.getText().toString();
-
-                if(email.equals("") && password.equals("")){
-                    Toast.makeText(getApplicationContext(), "Slaptazodis arba e-pastas neirasytas!", Toast.LENGTH_SHORT).show();
-                } else {
-                    mProgBar.setVisibility(View.VISIBLE);
-                    mAuth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    FirebaseUser Fuser = mAuth.getCurrentUser();
-
-                                    if(task.isSuccessful()){
-                                        try {
-                                            startActivity(new Intent(Login.this, MainActivity.class));
-                                            finish();
-
-                                        } catch (Exception e){
-                                            Log.d(TAG, "onComplete: NullPointerException" + e.getMessage());
-                                        }
-                                    } else {
-                                        Log.d(TAG, "onComplete: failure" + task.getException());
-                                        Toast.makeText(Login.this, "Slaptazodis arba e-pastas netinka!", Toast.LENGTH_SHORT).show();
-                                        mProgBar.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
-
-                }
-            }
-        });
-       TextView  mRegisterTextView = (TextView) findViewById(R.id.go_to_register_helpseeker);
-        mRegisterTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent inttent = new Intent(Login.this, RegisterX.class);
-                startActivity(inttent);
-            }
-        });
 
 
-    }
 
     private void setupFirebaseAuth(){
         //Initialiazing Firebase authenticator;

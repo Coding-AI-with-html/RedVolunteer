@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     /**
      * User View Model
      */
-    private UserViewModel mUserViewModel, mUserViewModelVolunteer;
+    private UserViewModel mUserViewModel;
 
     /**
      * Help Request View Model
      */
-    private HelpRequestViewModel mHelpRequestViewModel,mHelpRequestViewModelVolunteer;
+    private HelpRequestViewModel mHelpRequestViewModel;
 
     /**
      * Help request who created user fragment

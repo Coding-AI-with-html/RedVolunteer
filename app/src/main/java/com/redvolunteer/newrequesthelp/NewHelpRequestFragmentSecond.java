@@ -66,7 +66,6 @@ public class NewHelpRequestFragmentSecond extends Fragment {
      */
     private UserViewModel mUserViewMODel;
 
-    Object UserCreator = new User();
 
     private NewHelpRequestFragmentListener mListener;
     /**
@@ -88,6 +87,7 @@ public class NewHelpRequestFragmentSecond extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RequestLocation mUserLocation = mListener.getHelpRequestCreatorLocation();
+        mUserViewMODel = ((RedVolunteerApplication) getActivity().getApplication()).getUserViewModel();
         wifiManager= (WifiManager) this.getContext().getSystemService(Context.WIFI_SERVICE);
     }
 
@@ -123,11 +123,9 @@ public class NewHelpRequestFragmentSecond extends Fragment {
             @Override
             public void onClick(View view) {
 
-                mAuth = mAuth.getInstance();
                 if(isFormFilled()){
-                    String userUID = mAuth.getCurrentUser().getUid();
                     RequestHelp requestHelp = mListener.getHelpRequest();
-                    requestHelp.setHelpRequestCreatorID(userUID);
+                    requestHelp.setHelpRequestCreatorID(mUserViewMODel.retrieveCachedUser().getId());
                     requestHelp.setRequestLocation(mRetrievedLocation);
 
                     mListener.finish(requestHelp);
