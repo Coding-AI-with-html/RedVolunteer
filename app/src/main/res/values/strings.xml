@@ -8,6 +8,7 @@
     <string name="ok_button">Gerai</string>
     <string name="no_request_around_label">Sorry, it seems that there are no events around!</string>
     <string name="add_request_suggestion_label">Press + to add one</string>
+    <string name="your_requests_title">Jusu prasymo uzklausos</string>
     <string name="recconnecting_request">No internet connection. Once reconnected it could take a while to recontact the server</string>
     <string name="description_input_label">Type a description about what help you need!</string>
     <string name="type_here_hint">Type here!</string>

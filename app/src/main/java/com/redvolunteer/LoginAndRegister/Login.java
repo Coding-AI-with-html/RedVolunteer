@@ -64,12 +64,6 @@ public class Login extends AppCompatActivity {
      */
     private ProgressDialog popupProgDialog;
 
-    /**
-     * Login layout
-     **/
-    private EditText mEmail, mPassword;
-    private ProgressBar mProgBar;
-
 
 
     @Override

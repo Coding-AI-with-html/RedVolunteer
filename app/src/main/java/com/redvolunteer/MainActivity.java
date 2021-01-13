@@ -42,6 +42,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.redvolunteer.fragments.UserRequestFragment;
 import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.ValidateUtils;
@@ -98,6 +99,10 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
      */
     private UserMessageFragment myMessageFragment = new UserMessageFragment();
 
+    /***
+     * User Created RequestsHelps
+     */
+    private UserRequestFragment myRequestFragment = new UserRequestFragment();
     /**
      * Profile fragment
      */
@@ -117,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
      * contants used to handle fragments
      */
     public static final String WALL_FRAGMENT = "main";
-    public static final String MESSAGES_FRAGMENT = "requests";
+    public static final String MESSAGES_FRAGMENT = "messages";
+    public static final String MY_REQUEST_FRAGMENT = "requests";
     public static final String PROFILE_FRAGMENT = "profile";
 
     /**
@@ -128,8 +134,10 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
     private LinearLayout mWallButton;
     private LinearLayout mProfileButton;
     private LinearLayout mProfileButtonPressed;
-    private LinearLayout mMyRequestButton;
-    private LinearLayout mMyRequestButtonPressed;
+    private LinearLayout mMyMessagesButton;
+    private LinearLayout mMyMessagesButtonPressed;
+    private LinearLayout mMyRequestsButton;
+    private LinearLayout mMyRequestsButtonPressed;
 
 
     @Override
@@ -142,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             signOut();
         }
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: Started main Activity");
         bindLayoutComponents();
         setFragments();
 
@@ -157,8 +164,10 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         mWallButton = (LinearLayout) findViewById(R.id.button_wall_not_pressed);
         mProfileButton = (LinearLayout) findViewById(R.id.profile_button_not_pressed);
         mProfileButtonPressed = (LinearLayout) findViewById(R.id.profile_button_pressed);
-        mMyRequestButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
-        mMyRequestButtonPressed = (LinearLayout) findViewById(R.id.myrequest_button_pressed);
+        mMyMessagesButton = (LinearLayout) findViewById(R.id.mymessages_button_not_pressed);
+        mMyMessagesButtonPressed = (LinearLayout) findViewById(R.id.mymessages_button_pressed);
+         mMyRequestsButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
+         mMyRequestsButtonPressed = (LinearLayout) findViewById(R.id.myrequests_button_pressed);
 
         mWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,10 +183,16 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             }
         });
 
-        mMyRequestButton.setOnClickListener(new View.OnClickListener() {
+        mMyMessagesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragmentTransaction(MESSAGES_FRAGMENT);
+            }
+        });
+        mMyRequestsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragmentTransaction(MY_REQUEST_FRAGMENT);
             }
         });
 
@@ -195,14 +210,17 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         fragmentMap.put(WALL_FRAGMENT, mainFragment);
         fragmentMap.put(MESSAGES_FRAGMENT, myMessageFragment);
         fragmentMap.put(PROFILE_FRAGMENT, profileFragment);
+        fragmentMap.put(MY_REQUEST_FRAGMENT, myRequestFragment);
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.main_fragment, mainFragment)
                 .add(R.id.main_fragment, myMessageFragment)
+                .add(R.id.main_fragment, myRequestFragment)
                 .add(R.id.main_fragment, profileFragment)
                 .hide(myMessageFragment)
                 .hide(profileFragment)
+                .hide(myRequestFragment)
                 .commit();
         stack.push(mainFragment);
 
@@ -220,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
                 .hide(mainFragment)
                 .hide(myMessageFragment)
                 .hide(profileFragment)
+                .hide(myRequestFragment)
                 .show(fragment)
                 .commitAllowingStateLoss();
         stack.push(fragment);
@@ -232,10 +251,13 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             openWall();
         }
         if (fragmentID.equals(MESSAGES_FRAGMENT)) {
-            openMyRequests();
+            openMyMessages();
         }
         if (fragmentID.equals(PROFILE_FRAGMENT)) {
             openProfile();
+        }
+        if(fragmentID.equals(MY_REQUEST_FRAGMENT)){
+            openMyRequests();
         }
 
         fragmentTransaction(fragmentMap.get(fragmentID));
@@ -263,6 +285,8 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
                 switchFragmentID = MESSAGES_FRAGMENT;
             } else if(oldFrag == profileFragment){
                 switchFragmentID = PROFILE_FRAGMENT;
+            } else if(oldFrag == myRequestFragment){
+                switchFragmentID = MY_REQUEST_FRAGMENT;
             }
 
             fragmentTransaction(switchFragmentID);
@@ -318,19 +342,23 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         mWallButton.setVisibility(View.GONE);
         mProfileButton.setVisibility(View.VISIBLE);
         mProfileButtonPressed.setVisibility(View.GONE);
-        mMyRequestButton.setVisibility(View.VISIBLE);
-        mMyRequestButtonPressed.setVisibility(View.GONE);
+        mMyMessagesButton.setVisibility(View.VISIBLE);
+        mMyMessagesButtonPressed.setVisibility(View.GONE);
+        mMyRequestsButton.setVisibility(View.VISIBLE);
+        mMyRequestsButtonPressed.setVisibility(View.GONE);
 
     }
 
-    private void openMyRequests() {
+    private void  openMyMessages() {
 
         mWallButtonPressed.setVisibility(View.GONE);
         mWallButton.setVisibility(View.VISIBLE);
         mProfileButton.setVisibility(View.VISIBLE);
         mProfileButtonPressed.setVisibility(View.GONE);
-        mMyRequestButton.setVisibility(View.GONE);
-        mMyRequestButtonPressed.setVisibility(View.VISIBLE);
+        mMyMessagesButton.setVisibility(View.GONE);
+        mMyMessagesButtonPressed.setVisibility(View.VISIBLE);
+        mMyRequestsButton.setVisibility(View.VISIBLE);
+        mMyRequestsButtonPressed.setVisibility(View.GONE);
 
     }
 
@@ -340,8 +368,22 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         mWallButton.setVisibility(View.VISIBLE);
         mProfileButton.setVisibility(View.GONE);
         mProfileButtonPressed.setVisibility(View.VISIBLE);
-        mMyRequestButton.setVisibility(View.VISIBLE);
-        mMyRequestButtonPressed.setVisibility(View.GONE);
+        mMyMessagesButton.setVisibility(View.VISIBLE);
+        mMyMessagesButtonPressed.setVisibility(View.GONE);
+        mMyRequestsButton.setVisibility(View.VISIBLE);
+        mMyRequestsButtonPressed.setVisibility(View.GONE);
+
+    }
+    private void openMyRequests(){
+
+        mWallButtonPressed.setVisibility(View.GONE);
+        mWallButton.setVisibility(View.VISIBLE);
+        mProfileButton.setVisibility(View.VISIBLE);
+        mProfileButtonPressed.setVisibility(View.GONE);
+        mMyMessagesButton.setVisibility(View.VISIBLE);
+        mMyMessagesButtonPressed.setVisibility(View.GONE);
+        mMyRequestsButton.setVisibility(View.GONE);
+        mMyRequestsButtonPressed.setVisibility(View.VISIBLE);
 
     }
 

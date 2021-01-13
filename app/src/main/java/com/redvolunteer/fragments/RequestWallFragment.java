@@ -254,7 +254,6 @@ public class RequestWallFragment extends Fragment {
 
     private void handleAdapter(List<RequestHelp> requestsForHelp){
         if(requestsForHelp.size() !=0) {
-            Log.d(TAG, "handleAdapter: " + requestsForHelp);
             retrievedRequests = requestsForHelp;
             mVolunteerListView.setVisibility(View.VISIBLE);
             mNoRequestShow.setVisibility(View.GONE);
@@ -289,7 +288,6 @@ public class RequestWallFragment extends Fragment {
                                 public void onNext(List<RequestHelp> requestsH) {
                                     if (requestsH.size() != 0) {
                                         retrievedRequests.addAll(requestsH);
-                                        Log.d(TAG, "onNext: " + retrievedRequests);
                                         mAdapter.notifyDataSetChanged();
                                     }
                                 }
@@ -314,70 +312,6 @@ public class RequestWallFragment extends Fragment {
         }
     }
 
-
-
-    private void initializeListView(final List<RequestHelp> requestHelps){
-
-    }
-
-
-
-    /**@Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(!hidden){
-
-            ShowWhaitSpinner();
-
-            if(NetworkCheker.getInstance().isNetworkAvailable(getContext())){
-
-                mHelpRequestViewModel.getUserHelpRequests().subscribe(new FlowableSubscriber<List<RequestHelp>>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Subscription s) {
-
-                        s.request(1L);
-
-
-                        if(requestRetrieveSubscription != null){
-                            requestRetrieveSubscription.cancel();
-                        }
-
-                        requestRetrieveSubscription = s;
-                    }
-
-                    @Override
-                    public void onNext(List<RequestHelp> requestHelps) {
-
-                        StopWhaitSpinner();
-
-                        if(requestHelps.size() != 0){
-
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-
-
-            }
-
-
-
-
-        }
-    }
-*/
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

@@ -115,10 +115,10 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
 
                 remoteRequestDao
-                        .loadRequestByAdmin(userID)
+                        .loadRequestByAdmin(userModel.GetLocalUser().getId())
                         .subscribe(new Consumer<List<RequestHelp>>() {
                             @Override
-                            public void accept(List<RequestHelp> requestHelps) throws Exception {
+                            public void accept(final List<RequestHelp> requestHelps) throws Exception {
 
                                 Collections.reverse(requestHelps);
                                 FlowEmitter.onNext(requestHelps);
@@ -155,6 +155,21 @@ public class HelpRequestModellmpl implements RequestHelpModel {
         return remoteRequestDao.LoadRequestById(requestID);
     }
 
+    private List<RequestHelp> FilterUserRequests(List<RequestHelp> requestHelps){
+
+        List<RequestHelp> availableRequests = new ArrayList<>();
+
+        String currentUSerId =  userModel.GetLocalUser().getId();
+
+        for(RequestHelp singleRequestor: requestHelps){
+
+            if(!currentUSerId.equals(singleRequestor.getHelpRequestCreatorID())){
+                availableRequests.add(singleRequestor);
+            }
+        }
+
+        return availableRequests;
+    }
 
     private class FillRequestDetails implements FlowableOnSubscribe<List<RequestHelp>> {
 
@@ -173,6 +188,9 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
                                 //retrieve anchor to perform future calls
                                 anchorID += NUMBER_HELP_REQUESTED;
+
+                                //Filter User created Requests, because it don't make sense to show those requests
+                                requestHelps = FilterUserRequests(requestHelps);
 
 
                                 requestHelps = distanceManager.sortByDistanceFromLocation(getUserLocation(), requestHelps, DISTANCE_FILTER);
