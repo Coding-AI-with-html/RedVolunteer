@@ -121,7 +121,6 @@ public class UserDetailsActivity  extends AppCompatActivity {
 
         mUserPIc = (ImageView) findViewById(R.id.retrieved_profile_user_pic);
         mUserName = (TextView) findViewById(R.id.retrieved_user_name);
-        mUserSurname = (TextView) findViewById(R.id.retrieved_user_surname);
         mBirthDate = (TextView) findViewById(R.id.retrieved_birth_date);
         mUserBio = (TextView) findViewById(R.id.retrieved_user_bio);
 
@@ -178,9 +177,8 @@ public class UserDetailsActivity  extends AppCompatActivity {
 
         //mUserPIc.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mRetrievedUser.getPhoto()));
         mUserName.setText(mRetrievedUser.getName());
-        mUserSurname.setText(mRetrievedUser.getSurname());
-       // mBirthDate.setText(CalendarFormatter.getDate(mRetrievedUser.getBirthDay()));
-        //mUserBio.setText(mRetrievedUser.getBiography());
+       mBirthDate.setText(CalendarFormatter.getDate(mRetrievedUser.getBirthDay()));
+        mUserBio.setText(mRetrievedUser.getBiography());
     }
 
     @Override

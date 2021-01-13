@@ -111,17 +111,17 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
         return Flowable.create(new FlowableOnSubscribe<List<RequestHelp>>() {
             @Override
-            public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> FlowEmitter) throws Exception {
+            public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> FlowEmmiter) throws Exception {
 
 
                 remoteRequestDao
                         .loadRequestByAdmin(userModel.GetLocalUser().getId())
                         .subscribe(new Consumer<List<RequestHelp>>() {
                             @Override
-                            public void accept(final List<RequestHelp> requestHelps) throws Exception {
+                            public void accept(List<RequestHelp> requestHelps) throws Exception {
 
-                                Collections.reverse(requestHelps);
-                                FlowEmitter.onNext(requestHelps);
+
+                                FlowEmmiter.onNext(requestHelps);
                             }
                         });
             }

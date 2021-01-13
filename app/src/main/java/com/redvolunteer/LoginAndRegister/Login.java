@@ -2,6 +2,7 @@ package com.redvolunteer.LoginAndRegister;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
@@ -22,6 +24,12 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -29,6 +37,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -45,19 +54,35 @@ import io.reactivex.functions.Consumer;
 
 public class Login extends AppCompatActivity {
     private static final String TAG = "Login";
-    /**
-     * Facebook login button
-     */
-    private Button mFacebookLogin;
 
+
+    /**
+     * For registering with google credentials
+     */
+    private static final int GOOGLE_REQ_LOGIN_CODE = 1;
+    /**
+     * Facebook register
+     */
+    private Button fbRegister;
+
+    private Button GoogleRegister;
+
+    /**
+     * Handle callback
+     */
     private CallbackManager fbCallBackManager;
 
-    /**
-     * Handle to log in with WM
-     */
-    private UserViewModel loginModel;
+    private GoogleApiClient mGoogleApiClient;
 
+    /**
+     * Firebase authentication manager
+     */
     private FirebaseAuth mAuth;
+    /**
+     * Handle to register with WM
+     */
+    private UserViewModel mUserViewModel;
+
 
     /**
      * it simple is the popup spinner
@@ -65,161 +90,235 @@ public class Login extends AppCompatActivity {
     private ProgressDialog popupProgDialog;
 
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if(!NetworkCheker.getInstance().isNetworkAvailable(this)){
-            Toast.makeText(Login.this, R.string.no_internet_popup_label, Toast.LENGTH_LONG).show();
+            Toast.makeText(Login.this, Login.this.getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
         }
+        this.mUserViewModel = ((RedVolunteerApplication) getApplicationContext()).getUserViewModel();
 
-        this.loginModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
-
-        //setup firebase
+        setupFacebookRegister();
         setupFirebaseAuth();
-        setupFacebookLogin();
-
+        setupGoogleLogin();
 
         setContentView(R.layout.login_activity);
 
-        this.bindFacebookButton();
-    }
 
+        this.bindFacebookButton();
+        this.BindGoogleButton();
+
+
+    }
 
 
 
     private void setupFirebaseAuth(){
-        //Initialiazing Firebase authenticator;
         mAuth = FirebaseAuth.getInstance();
     }
 
     /**
-     * FB login service instaliazation
+     * Register without Facebook
      */
-    private void setupFacebookLogin(){
-        //Iniatiazling FacebookSDK
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        fbCallBackManager = CallbackManager.Factory.create();
 
+
+    private void setupFacebookRegister(){
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        fbCallBackManager  = CallbackManager.Factory.create();
     }
 
-    /**
-     * Connet the button layout of the facebook to login
-     */
+
 
     private void bindFacebookButton(){
 
-        mFacebookLogin = (Button) this.findViewById(R.id.facebook_login_btn);
+        fbRegister = (Button) findViewById(R.id.facebook_login_btn);
 
-        LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookLoginRequestCallBack());
 
-        mFacebookLogin.setOnClickListener(new View.OnClickListener() {
+        LoginManager.getInstance().registerCallback(fbCallBackManager, new FacebookRegisterRequestCallBack());
 
-            final List<String> requestPermisions = Arrays.asList(
+        fbRegister.setOnClickListener(new View.OnClickListener() {
+
+            final List<String> requestPermissions = Arrays.asList(
                     "public_profile",
                     "email"
             );
+
             @Override
             public void onClick(View view) {
 
                 if(NetworkCheker.getInstance().isNetworkAvailable(getApplicationContext())){
-                    LoginManager.getInstance().logInWithReadPermissions(Login.this, requestPermisions);
+                    LoginManager.getInstance().logInWithReadPermissions(Login.this, requestPermissions);
                 } else {
-                    showNoInternetConnection();
+                    showNoInternetConnectionToast();
                 }
             }
         });
     }
+    private void setupGoogleLogin(){
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        showWhaitSpiner();
-        super.onActivityResult(requestCode, resultCode, data);
+        GoogleSignInOptions Goptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
 
-        fbCallBackManager.onActivityResult(requestCode,resultCode,data);
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+                        Toast.makeText(Login.this,
+                                "Prisijunkite prie interneto!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, Goptions)
+                .build();
     }
 
-    private class FacebookLoginRequestCallBack implements FacebookCallback<LoginResult>{
-       @Override
-       public void onSuccess(LoginResult loginResult) {
-           showWhaitSpiner();
-           handleFacebookTokenAccesFromFirebase(loginResult.getAccessToken());
-       }
+    private void BindGoogleButton(){
 
-       @Override
-       public void onCancel() {
-           stopSpinner();
-           Toast.makeText(getApplicationContext(),"Prasome nesidroveti",Toast.LENGTH_LONG).show();
-       }
+        GoogleRegister = (Button) findViewById(R.id.google_login_btn);
 
-       @Override
-       public void onError(FacebookException error) {
+        GoogleRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-           stopSpinner();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
 
-           Toast.makeText(getApplicationContext(), "Ops, klaida su Facebook", Toast.LENGTH_SHORT).show();
-       }
-   }
+                if(NetworkCheker.getInstance().isNetworkAvailable(getApplicationContext())){
+                    Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                    startActivityForResult(signInIntent, GOOGLE_REQ_LOGIN_CODE);
+                } else {
+                    showNoInternetConnectionToast();
+                }
+            }
+        });
 
 
-   private void handleFacebookTokenAccesFromFirebase(AccessToken account) {
-        AuthCredential credential = FacebookAuthProvider.getCredential(account.getToken());
+
+    }
+
+    private void handleGoogleAccesTokenForFireBase(GoogleSignInAccount Googleaccount){
+        AuthCredential authCredential = GoogleAuthProvider.getCredential(Googleaccount.getIdToken(), null);
+        buildFirebaseUser(authCredential);
+    }
+
+
+
+    private class FacebookRegisterRequestCallBack implements FacebookCallback<LoginResult> {
+
+        @Override
+        public void onSuccess(LoginResult registerResult) {
+            showWhaitSpinner();
+            handleFacebookAccesTokenForFirebase(registerResult.getAccessToken());
+        }
+
+        @Override
+        public void onCancel() {
+            stopSpinner();
+            Toast.makeText(getApplicationContext(), R.string.facebook_cancel_string, Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onError(FacebookException error) {
+            stopSpinner();
+            Log.d(TAG, "onError: " + error);
+            Toast.makeText(getApplicationContext(), R.string.facebook_login_error_string, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void handleFacebookAccesTokenForFirebase(AccessToken token){
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         buildFirebaseUser(credential);
-   }
+    }
+
+    private void googleLoginResultHandling(GoogleSignInResult resultGoogle){
 
 
-   private void buildFirebaseUser(final AuthCredential credential){
+        if(resultGoogle.isSuccess()){
+            handleGoogleAccesTokenForFireBase(resultGoogle.getSignInAccount());
+        }
+        else {
+            stopSpinner();
+            Toast.makeText(this, R.string.facebook_login_error_string, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void buildFirebaseUser(final AuthCredential credential){
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
 
-
-                            loginModel.retireveUSerFromRemoteStore().subscribe(new Consumer<User>() {
+                            mUserViewModel.retireveUSerFromRemoteStore().subscribe(new Consumer<User>() {
                                 @Override
                                 public void accept(User user) throws Exception {
+
                                     startMainActivity();
                                 }
                             });
                         } else {
                             stopSpinner();
-                            Toast.makeText(getApplicationContext(), "Klaida su Programeles serveriu",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), R.string.facebook_error_credential_string, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
-   }
 
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-   private void startMainActivity(){
+        showWhaitSpinner();
+        super.onActivityResult(requestCode, resultCode, data);
 
-        stopSpinner();
-        //check if auth has been succesfull
-       if(this.loginModel.isAuth()){
-           startActivity(new Intent(this, MainActivity.class));
-           finish();
-       } else {
-           Toast.makeText(this, "Jusu e-pastas nepatvirtintas", Toast.LENGTH_LONG).show();
-       }
-
-   }
-   private void showWhaitSpiner(){
-       popupProgDialog = ProgressDialog.show(this, "",
-               getString(R.string.loading_text), true);
-   }
-
-   private void stopSpinner(){
-        if(popupProgDialog != null){
-            popupProgDialog.dismiss();
-            popupProgDialog = null;
+        if (requestCode == GOOGLE_REQ_LOGIN_CODE) {
+            GoogleSignInResult GoogleRes = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            googleLoginResultHandling(GoogleRes);
+        } else {
+            // facebook request has NO USER DEFINED CODEs
+            fbCallBackManager.onActivityResult(requestCode, resultCode, data);
         }
-   }
+    }
 
-   private void showNoInternetConnection(){
+    private void startMainActivity(){
 
         stopSpinner();
-       Toast.makeText(getApplicationContext(), "Nera prisijungta prie interneto", Toast.LENGTH_SHORT).show();
+
+        if(this.mUserViewModel.isAuth()){
+            startActivity(new Intent(this, MainActivity.class));
+
+        } else {
+            Toast.makeText(this, "E-pasto klaida", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void showWhaitSpinner(){
+
+        popupProgDialog = ProgressDialog.show(this, "", getString(R.string.loading_text), true);
+    }
+
+    private void stopSpinner(){
+        if(popupProgDialog != null)
+
+            popupProgDialog.dismiss();
+        popupProgDialog = null;
+
+    }
+
+    private void showNoInternetConnectionToast(){
+
+        stopSpinner();
+
+        Toast.makeText(getApplicationContext(), R.string.no_internet_popup_label, Toast.LENGTH_LONG).show();
     }
 
 
