@@ -56,7 +56,7 @@ public class UserRequestHelpWallAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         if(position >= requestHelpList.size())
-            throw  new IllegalArgumentException(position + "exceeds " + requestHelpList.size());
+            throw new IllegalArgumentException(position + "exceeds " + requestHelpList.size());
         return requestHelpList.get(position);
     }
 
@@ -70,7 +70,7 @@ public class UserRequestHelpWallAdapter extends BaseAdapter {
 
 
         if(Conview == null){
-            Conview = LayoutInflater.from(mContext).inflate(R.layout.myrequest_list_item, null);
+            Conview = LayoutInflater.from(mContext).inflate(R.layout.myrequest_list_item,parent, false);
         }
 
         RequestHelpViewHolder holder = (RequestHelpViewHolder) Conview.getTag();
@@ -84,7 +84,6 @@ public class UserRequestHelpWallAdapter extends BaseAdapter {
 
         holder.title.setText(reqHelp.getName());
         holder.location.setText(reqHelp.getRequestLocation().getName());
-
 
         return Conview;
     }

@@ -50,13 +50,7 @@ import io.reactivex.FlowableSubscriber;
 public class RequestWallFragment extends Fragment {
 
     private static final String TAG = "RequestWallFragment";
-    /**
-     * firebase
-     */
-    private DatabaseReference dataRef;
-    private FirebaseAuth mAuth;
-    private FirebaseDatabase mFirebaseDatabase;
-    private String userID;
+
     /**
      * RxAndroid subscription
      */
@@ -74,10 +68,6 @@ public class RequestWallFragment extends Fragment {
      */
     private FragmentInteractionListener mListener;
 
-    /**
-     * User Created Help Requests
-     */
-    private ListView mUserRequestsList;
 
     /**
      * ListView for Volunteer
@@ -143,29 +133,6 @@ public class RequestWallFragment extends Fragment {
                 startActivity(new Intent(getContext(), NewRequestHelpActivity.class));
             }
         });
-
-        mAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        dataRef = mFirebaseDatabase.getReference(getString(R.string.database_Volunteers));
-        if(mAuth.getCurrentUser() != null) {
-            userID = mAuth.getCurrentUser().getUid();
-            DatabaseReference userInfo = dataRef.child(userID);
-            userInfo.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                    if(snapshot.exists()){
-
-                        layout.findViewById(R.id.new_request_button).setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
 
     }
 

@@ -64,7 +64,7 @@ public class UserRequestFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         bindLayoutComponents(view);
-        InitializeView(new ArrayList<RequestHelp>());
+        InitializeView(new ArrayList<>());
     }
 
 

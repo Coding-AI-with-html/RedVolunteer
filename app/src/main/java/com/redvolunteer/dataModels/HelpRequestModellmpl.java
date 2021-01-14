@@ -15,6 +15,7 @@ import com.redvolunteer.utils.persistence.RemoteUserDao;
 import com.redvolunteer.utils.requestutils.DistanceManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +112,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
 
         return Flowable.create(new FlowableOnSubscribe<List<RequestHelp>>() {
             @Override
-            public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> FlowEmmiter) throws Exception {
+            public void subscribe(final FlowableEmitter<List<RequestHelp>> FlowEmmiter) throws Exception {
 
 
                 remoteRequestDao
