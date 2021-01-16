@@ -64,7 +64,7 @@ public class UserRequestFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         bindLayoutComponents(view);
-        InitializeView(new ArrayList<>());
+        InitializeView(new ArrayList<RequestHelp>());
     }
 
 
@@ -110,62 +110,57 @@ public class UserRequestFragment extends Fragment {
 
     }
 
-
     @Override
     public void onHiddenChanged(boolean hidden) {
-    super.onHiddenChanged(hidden);
-    if(!hidden){
-
-        showWaitSpinner();
-
-    if(NetworkCheker.getInstance().isNetworkAvailable(getContext())){
-
-    mRequestHelpViewModel.getUserHelpRequests().subscribe(new FlowableSubscriber<List<RequestHelp>>() {
-    @Override
-    public void onSubscribe(@io.reactivex.annotations.NonNull Subscription s) {
-
-    s.request(1L);
-
-
-    if(requestRetrievedSubscription != null){
-        requestRetrievedSubscription.cancel();
-    }
-
-    requestRetrievedSubscription = s;
-    }
-
-    @Override
-    public void onNext(List<RequestHelp> requestHelps) {
-
-    StopWhaitSpinner();
-
-    if(requestHelps.size() != 0){
-        InitializeView(requestHelps);
-    } else {
-        mRequestListView.setVisibility(View.GONE);
-        mNoRequestLayout.setVisibility(View.VISIBLE);
-    }
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            showWaitSpinner();
 
 
 
-    }
 
-    @Override
-    public void onError(Throwable t) {
+            if(NetworkCheker.getInstance().isNetworkAvailable(getContext())){
 
-        ShowRetrievedErrorPopupDialog();
-    }
+                mRequestHelpViewModel.getUserHelpRequests().subscribe(new FlowableSubscriber<List<RequestHelp>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Subscription subscription) {
 
-    @Override
-    public void onComplete() {
+                        subscription.request(1L);
 
-    }
-    });
-    } else {
-        ShowNoInternetConnection();
-    }
-    }
 
+                        if(requestRetrievedSubscription != null){
+                            requestRetrievedSubscription.cancel();
+                        }
+                        requestRetrievedSubscription = subscription;
+                    }
+
+                    @Override
+                    public void onNext(List<RequestHelp> requestHelps) {
+
+                        StopWhaitSpinner();
+                        if(requestHelps.size() != 0){
+                            InitializeView(requestHelps);
+                        } else {
+                            mRequestListView.setVisibility(View.GONE);
+                            mNoRequestLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        ShowRetrievedErrorPopupDialog();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+            } else {
+                ShowNoInternetConnection();
+            }
+        }
     }
 
     @Override

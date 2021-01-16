@@ -2,7 +2,7 @@ package com.redvolunteer.pojo;
 
 import com.google.firebase.database.Exclude;
 
-public class RequestHelp {
+public class RequestHelp  {
 
     private String id;
 
@@ -25,7 +25,7 @@ public class RequestHelp {
      */
     private String helpRequestCreatorID;
 
-    public RequestHelp() {
+    public RequestHelp(){
 
     }
 
@@ -61,7 +61,6 @@ public class RequestHelp {
     public void setRequestLocation(RequestLocation requestLocation) {
         this.requestLocation = requestLocation;
     }
-
     @Exclude
     public User getHelpRequestCreator() {
         return helpRequestCreator;
@@ -91,4 +90,5 @@ public class RequestHelp {
                 ", helpRequestCreatorID='" + helpRequestCreatorID + '\'' +
                 '}';
     }
+
 }

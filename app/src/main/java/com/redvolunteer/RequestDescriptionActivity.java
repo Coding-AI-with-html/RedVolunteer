@@ -220,14 +220,17 @@ public class RequestDescriptionActivity extends AppCompatActivity {
  private void setRequestActionButtons(){
 
 
-     String UserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
         mAcceptHelpRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // retrieves user(volunteer) id and moves to the message box with requestCreator
-                mUserViewModel.retrieveUserByID(UserId);
+                // retrieves user who wants help id and moves to the message box with requestCreator
+
+                Intent intent = new Intent(getApplicationContext(), MessageActivity.class);
+                intent.putExtra(ExtraLabels.USER_ID, mRetrievedRequest.getHelpRequestCreatorID());
+                startActivity(intent);
             }
         });
 
@@ -241,7 +244,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
                 mRequestDescription.requestFocus();
                 mRequestDescription.setSelection(mRequestDescription.getText().length());
 
-                mAcceptHelpRequest.setVisibility(View.VISIBLE);
+                mAcceptModifyRequest.setVisibility(View.VISIBLE);
             }
         });
 
@@ -251,7 +254,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
                 if(NetworkCheker.getInstance().isNetworkAvailable(getApplicationContext())) {
 
-                    String newDescription = mAcceptHelpRequest.getTag().toString();
+                    String newDescription = mRequestDescription.getText().toString();
                     if (newDescription.length() != 0) {
 
                         mRetrievedRequest.setDescription(mRequestDescription.getText().toString());
@@ -259,7 +262,10 @@ public class RequestDescriptionActivity extends AppCompatActivity {
                         //disable modification
                         mRequestDescription.setEnabled(false);
 
-                        //update Request
+                        //update request
+                        mHelpRequestViewModel.updateHelpRequest(mRetrievedRequest);
+
+
                         mModifyRequest.setVisibility(View.VISIBLE);
                         modifAcceptButton.setVisibility(View.GONE);
 
@@ -276,47 +282,17 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
             mAcceptHelpRequest.setVisibility(View.GONE);
 
+
         } else {
 
             mModifyRequest.setVisibility(View.GONE);
 
-            isLoggedUserIsVolunteer();
         }
 
 
  }
 
 
-private void isLoggedUserIsVolunteer(){
-
-      String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-      DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-
-       database.child(getString(R.string.database_Volunteers))
-                .child(userID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-
-                        if(dataSnapshot.exists()){
-
-                            mAcceptHelpRequest.setVisibility(View.VISIBLE);
-                        }
-                        else {
-                                mAcceptHelpRequest.setVisibility(View.GONE);
-
-                            }
-                    }
-
-                    @Override
-                    public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-
-                    }
-                });
-
-
-
- }
 
  private boolean checkIfUserIsAdmin(){
 

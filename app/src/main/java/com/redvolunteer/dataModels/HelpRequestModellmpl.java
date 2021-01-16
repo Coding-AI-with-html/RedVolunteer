@@ -1,11 +1,8 @@
 package com.redvolunteer.dataModels;
 
-import android.util.Log;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.redvolunteer.R;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;
@@ -15,7 +12,6 @@ import com.redvolunteer.utils.persistence.RemoteUserDao;
 import com.redvolunteer.utils.requestutils.DistanceManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +20,6 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
 public class HelpRequestModellmpl implements RequestHelpModel {
@@ -119,10 +114,12 @@ public class HelpRequestModellmpl implements RequestHelpModel {
                         .loadRequestByAdmin(userModel.GetLocalUser().getId())
                         .subscribe(new Consumer<List<RequestHelp>>() {
                             @Override
-                            public void accept(List<RequestHelp> requestHelps) throws Exception {
+                            public void accept(List<RequestHelp> requestHelp) throws Exception {
 
 
-                                FlowEmmiter.onNext(requestHelps);
+                                    Collections.reverse(requestHelp);
+                                    FlowEmmiter.onNext(requestHelp);
+
                             }
                         });
             }

@@ -58,7 +58,7 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
             public void subscribe(@NonNull FlowableEmitter<List<RequestHelp>> FlowEmitter) throws Exception {
 
                 mRequestStore
-                        .orderByChild("adminID")  //its necessary to access the children
+                        .orderByChild("helpRequestCreatorID")  //its necessary to access the children
                         .equalTo(adminID)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override

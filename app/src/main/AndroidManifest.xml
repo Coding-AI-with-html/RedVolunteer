@@ -70,6 +70,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MaterialComponents.DayNight"/>
 
+        <activity android:name=".MessageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"/>
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"

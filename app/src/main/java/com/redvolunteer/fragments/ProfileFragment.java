@@ -70,17 +70,6 @@ public class ProfileFragment extends Fragment {
     private UserViewModel mUserViewModel;
 
 
-
-    /**
-     * Firebase
-     */
-    private DatabaseReference dataRef;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase mFirebaseDatabase;
-    private String userID;
-    private Context mContext;
-
     /**
      * User showed in this layout
      * @param view
