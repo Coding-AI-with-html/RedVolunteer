@@ -1,11 +1,13 @@
 package com.redvolunteer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.GenericLifecycleObserver;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.redvolunteer.adapters.MessageAdapter;
+import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.persistence.ExtraLabels;
@@ -28,7 +34,9 @@ import com.redvolunteer.viewmodels.UserViewModel;
 
 import org.reactivestreams.Subscription;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.annotations.NonNull;
@@ -46,6 +54,11 @@ public class MessageActivity extends AppCompatActivity {
     CircularImageView prof_image;
     TextView HelpUserName;
 
+
+    MessageAdapter messageAdapter;
+    List<Chat> mChating;
+
+    RecyclerView recyclerView;
     private User mRetrievedUserCreator;
     private Subscription retrievedUserSubscription;
 
@@ -118,9 +131,14 @@ public class MessageActivity extends AppCompatActivity {
         HelpUserName = findViewById(R.id.name_user);
         send_message = findViewById(R.id.btn_send_msg);
         message_field = findViewById(R.id.text_send_field);
-
+        recyclerView = findViewById(R.id.recycler_viewer);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         String userSenderUID = mUserViewModel.retrieveCachedUser().getId();
+
 
         String userID = mRetrievedUserCreator.getId();
         send_message.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +153,7 @@ public class MessageActivity extends AppCompatActivity {
                 message_field.setText("");
             }
         });
+        readMessages(userSenderUID, userID, prof_image);
 
 
     }
@@ -142,10 +161,7 @@ public class MessageActivity extends AppCompatActivity {
     private void fillActivityWithUSerInfo(){
 
         HelpUserName.setText(mRetrievedUserCreator.getName());
-
-            prof_image.setImageResource(R.drawable.ic_default_profile);
-
-
+        prof_image.setImageResource(R.drawable.ic_default_profile);
 
     }
 
@@ -161,6 +177,36 @@ public class MessageActivity extends AppCompatActivity {
 
         DatRef.child("Chats").push().setValue(hashMap);
 
+    }
+
+    private void readMessages(String myID, String userID, CircularImageView imgUrl){
+        mChating = new ArrayList<>();
+
+
+        DatabaseReference DatRef = FirebaseDatabase.getInstance().getReference("Chats");
+        DatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot Dsnapshot) {
+
+                mChating.clear();
+                for(DataSnapshot snapshot: Dsnapshot.getChildren()){
+                    Chat chat = snapshot.getValue(Chat.class);
+                    if(chat.getReceiver().equals(myID) && chat.getSender().equals(userID) ||
+                        chat.getReceiver().equals(userID) && chat.getSender().equals(myID)){
+                            mChating.add(chat);
+                        }
+
+                    messageAdapter = new MessageAdapter(MessageActivity.this, mChating, imgUrl);
+                    recyclerView.setAdapter(messageAdapter);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
