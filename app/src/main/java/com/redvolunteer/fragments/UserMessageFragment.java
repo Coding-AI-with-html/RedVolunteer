@@ -57,6 +57,7 @@ public class UserMessageFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //retrieve the user from the local store
+        //This is commiting file
 
     }
 
