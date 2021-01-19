@@ -56,9 +56,6 @@ public class UserMessageFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //retrieve the user from the local store
-        //This is commiting file
-
     }
 
     @Nullable
