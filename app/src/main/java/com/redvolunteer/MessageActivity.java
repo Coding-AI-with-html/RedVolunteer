@@ -92,8 +92,6 @@ public class MessageActivity extends AppCompatActivity {
                 public void onNext(User user) {
 
                     mRetrievedUserCreator = user;
-                    Log.d(TAG, "onNext: " + mRetrievedUserCreator);
-
                     setLayout();
                 }
 
