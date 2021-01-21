@@ -54,7 +54,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.firebase:firebase-analytics:18.0.0'
-    implementation 'com.google.android.gms:play-services-basement:17.4.0'
+
+    //Material for bottom navBar
+    implementation 'com.google.android.material:material:1.3.0-alpha03'
 
     //noinspection GradleCompatible
     implementation 'com.android.support:support-v13:25.4.0'

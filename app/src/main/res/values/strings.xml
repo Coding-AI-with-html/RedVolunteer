@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RedVolunteer</string>
+    <string name="app_name">NeVieni</string>
     <string name="discard">Discard</string>
     <string name="alert_no_age">Hey, tell us your birthdate!</string>
     <string name="error_message_download_resources">Klaida siunciant duomenis</string>

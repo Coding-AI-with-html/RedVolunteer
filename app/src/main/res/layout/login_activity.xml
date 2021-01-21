@@ -1,46 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="158dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:fontFamily="Roboto"
-            android:padding="20dp"
-            android:text="Sveiki atvyke i Example,
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/giving"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-96dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="254dp"
+        android:layout_height="93dp"
+        android:layout_marginTop="100dp"
+
+        android:text="Sveiki atvyke i NeVieni programele,
 Prasome Prisijungti  &#xA;"
-            android:textColor="#585858"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/imgLogo1"
-            android:layout_width="wrap_content"
-
-
-            android:layout_height="match_parent"
-
-            android:adjustViewBounds="true"
-
-            android:src="@drawable/red_volunteer_splash_image" />
-
-
-    </LinearLayout>
-
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/facebook_login_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/facebook_login_btn"
@@ -48,6 +38,7 @@ Prasome Prisijungti  &#xA;"
         android:layout_height="wrap_content"
         android:layout_above="@+id/google_login_btn"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/my_facebook_button"
         android:drawableStart="@drawable/ic_facebook"
         android:drawableLeft="@drawable/ic_facebook"
@@ -58,19 +49,17 @@ Prasome Prisijungti  &#xA;"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/google_login_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.864" />
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/google_login_btn"
-        android:layout_width="185dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="104dp"
+        android:layout_marginBottom="56dp"
         android:background="@drawable/my_google_button"
         android:drawableStart="@drawable/ic_google"
         android:drawableLeft="@drawable/ic_google"
@@ -81,8 +70,22 @@ Prasome Prisijungti  &#xA;"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.528"
+        app:layout_constraintHorizontal_bias="0.527"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inspired by A"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.875"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/google_login_btn"
+        app:layout_constraintVertical_bias="0.811" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
