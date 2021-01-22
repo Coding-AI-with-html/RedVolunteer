@@ -74,18 +74,18 @@ Prasome Prisijungti  &#xA;"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Inspired by A"
-        android:textColor="@color/black"
-        android:textSize="20sp"
+        android:layout_width="164dp"
+        android:layout_height="53dp"
+        android:text="Inspired by AA"
+        android:textColor="@color/white"
+        android:textSize="25sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/facebook_login_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.875"
+        app:layout_constraintHorizontal_bias="0.542"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/google_login_btn"
-        app:layout_constraintVertical_bias="0.811" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.567" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

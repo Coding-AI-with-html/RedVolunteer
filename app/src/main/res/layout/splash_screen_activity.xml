@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:textColor="@color/white"
-        android:text="Red Volunteer"
+        android:text="NeVieni"
         android:layout_centerHorizontal="true"
 
         />
