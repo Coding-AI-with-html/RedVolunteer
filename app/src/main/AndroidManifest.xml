@@ -32,7 +32,7 @@
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyB4xgUFe-zCwxNeRuzRYgD7nbIj2AYWAfg"/>
     <activity android:name=".SplashScreenActivity"
         android:screenOrientation="portrait"
-        android:theme="@style/Theme.AppCompat">
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

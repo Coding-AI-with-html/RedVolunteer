@@ -9,18 +9,20 @@
     <RelativeLayout
     android:id="@+id/helpRequestList_top_bar"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
+    android:layout_height="80dp"
     android:layout_alignParentTop="true"
     android:gravity="top"
-    android:background="@color/mainlyColor">
+    android:background="@drawable/ic_wavetop">
 
-    <ImageView
-        android:layout_width="250dp"
-        android:layout_height="150dp"
-        android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/logo_topbar"/>
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Visos uzklausos"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:fontFamily="@font/aclonica"/>
 
     <ImageView
         android:id="@+id/new_request_button"
@@ -28,12 +30,11 @@
         android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:background="@color/mainlyColor"
         android:src="@drawable/ic_new_event_plus"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginTop="5dp"/>
 
 </RelativeLayout>
 
