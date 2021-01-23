@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -36,6 +38,7 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -166,8 +169,8 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         mProfileButtonPressed = (LinearLayout) findViewById(R.id.profile_button_pressed);
         mMyMessagesButton = (LinearLayout) findViewById(R.id.mymessages_button_not_pressed);
         mMyMessagesButtonPressed = (LinearLayout) findViewById(R.id.mymessages_button_pressed);
-         mMyRequestsButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
-         mMyRequestsButtonPressed = (LinearLayout) findViewById(R.id.myrequests_button_pressed);
+        mMyRequestsButton = (LinearLayout) findViewById(R.id.myrequest_button_not_pressed);
+        mMyRequestsButtonPressed = (LinearLayout) findViewById(R.id.myrequests_button_pressed);
 
         mWallButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -517,7 +520,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         switch (requestCode){
             case LOCATION_PERMISSION: {
                 if(grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     enableGoogleApiClient();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.location_permission_notallowed_toast, Toast.LENGTH_SHORT).show();

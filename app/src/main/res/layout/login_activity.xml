@@ -3,89 +3,133 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/wave">
 
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/giving"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-96dp" />
+        android:background="@color/white"
+        >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="254dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="100dp"
+        <Button
+            android:id="@+id/facebook_login_btn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="74dp"
 
-        android:text="Sveiki atvyke i NeVieni programele,
-Prasome Prisijungti  &#xA;"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/facebook_login_btn"
+            android:layout_marginTop="300dp"
+            android:layout_marginEnd="86dp"
+            android:background="@drawable/my_facebook_button"
+            android:drawableStart="@drawable/ic_facebook"
+            android:drawableLeft="@drawable/ic_facebook"
+            android:padding="15dp"
+            android:rotationX="4"
+            android:text="@string/login_with_facebook"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/google_login_btn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/facebook_login_btn"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="73dp"
+            android:layout_marginTop="84dp"
+            android:layout_marginEnd="87dp"
+            android:background="@drawable/my_google_button"
+            android:drawableStart="@drawable/ic_google"
+            android:drawableLeft="@drawable/ic_google"
+            android:padding="4dp"
+            android:text="Prisijungti su Google"
+            android:textAllCaps="false"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="212dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/google_login_btn"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="97dp"
+            android:layout_marginTop="144dp"
+            android:layout_marginEnd="101dp"
+            android:layout_marginBottom="51dp"
+            android:fontFamily="@font/aclonica"
+            android:rotation="0"
+            android:rotationX="0"
+            android:rotationY="0"
+            android:text="Inspired By AA"
+            android:textColor="#c4302b"
+            android:textSize="24sp"
+            android:textStyle="bold|italic" />
+
+
+    </RelativeLayout>
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:background="#c4302b"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:background="@drawable/wave"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/facebook_login_btn"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/google_login_btn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/my_facebook_button"
-        android:drawableStart="@drawable/ic_facebook"
-        android:drawableLeft="@drawable/ic_facebook"
-        android:padding="15dp"
-        android:text="@string/login_with_facebook"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/google_login_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/google_login_btn"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="56dp"
-        android:background="@drawable/my_google_button"
-        android:drawableStart="@drawable/ic_google"
-        android:drawableLeft="@drawable/ic_google"
-        android:padding="4dp"
-        android:text="Prisijungti su Google"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.527"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:srcCompat="@drawable/ic_login_icon" />
 
     <TextView
-        android:layout_width="164dp"
-        android:layout_height="53dp"
-        android:text="Inspired by AA"
+        android:id="@+id/topText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:fontFamily="@font/aclonica"
+        android:text='Sveiki atvyke i "NeVieni" programele'
         android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/facebook_login_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
+        android:textSize="30sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        app:layout_constraintHorizontal_bias="0.274"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.567" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view3"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:background="@drawable/ic_wavebot"
+        app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

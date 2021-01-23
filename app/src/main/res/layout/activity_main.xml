@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/mainlyColor"
+        android:background="@drawable/bottom_bar_shape"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -137,7 +137,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="My requests"
+                android:text="Mano"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="normal" />
@@ -160,7 +160,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="My events"
+                android:text="Mano"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
