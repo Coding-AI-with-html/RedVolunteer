@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "303496762388",
+    "firebase_url": "https://redvolunteer-299116-default-rtdb.firebaseio.com",
+    "project_id": "redvolunteer-299116",
+    "storage_bucket": "redvolunteer-299116.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303496762388:android:a4efa02d8b1a2598798301",
+        "android_client_info": {
+          "package_name": "com.redvolunteer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "303496762388-ef65q0djgbnavn8n6d0368v693u1445d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.redvolunteer",
+            "certificate_hash": "0242545e2ac266228de39fcb77e8773257c47451"
+          }
+        },
+        {
+          "client_id": "303496762388-mttq26t0rkb4jddm3mqbf7vv90ce2jfg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4xgUFe-zCwxNeRuzRYgD7nbIj2AYWAfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "303496762388-mttq26t0rkb4jddm3mqbf7vv90ce2jfg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
