@@ -118,7 +118,6 @@ public class FirebaseUserDao implements RemoteUserDao {
 
                             DataSnapshot userWrap = snapshot.getChildren().iterator().next();
                             retrieved = userWrap.getValue(User.class);
-                            Log.d(TAG, "onDataChange:  " + retrieved);
                         } catch (NoSuchElementException e){
                             retrieved = new User();
                         }

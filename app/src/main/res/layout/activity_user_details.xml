@@ -28,7 +28,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RedVolunteer Vartotojas"
+            android:text="NeVieni Vartotojas"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:layout_centerInParent="true"
@@ -68,7 +68,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/calendar_ico"
+                android:src="@drawable/ic_default_profile"
                 app:civ_border_width="0dp"
                 tools:layout_editor_absoluteX="84dp"
                 tools:layout_editor_absoluteY="66dp" />

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.R;
 import com.redvolunteer.UserDetailsActivity;
 import com.redvolunteer.pojo.RequestHelp;
@@ -75,7 +76,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
         final RequestHelp reqHelp = helpList.get(position);
         holder.mRequestTitle.setText(reqHelp.getName());
         holder.mReqLocation.setText(reqHelp.getRequestLocation().getName());
-        //holder.mUserImage.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(reqHelp.getHelpRequestCreator().getPhoto()));
+        holder.mUserImage.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(reqHelp.getHelpRequestCreator().getPhoto()));
         holder.mRequestor.setText(reqHelp.getHelpRequestCreator().getName());
 
         View.OnClickListener showUserClicked = new View.OnClickListener() {
@@ -88,7 +89,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
             }
         };
 
-        //holder.mUserImage.setOnClickListener(showUserClicked);
+        holder.mUserImage.setOnClickListener(showUserClicked);
         holder.mRequestor.setOnClickListener(showUserClicked);
 
         return convertedview;
@@ -104,7 +105,7 @@ public class HelpRequestWallAdapter extends BaseAdapter {
         public HelpRequestViewHolder(View row) {
 
 
-            //this.mUserImage = (ImageView) row.findViewById(R.id.requestor_image);
+            this.mUserImage = (CircularImageView) row.findViewById(R.id.request_user_image);
             this.mRequestTitle = (TextView) row.findViewById(R.id.request_title);
             this.mReqLocation = (TextView) row.findViewById(R.id.request_location);
             this.mRequestor = (TextView) row.findViewById(R.id.request_creator);

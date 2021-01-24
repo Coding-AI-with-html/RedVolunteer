@@ -76,16 +76,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
-                    android:background="@drawable/border_positive_event_button"
-                    android:text="confirm"
-                    android:textColor="@color/positive_event_green"
+                    android:background="@drawable/green_button_shape"
+                    android:text="@string/applyChanges"
+                    android:textColor="@color/black"
                     android:layout_marginEnd="10dp" />
 
                 <Button
                     android:id="@+id/profile_discard_modification_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border_abandon_event_button"
+                    android:background="@drawable/bottom_bar_shape"
                     android:text="@string/discard"
                     android:textColor="@color/black" />
 
@@ -146,14 +146,14 @@
                 android:layout_width="45dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:src="@drawable/calendar_ico"
+                android:src="@drawable/ic_calendar_today"
                 android:visibility="gone" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="About You"
+                android:text="Apie Jus"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
@@ -166,7 +166,8 @@
                 android:background="@null"
                 android:enabled="false"
                 android:focusable="true"
-                android:text="Description"
+                android:text="Aprasymas"
+                android:textColor="@color/grey"
                 android:windowSoftInputMode="adjustResize" />
 
         </LinearLayout>

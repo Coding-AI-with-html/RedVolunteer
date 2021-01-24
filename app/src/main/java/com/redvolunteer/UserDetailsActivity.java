@@ -49,7 +49,6 @@ public class UserDetailsActivity  extends AppCompatActivity {
      */
     private ImageView mUserPIc;
     private TextView mUserName;
-    private TextView mUserSurname;
     private TextView mBirthDate;
     private TextView mUserBio;
 
@@ -175,7 +174,7 @@ public class UserDetailsActivity  extends AppCompatActivity {
     }
     private void filLActivity(){
 
-        //mUserPIc.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mRetrievedUser.getPhoto()));
+        mUserPIc.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mRetrievedUser.getPhoto()));
         mUserName.setText(mRetrievedUser.getName());
        mBirthDate.setText(CalendarFormatter.getDate(mRetrievedUser.getBirthDay()));
         mUserBio.setText(mRetrievedUser.getBiography());
@@ -201,7 +200,7 @@ public class UserDetailsActivity  extends AppCompatActivity {
 
         this.popuDialogProg.dismiss();
 
-        Context context;
+
         AlertDialog.Builder builder =new AlertDialog.Builder(getApplicationContext());
         builder.setMessage(R.string.error_message_download_resources)
                 .setCancelable(false)

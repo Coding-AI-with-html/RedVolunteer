@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="mainlyColor">#C4302B</color>
-    <color name="positive_event_green">#008c1a</color>
+    <color name="positive_request_green">#008c1a</color>
     <color name="grey">#999999</color>
     <color name="lightBlue">#2ECCFA</color>
     <color name="darkerGrey">#3B3B3B</color>

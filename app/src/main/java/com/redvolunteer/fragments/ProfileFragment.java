@@ -353,6 +353,8 @@ public class ProfileFragment extends Fragment {
 
             mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
 
+        } else {
+            Toast.makeText(getContext(), "Ups, problema su programeles sistema, prasom apie tai pranesti", Toast.LENGTH_SHORT).show();
         }
 
     }

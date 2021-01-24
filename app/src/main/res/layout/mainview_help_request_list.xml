@@ -71,7 +71,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/bottom_bar_shape">
 
         <com.mikhaellopez.circularimageview.CircularImageView
             android:id="@+id/request_user_image"

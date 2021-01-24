@@ -6,5 +6,5 @@
     </corners>
     <stroke
         android:width="2dip"
-        android:color="@color/positive_event_green" />
+        android:color="@color/positive_request_green" />
 </shape>

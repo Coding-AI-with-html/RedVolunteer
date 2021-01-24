@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_positive_event_button"
                         android:text="@string/join_request_label_btn"
-                        android:textColor="@color/positive_event_green"
+                        android:textColor="@color/positive_request_green"
                         tools:ignore="ButtonStyle" />
 
 
@@ -98,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_positive_event_button"
                         android:text="@string/accept_edit_label_btn"
-                        android:textColor="@color/positive_event_green"
+                        android:textColor="@color/positive_request_green"
                         tools:ignore="ButtonStyle" />
 
 

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NeVieni</string>
-    <string name="discard">Discard</string>
+    <string name="discard">Atsaukti</string>
+    <string name="applyChanges">Patvirtinti</string>
     <string name="alert_no_age">Nurodykite savo gimimo data!</string>
     <string name="error_message_download_resources">Klaida siunciant duomenis</string>
     <string name="loading_popup_message_spinner">Krauname. Prasome Palaukti…</string>
@@ -17,10 +18,10 @@
     <string name="admin_label">admin</string>
     <string name="mail_uri_protocol">mailto:</string>
     <string name="email_content_type">text/plain</string>
-    <string name="contact_email_object">A RedVolunteer user want to contact you</string>
-    <string name="message_mail_user">Hi %1$s, I\'m %1$s from RedVolunteer</string>
-    <string name="toast_email_user_agent_not_installed">There is no email client installed!</string>
-    <string name="send_email_picker_title">Send mail…</string>
+    <string name="contact_email_object">NeVieni programeles vartotojas nori susisiekti su jumis</string>
+    <string name="message_mail_user">Hi %1$s, I\'m %1$s from NeVieni</string>
+    <string name="toast_email_user_agent_not_installed">Nera instaliuota pasto programele!</string>
+    <string name="send_email_picker_title">Siusti e-zinute…</string>
     <string name="create_request_button_label">Create Request!</string>
     <string name="create_help_request_move_forward">Eiti Toliau!</string>
     <string name="form_not_completely_filled_popup">Visi langeliai turi buti uzpildyti</string>
