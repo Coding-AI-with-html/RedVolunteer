@@ -37,9 +37,6 @@ public class FirebaseUserDao implements RemoteUserDao {
      * ref to firebase
      */
     private DatabaseReference dataRef;
-    private FirebaseAuth mAuth;
-    private String userUID;
-    private Context mContext;
 
 
     @Override
@@ -87,7 +84,6 @@ public class FirebaseUserDao implements RemoteUserDao {
     public void save(User userToStore) {
         //USer ALLWAYS has an a ID
         String userID = userToStore.getId();
-       //String userUID =  FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         //save the request to store
        userID = this.dataRef.child(userID).getKey();
@@ -122,6 +118,7 @@ public class FirebaseUserDao implements RemoteUserDao {
 
                             DataSnapshot userWrap = snapshot.getChildren().iterator().next();
                             retrieved = userWrap.getValue(User.class);
+                            Log.d(TAG, "onDataChange:  " + retrieved);
                         } catch (NoSuchElementException e){
                             retrieved = new User();
                         }

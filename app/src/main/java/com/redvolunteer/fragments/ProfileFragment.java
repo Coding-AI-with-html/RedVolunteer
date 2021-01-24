@@ -82,7 +82,6 @@ public class ProfileFragment extends Fragment {
      */
     private ImageView mUserPic;
     private TextView mUserName;
-    private TextView mUserSurname;
     private TextView mBirthDate;
     private EditText userBio;
     private ImageView mEditButton;
@@ -225,11 +224,11 @@ public class ProfileFragment extends Fragment {
                         mShowedUSer.setBiography(userBio.getText().toString());
                         mUserViewModel.UpdateUser(mShowedUSer);
                     } else {
-                        Toast.makeText(getContext(), "You forgot your biography", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getString(R.string.forgot_biography), Toast.LENGTH_LONG).show();
                     }
                 }
                     else {
-                        Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
                     }
 
             }
@@ -274,7 +273,7 @@ public class ProfileFragment extends Fragment {
 
     private void fillFragments(){
         if (mShowedUSer != null) {
-            //mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
+            mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
             mUserName.setText(mShowedUSer.getName());
 
             // if the user has not specified his birth date

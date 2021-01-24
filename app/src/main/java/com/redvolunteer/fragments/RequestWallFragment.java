@@ -122,10 +122,7 @@ public class RequestWallFragment extends Fragment {
     mMainViewModel = mListener.getHelpRequestViewModel();
     }
 
-    /**
-     * Setup Toolbar and /**
-     *      * Checking if user is HelpSeeker, or Volunteer, if Volunteer, needs New_request_Button be not visible
-     */
+
     private void SetupToolbar(View layout){
         layout.findViewById(R.id.new_request_button).setOnClickListener(new View.OnClickListener() {
             @Override

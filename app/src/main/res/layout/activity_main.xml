@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -12,7 +13,10 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_bar"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true" >
+
+    </FrameLayout>
+
 
     <!--Navbar-->
     <LinearLayout
@@ -26,7 +30,7 @@
         android:padding="5dp">
 
 
-        <!--my events button NOT pressed -->
+        <!--my requests button NOT pressed -->
         <LinearLayout
             android:id="@+id/mymessages_button_not_pressed"
             android:layout_width="0dp"
@@ -44,7 +48,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="My Messages"
+                android:text="Zinutes"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="normal" />
@@ -115,12 +119,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Home"
+                android:text="Pagrnd"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/myrequest_button_not_pressed"
             android:layout_width="0dp"
@@ -185,7 +188,7 @@
                 android:id="@+id/settings_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
+                android:text="Profilis"
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="normal" />

@@ -25,19 +25,44 @@
             android:paddingRight="15dp"
             tools:ignore="RtlHardcoded">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_marginStart="-3dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:src="@drawable/ic_request_name"
+                    android:layout_weight="0.05"/>
             <TextView
                 android:id="@+id/request_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="@dimen/mainview_bold_title"
-                android:textStyle="bold" />
-
+                android:textStyle="bold"
+                android:layout_weight="0.95"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:src="@drawable/ic_landmark"
+                android:layout_weight="0.05"/>
             <TextView
+                android:layout_weight="0.95"
                 android:id="@+id/request_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/mainview_bold_headline" />
+        </LinearLayout>
 
         </LinearLayout>
 

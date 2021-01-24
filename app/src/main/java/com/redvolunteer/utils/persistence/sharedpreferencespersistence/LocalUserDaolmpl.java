@@ -52,8 +52,8 @@ public class LocalUserDaolmpl implements LocalUserDao {
         editor.putString(NAME_FIELD, userToStore.getName());
         editor.putString(SURNAME_FIELD, userToStore.getSurname());
         editor.putString(CONTACT_FIELD, userToStore.getEmail());
-        //editor.putString(IMAGE_FIELD, userToStore.getPhoto());
-        //editor.putString(BIO_FIELD, userToStore.getBiography());
+        editor.putString(IMAGE_FIELD, userToStore.getPhoto());
+        editor.putString(BIO_FIELD, userToStore.getBiography());
         editor.putLong(BIRTH_FIELD, userToStore.getBirthDay());
 
         //commit changes
@@ -71,8 +71,8 @@ public class LocalUserDaolmpl implements LocalUserDao {
         localStoredUser.setId(sharedPreferences.getString(ID_FIELD, null));
         localStoredUser.setName(sharedPreferences.getString(NAME_FIELD, null));
         localStoredUser.setEmail(sharedPreferences.getString(CONTACT_FIELD, null));
-        //localStoredUser.setPhoto(sharedPreferences.getString(IMAGE_FIELD, null));
-        //localStoredUser.setBiography(sharedPreferences.getString(BIO_FIELD, null));
+        localStoredUser.setPhoto(sharedPreferences.getString(IMAGE_FIELD, null));
+        localStoredUser.setBiography(sharedPreferences.getString(BIO_FIELD, null));
         localStoredUser.setBirthDay(sharedPreferences.getLong(BIRTH_FIELD, 0));
 
         List<String> requests = new ArrayList<>();
