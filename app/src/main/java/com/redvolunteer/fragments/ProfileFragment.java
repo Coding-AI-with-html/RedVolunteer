@@ -1,15 +1,18 @@
 package com.redvolunteer.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,15 +23,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
 import com.redvolunteer.utils.calendar.CalendarFormatter;
@@ -38,9 +44,12 @@ import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 import com.redvolunteer.LoginAndRegister.Login;
 import com.redvolunteer.utils.NetworkCheker;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
@@ -53,8 +62,14 @@ public class ProfileFragment extends Fragment {
      */
 
     private static final int REQUEST_IMAGE_CAPTURE = 200;
-    private static final int RESULT_OK = -1;
 
+    //private static final int RESULT_OK = -1;
+
+    private static final int IMAGE_REQUEST = 1;
+    private Uri imgUrl;
+    private StorageTask uploadTask;
+    StorageReference storageReference;
+    DatabaseReference DataReference;
     /**
      * Reference to the activity
      * @param view
@@ -150,10 +165,7 @@ public class ProfileFragment extends Fragment {
                 mUserPic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if(takePictureIntent.resolveActivity(getContext().getPackageManager()) != null){
-                            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                        }
+                        openImage();
 
                     }
                 });
@@ -294,6 +306,7 @@ public class ProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
        return inflater.inflate(R.layout.fragment_user_profile, container, false);
 
     }
@@ -338,6 +351,75 @@ public class ProfileFragment extends Fragment {
 
 
     }
+    private void openImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, IMAGE_REQUEST);
+
+    }
+    private String getFileExtension(Uri uri){
+        ContentResolver contentResolver = getContext().getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+
+    }
+    private void uploadImage(){
+        final ProgressDialog Pg = new ProgressDialog(getContext());
+        Pg.setMessage("Keliama");
+        Pg.show();
+        if(imgUrl != null){
+            final StorageReference fileRef = storageReference.child(System.currentTimeMillis()
+                    +"."+getFileExtension(imgUrl));
+
+            uploadTask = fileRef.putFile(imgUrl);
+            uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+
+                    if(!task.isSuccessful()){
+                        throw task.getException();
+                    }
+                    return fileRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+
+                        Uri downlaodUrl = task.getResult();
+                        String mUri = downlaodUrl.toString();
+
+
+                        DataReference = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(mShowedUSer.getId());
+
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("ImageUrl", mUri);
+                        DataReference.updateChildren(map);
+
+                        Pg.dismiss();
+
+
+
+                    } else {
+                        Toast.makeText(getContext(), "Klaida, prasome meginti veliau", Toast.LENGTH_SHORT).show();
+                        Pg.dismiss();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Pg.dismiss();
+                }
+            });
+
+        } else {
+            Toast.makeText(getContext(), "Nepasirinka nuotraukos!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -345,17 +427,17 @@ public class ProfileFragment extends Fragment {
         //result of image capture
 
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && requestCode == RESULT_OK) {
+       if(requestCode == IMAGE_REQUEST && resultCode == RESULT_OK
+       && data != null && data.getData() != null){
+           imgUrl = data.getData();
 
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mUserPic.setImageBitmap(imageBitmap);
+           if(uploadTask != null && uploadTask.isInProgress()){
+               Toast.makeText(getContext(), "Kelimas progrese", Toast.LENGTH_SHORT).show();
 
-            mShowedUSer.setPhoto(ImageBase64Marshaller.encodedBase64BitmapString(imageBitmap));
-
-        } else {
-            Toast.makeText(getContext(), "Ups, problema su programeles sistema, prasom apie tai pranesti", Toast.LENGTH_SHORT).show();
-        }
+           } else {
+               uploadImage();
+           }
+       }
 
     }
 
