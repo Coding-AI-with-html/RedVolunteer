@@ -356,7 +356,6 @@ public class RequestWallFragment extends Fragment {
     private void ShowNoInternetConnection(){
         StopWhaitSpinner();
         //There was an error show error message
-        Context context;
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setMessage(R.string.recconnecting_request)
                 .setCancelable(false)

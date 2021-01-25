@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +26,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
 import com.redvolunteer.utils.calendar.CalendarFormatter;
@@ -165,7 +171,10 @@ public class ProfileFragment extends Fragment {
                 mUserPic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        openImage();
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(intent, IMAGE_REQUEST);
 
                     }
                 });
@@ -285,7 +294,7 @@ public class ProfileFragment extends Fragment {
 
     private void fillFragments(){
         if (mShowedUSer != null) {
-            mUserPic.setImageBitmap(ImageBase64Marshaller.decode64BitmapString(mShowedUSer.getPhoto()));
+
             mUserName.setText(mShowedUSer.getName());
 
             // if the user has not specified his birth date
@@ -307,8 +316,31 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         storageReference = FirebaseStorage.getInstance().getReference("uploads");
-       return inflater.inflate(R.layout.fragment_user_profile, container, false);
 
+
+        DataReference = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(mShowedUSer.getId());
+
+        DataReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                User usr = snapshot.getValue(User.class);
+                if(usr.getPhoto().equals("default_photo")){
+                    mUserPic.setImageResource(R.drawable.ic_default_profile);
+
+                } else {
+                    Glide.with(getContext()).load(usr.getPhoto()).into(mUserPic);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+       return inflater.inflate(R.layout.fragment_user_profile, container, false);
     }
 
     @Override
@@ -394,7 +426,7 @@ public class ProfileFragment extends Fragment {
                         DataReference = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(mShowedUSer.getId());
 
                         HashMap<String, Object> map = new HashMap<>();
-                        map.put("ImageUrl", mUri);
+                        map.put("photo", mUri);
                         DataReference.updateChildren(map);
 
                         Pg.dismiss();
@@ -436,6 +468,7 @@ public class ProfileFragment extends Fragment {
 
            } else {
                uploadImage();
+               mShowedUSer.setPhoto(imgUrl.toString());
            }
        }
 

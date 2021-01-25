@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.redvolunteer.MessageActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
@@ -44,7 +45,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         User user = mUserList.get(position);
         holder.username.setText(user.getName());
 
-        holder.profile_photo_list.setImageResource(R.drawable.ic_default_profile);
+        if(user.getPhoto().equals("default_photo")){
+            holder.profile_photo_list.setImageResource(R.drawable.ic_default_profile);
+        } else {
+            Glide.with(mContext).load(user.getPhoto()).into(holder.profile_photo_list);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
