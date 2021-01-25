@@ -28,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.RequestDescriptionActivity;
@@ -103,6 +105,7 @@ public class RequestWallFragment extends Fragment {
      */
     private List<RequestHelp> retrievedRequests;
 
+    StorageReference storageReference;
     public RequestWallFragment(){
         //Requires empty public constructor
     }
@@ -212,6 +215,7 @@ public class RequestWallFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
         return inflater.inflate(R.layout.fragment_request_wall, container, false);
     }
 

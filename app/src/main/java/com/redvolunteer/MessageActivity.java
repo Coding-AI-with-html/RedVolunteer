@@ -19,11 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.adapters.MessageAdapter;
 import com.redvolunteer.pojo.Chat;
@@ -61,6 +64,8 @@ public class MessageActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private User mRetrievedUserCreator;
     private Subscription retrievedUserSubscription;
+    DatabaseReference dataRef;
+    StorageReference storageReference;
 
 
     /**
@@ -71,7 +76,7 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
         mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
 
         setContentView(R.layout.activity_message_with_x);
@@ -159,7 +164,25 @@ public class MessageActivity extends AppCompatActivity {
     private void fillActivityWithUSerInfo(){
 
         HelpUserName.setText(mRetrievedUserCreator.getName());
-        prof_image.setImageResource(R.drawable.ic_default_profile);
+
+        dataRef = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(mRetrievedUserCreator.getId());
+        dataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                User usr = snapshot.getValue(User.class);
+                if(usr.getPhoto().equals("default_photo")){
+                    prof_image.setImageResource(R.drawable.ic_default_profile);
+                } else {
+                    Glide.with(MessageActivity.this).load(usr.getPhoto()).into(prof_image);
+                }
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
