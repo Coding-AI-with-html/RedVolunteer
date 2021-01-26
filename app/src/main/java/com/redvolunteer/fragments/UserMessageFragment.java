@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -42,6 +44,7 @@ public class UserMessageFragment extends Fragment {
     private FragmentInteractionListener mListener;
     private List<String> mUserChatList;
     private FirebaseUser mCurentUser;
+    CircularImageView profPicture;
 
 
     DatabaseReference DataRefs;
@@ -64,6 +67,7 @@ public class UserMessageFragment extends Fragment {
         View view  = inflater.inflate(R.layout.fragment_message_wall, container, false);
         mCurentUser = FirebaseAuth.getInstance().getCurrentUser();
         mRecycleView = view.findViewById(R.id.recycler_viewer_msg);
+        profPicture = view.findViewById(R.id.profile_photo);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
 

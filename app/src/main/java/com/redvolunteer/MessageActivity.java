@@ -97,7 +97,7 @@ public class MessageActivity extends AppCompatActivity {
                 public void onNext(User user) {
 
                     mRetrievedUserCreator = user;
-                    setLayout();
+                    BindLayoutComponents();
                 }
 
                 @Override
@@ -120,8 +120,6 @@ public class MessageActivity extends AppCompatActivity {
     private void setLayout(){
 
 
-        BindLayoutComponents();
-        fillActivityWithUSerInfo();
 
     }
 
@@ -157,6 +155,27 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
         readMessages(userSenderUID, userID, prof_image);
+
+        HelpUserName.setText(mRetrievedUserCreator.getName());
+
+        dataRef = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(mRetrievedUserCreator.getId());
+        dataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                User usr = snapshot.getValue(User.class);
+                if(usr.getPhoto().equals("default_photo")){
+                    prof_image.setImageResource(R.drawable.ic_default_profile);
+                } else {
+                    Glide.with(MessageActivity.this).load(usr.getPhoto()).into(prof_image);
+                }
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+            }
+        });
 
 
     }

@@ -13,6 +13,7 @@ import androidx.lifecycle.GenericLifecycleObserver;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.mikhaellopez.circularimageview.CircularImageView;
@@ -65,7 +66,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         holder.showMessage.setText(chat.getMessage());
 
-        holder.profile_picture.setImageResource(R.mipmap.ic_launcher_round);
+        if(imgUrl.equals("default_photo")){
+            holder.profile_picture.setImageResource(R.mipmap.ic_launcher_round);
+        } else {
+            Glide.with(mContext).load(imgUrl).into(holder.profile_picture);
+        }
 
     }
 

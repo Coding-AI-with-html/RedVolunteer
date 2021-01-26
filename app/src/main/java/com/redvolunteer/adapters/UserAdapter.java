@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.MessageActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
@@ -69,7 +70,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView username;
-        public ImageView profile_photo_list;
+        public CircularImageView profile_photo_list;
 
 
         public ViewHolder(@NonNull View itemView) {

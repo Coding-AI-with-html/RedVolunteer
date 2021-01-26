@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,6 +37,7 @@ import com.redvolunteer.RequestDescriptionActivity;
 import com.redvolunteer.adapters.HelpRequestWallAdapter;
 import com.redvolunteer.newrequesthelp.NewRequestHelpActivity;
 import com.redvolunteer.R;
+import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
@@ -106,6 +108,7 @@ public class RequestWallFragment extends Fragment {
     private List<RequestHelp> retrievedRequests;
 
     StorageReference storageReference;
+    DatabaseReference DataReference;
     public RequestWallFragment(){
         //Requires empty public constructor
     }
@@ -122,6 +125,7 @@ public class RequestWallFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
     mMainViewModel = mListener.getHelpRequestViewModel();
     }
 
@@ -215,7 +219,6 @@ public class RequestWallFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        storageReference = FirebaseStorage.getInstance().getReference("uploads");
         return inflater.inflate(R.layout.fragment_request_wall, container, false);
     }
 
