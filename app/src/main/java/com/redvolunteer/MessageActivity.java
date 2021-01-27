@@ -76,7 +76,6 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storageReference = FirebaseStorage.getInstance().getReference("uploads");
         mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
 
         setContentView(R.layout.activity_message_with_x);
@@ -128,7 +127,7 @@ public class MessageActivity extends AppCompatActivity {
      */
     private void BindLayoutComponents(){
 
-        prof_image = findViewById(R.id.profile_photo_msg_user);
+        prof_image = (CircularImageView) findViewById(R.id.profile_photo_msg_user);
         HelpUserName = findViewById(R.id.name_user);
         send_message = findViewById(R.id.btn_send_msg);
         message_field = findViewById(R.id.text_send_field);
@@ -166,9 +165,10 @@ public class MessageActivity extends AppCompatActivity {
                 if(usr.getPhoto().equals("default_photo")){
                     prof_image.setImageResource(R.drawable.ic_default_profile);
                 } else {
-                    Glide.with(MessageActivity.this).load(usr.getPhoto()).into(prof_image);
+
+                    Glide.with(MessageActivity.this).load(usr.getPhoto()).centerCrop().into(prof_image);
                 }
-                readMessages(userSenderUID, userID, usr.getPhoto());
+                readMessages(userID, userSenderUID, usr.getPhoto());
             }
 
             @Override
@@ -201,7 +201,7 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-    private void readMessages(final String myID,final  String userID, final String imgUrl){
+    private void readMessages(final String myID,final  String userID, final String photo){
         mChating = new ArrayList<>();
 
 
@@ -218,7 +218,7 @@ public class MessageActivity extends AppCompatActivity {
                             mChating.add(chat);
                         }
 
-                    messageAdapter = new MessageAdapter(MessageActivity.this, mChating, imgUrl);
+                    messageAdapter = new MessageAdapter(MessageActivity.this, mChating, photo);
                     recyclerView.setAdapter(messageAdapter);
 
                 }

@@ -22,22 +22,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.RequestDescriptionActivity;
 import com.redvolunteer.adapters.HelpRequestWallAdapter;
 import com.redvolunteer.newrequesthelp.NewRequestHelpActivity;
 import com.redvolunteer.R;
-import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
@@ -107,8 +103,6 @@ public class RequestWallFragment extends Fragment {
      */
     private List<RequestHelp> retrievedRequests;
 
-    StorageReference storageReference;
-    DatabaseReference DataReference;
     public RequestWallFragment(){
         //Requires empty public constructor
     }
@@ -125,7 +119,7 @@ public class RequestWallFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    mMainViewModel = mListener.getHelpRequestViewModel();
+        mMainViewModel = mListener.getHelpRequestViewModel();
     }
 
 
@@ -218,7 +212,6 @@ public class RequestWallFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        storageReference = FirebaseStorage.getInstance().getReference("uploads");
         return inflater.inflate(R.layout.fragment_request_wall, container, false);
     }
 
@@ -233,49 +226,49 @@ public class RequestWallFragment extends Fragment {
                 mVolunteerListView.setAdapter(mAdapter);
             } else
                 mAdapter.setHelpList(retrievedRequests);
-                mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataSetChanged();
 
-                mVolunteerListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(AbsListView absListView, int i) {
+            mVolunteerListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
 
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    int visibleElementCount = firstVisibleItem + visibleItemCount;
+                    if (visibleElementCount == totalItemCount && totalItemCount != 0) {
+                        mMainViewModel.getNewRequests().subscribe(new FlowableSubscriber<List<RequestHelp>>() {
+                            @Override
+                            public void onSubscribe(Subscription subscription) {
+                                subscription.request(1L);
+                                if (mMotherRequestHelpSubscription != null) {
+                                    mMotherRequestHelpSubscription.cancel();
+                                }
+                                mMotherRequestHelpSubscription = subscription;
+                            }
+
+                            @Override
+                            public void onNext(List<RequestHelp> requestsH) {
+                                if (requestsH.size() != 0) {
+                                    retrievedRequests.addAll(requestsH);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+
+                            }
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
                     }
+                }
 
-                    @Override
-                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                        int visibleElementCount = firstVisibleItem + visibleItemCount;
-                        if (visibleElementCount == totalItemCount && totalItemCount != 0) {
-                            mMainViewModel.getNewRequests().subscribe(new FlowableSubscriber<List<RequestHelp>>() {
-                                @Override
-                                public void onSubscribe(Subscription subscription) {
-                                    subscription.request(1L);
-                                    if (mMotherRequestHelpSubscription != null) {
-                                        mMotherRequestHelpSubscription.cancel();
-                                    }
-                                    mMotherRequestHelpSubscription = subscription;
-                                }
-
-                                @Override
-                                public void onNext(List<RequestHelp> requestsH) {
-                                    if (requestsH.size() != 0) {
-                                        retrievedRequests.addAll(requestsH);
-                                        mAdapter.notifyDataSetChanged();
-                                    }
-                                }
-
-                                @Override
-                                public void onError(Throwable throwable) {
-
-                                }
-                                @Override
-                                public void onComplete() {
-
-                                }
-                            });
-                        }
-                    }
-
-                });
+            });
         } else {
             mVolunteerListView.setVisibility(View.GONE);
             mNoRequestShow.setVisibility(View.VISIBLE);

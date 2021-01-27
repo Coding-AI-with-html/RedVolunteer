@@ -116,6 +116,7 @@ public class UserMessageFragment extends Fragment {
                 for(DataSnapshot ds: Dsnapshot.getChildren()){
                     User user = ds.getValue(User.class);
 
+                    //display user from chat's
                     for(String id: mUserChatList){
                         if(user.getId().equals(id)){
                             if(mUsers.size() != 0){

@@ -2,7 +2,6 @@ package com.redvolunteer.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,12 +32,11 @@ import com.redvolunteer.utils.persistence.ExtraLabels;
 import java.util.List;
 
 /**
-* This Class is responsible to populate HelpRequest in the selected listView
+ * This Class is responsible to populate HelpRequest in the selected listView
  */
 public class HelpRequestWallAdapter extends BaseAdapter {
     private static final String TAG = "HelpRequestWallAdapter";
 
-    Uri photoUser;
     private List<RequestHelp> helpList;
     private Context context;
 
@@ -88,13 +86,11 @@ public class HelpRequestWallAdapter extends BaseAdapter {
 
         holder.mRequestTitle.setText(reqHelp.getName());
         holder.mReqLocation.setText(reqHelp.getRequestLocation().getName());
-
-        if(reqHelp.getHelpRequestCreator().getPhoto().equals("default_image")){
+        if(reqHelp.getHelpRequestCreator().getPhoto().equals("default_photo")){
             holder.mUserImage.setImageResource(R.drawable.ic_default_profile);
         } else {
             Glide.with(context).load(reqHelp.getHelpRequestCreator().getPhoto()).into(holder.mUserImage);
         }
-        //holder.mUserImage.setImageResource(reqHelp.getHelpRequestCreator().getPhoto());
         holder.mRequestor.setText(reqHelp.getHelpRequestCreator().getName());
 
         View.OnClickListener showUserClicked = new View.OnClickListener() {

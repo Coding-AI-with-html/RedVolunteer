@@ -1,5 +1,6 @@
 package com.redvolunteer.fragments;
 
+
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -141,7 +142,7 @@ public class ProfileFragment extends Fragment {
 
         mUserPic = (ImageView) view.findViewById(R.id.profile_user_pic);
         mUserName = (TextView) view.findViewById(R.id.user_name);
-         mBirthDate = (TextView) view.findViewById(R.id.birth_date);
+        mBirthDate = (TextView) view.findViewById(R.id.birth_date);
         userBio = (EditText) view.findViewById(R.id.user_bio);
         mEditButton = (ImageView) view.findViewById(R.id.edit_profile_button);
         mEditBirthDate = (ImageView) view.findViewById(R.id.modify_birthdate_btn);
@@ -165,7 +166,7 @@ public class ProfileFragment extends Fragment {
 
                 //copy the old info to perform rollback
                 tpmOldBiogaraphy = mShowedUSer.getBiography();
-               tmpOldBirthDate = mShowedUSer.getBirthDay();
+                tmpOldBirthDate = mShowedUSer.getBirthDay();
                 tmpOldPicture = mShowedUSer.getPhoto();
 
                 mUserPic.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +222,7 @@ public class ProfileFragment extends Fragment {
                         fillFragments();
                     }
                 },   cal
-                .get(Calendar.YEAR), cal.get(Calendar.MONTH),
+                        .get(Calendar.YEAR), cal.get(Calendar.MONTH),
                         cal.get(Calendar.DAY_OF_MONTH));
 
                 datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - HEIGHTEEN_YEAR_AGO);
@@ -248,9 +249,9 @@ public class ProfileFragment extends Fragment {
                         Toast.makeText(getContext(), getString(R.string.forgot_biography), Toast.LENGTH_LONG).show();
                     }
                 }
-                    else {
-                        Toast.makeText(getContext(), getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
-                    }
+                else {
+                    Toast.makeText(getContext(), getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -259,7 +260,7 @@ public class ProfileFragment extends Fragment {
 
 
     /**
-    it modify's the layout
+     it modify's the layout
      */
 
     private void resetInvisibleModificationComponents(){
@@ -340,7 +341,7 @@ public class ProfileFragment extends Fragment {
         });
 
 
-       return inflater.inflate(R.layout.fragment_user_profile, container, false);
+        return inflater.inflate(R.layout.fragment_user_profile, container, false);
     }
 
     @Override
@@ -351,7 +352,7 @@ public class ProfileFragment extends Fragment {
 
         } else {
             throw new RuntimeException(context.toString()
-            +" must implement FragInteractionListener");
+                    +" must implement FragInteractionListener");
 
         }
     }
@@ -359,7 +360,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-    mFragListener = null;
+        mFragListener = null;
     }
 
 
@@ -459,21 +460,20 @@ public class ProfileFragment extends Fragment {
         //result of image capture
 
 
-       if(requestCode == IMAGE_REQUEST && resultCode == RESULT_OK
-       && data != null && data.getData() != null){
-           imgUrl = data.getData();
+        if(requestCode == IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null){
+            imgUrl = data.getData();
 
-           if(uploadTask != null && uploadTask.isInProgress()){
-               Toast.makeText(getContext(), "Kelimas progrese", Toast.LENGTH_SHORT).show();
+            if(uploadTask != null && uploadTask.isInProgress()){
+                Toast.makeText(getContext(), "Kelimas progrese", Toast.LENGTH_SHORT).show();
 
-           } else {
-               uploadImage();
-               mShowedUSer.setPhoto(imgUrl.toString());
-           }
-       }
+            } else {
+                uploadImage();
+                mShowedUSer.setPhoto(imgUrl.toString());
+            }
+        }
 
     }
 
 }
-
 

@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.MessageActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
@@ -49,7 +48,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         if(user.getPhoto().equals("default_photo")){
             holder.profile_photo_list.setImageResource(R.drawable.ic_default_profile);
         } else {
-            Glide.with(mContext).load(user.getPhoto()).into(holder.profile_photo_list);
+            Glide.with(mContext).load(user.getPhoto()).centerCrop().into(holder.profile_photo_list);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +69,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView username;
-        public CircularImageView profile_photo_list;
+        public ImageView profile_photo_list;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -81,3 +80,4 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
     }
 }
+

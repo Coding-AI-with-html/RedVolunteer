@@ -20,6 +20,7 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
 import com.redvolunteer.pojo.Chat;
+import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.viewmodels.UserViewModel;
 
@@ -30,18 +31,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public static final int MSG_TYPE_LEFT = 0;
     public static final int MSG_TYPE_RIGHT = 1;
-    User CurrentUser;
+    FirebaseUser Fuser;
 
     private UserViewModel mUserViewModel;
     private Context mContext;
     private List<Chat> Messages;
-    private String imgUrl;
+    private String photo;
 
 
-    public MessageAdapter(Context mContext, List<Chat> messages, String imgUrl) {
+    public MessageAdapter(Context mContext, List<Chat> messages, String photo) {
         this.mContext = mContext;
         this.Messages = messages;
-        this.imgUrl = imgUrl;
+        this.photo = photo;
     }
 
 
@@ -66,10 +67,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         holder.showMessage.setText(chat.getMessage());
 
-        if(imgUrl.equals("default_photo")){
-            holder.profile_picture.setImageResource(R.mipmap.ic_launcher_round);
+        if(photo.equals("default_photo")){
+            holder.profile_picture.setImageResource(R.drawable.ic_default_profile);
         } else {
-            Glide.with(mContext).load(imgUrl).into(holder.profile_picture);
+            Glide.with(mContext).load(photo).into(holder.profile_picture);
         }
 
     }
@@ -95,9 +96,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        FirebaseUser Fuser = FirebaseAuth.getInstance().getCurrentUser();
+         Fuser = FirebaseAuth.getInstance().getCurrentUser();
         if(Messages.get(position).getSender().equals(Fuser.getUid())){
-           return MSG_TYPE_RIGHT;
+            return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;
         }
