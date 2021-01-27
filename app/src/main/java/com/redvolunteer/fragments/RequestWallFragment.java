@@ -125,7 +125,6 @@ public class RequestWallFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        storageReference = FirebaseStorage.getInstance().getReference("uploads");
     mMainViewModel = mListener.getHelpRequestViewModel();
     }
 
@@ -219,6 +218,7 @@ public class RequestWallFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
         return inflater.inflate(R.layout.fragment_request_wall, container, false);
     }
 

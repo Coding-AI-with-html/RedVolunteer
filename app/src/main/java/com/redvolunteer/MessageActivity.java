@@ -154,7 +154,6 @@ public class MessageActivity extends AppCompatActivity {
                 message_field.setText("");
             }
         });
-        readMessages(userSenderUID, userID, prof_image);
 
         HelpUserName.setText(mRetrievedUserCreator.getName());
 
@@ -169,6 +168,7 @@ public class MessageActivity extends AppCompatActivity {
                 } else {
                     Glide.with(MessageActivity.this).load(usr.getPhoto()).into(prof_image);
                 }
+                readMessages(userSenderUID, userID, usr.getPhoto());
             }
 
             @Override
@@ -184,24 +184,6 @@ public class MessageActivity extends AppCompatActivity {
 
         HelpUserName.setText(mRetrievedUserCreator.getName());
 
-        dataRef = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(mRetrievedUserCreator.getId());
-        dataRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
-
-                User usr = snapshot.getValue(User.class);
-                if(usr.getPhoto().equals("default_photo")){
-                    prof_image.setImageResource(R.drawable.ic_default_profile);
-                } else {
-                    Glide.with(MessageActivity.this).load(usr.getPhoto()).into(prof_image);
-                }
-            }
-
-            @Override
-            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-
-            }
-        });
 
     }
 
@@ -219,7 +201,7 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-    private void readMessages(String myID, String userID, CircularImageView imgUrl){
+    private void readMessages(final String myID,final  String userID, final String imgUrl){
         mChating = new ArrayList<>();
 
 

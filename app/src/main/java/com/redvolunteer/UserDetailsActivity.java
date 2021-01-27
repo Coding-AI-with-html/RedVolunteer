@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.redvolunteer.adapters.UserAdapter;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.calendar.CalendarFormatter;
@@ -45,6 +46,7 @@ public class UserDetailsActivity  extends AppCompatActivity {
     private UserViewModel mUserViewModel;
 
     private User mRetrievedUser;
+    UserAdapter mAdapter;
 
     /**
      * Rx java subscribtions
@@ -196,7 +198,7 @@ public class UserDetailsActivity  extends AppCompatActivity {
                 if(usr.getPhoto().equals("default_photo")){
                     mUserPIc.setImageResource(R.drawable.ic_default_profile);
                 } else {
-                    Glide.with(getApplicationContext()).load(usr.getPhoto()).into(mUserPIc);
+                    Glide.with(getBaseContext()).load(usr.getPhoto()).into(mUserPIc);
                 }
             }
 

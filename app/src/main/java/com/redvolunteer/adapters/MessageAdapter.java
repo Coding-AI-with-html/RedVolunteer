@@ -35,10 +35,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private UserViewModel mUserViewModel;
     private Context mContext;
     private List<Chat> Messages;
-    private CircularImageView imgUrl;
+    private String imgUrl;
 
 
-    public MessageAdapter(Context mContext, List<Chat> messages, CircularImageView imgUrl) {
+    public MessageAdapter(Context mContext, List<Chat> messages, String imgUrl) {
         this.mContext = mContext;
         this.Messages = messages;
         this.imgUrl = imgUrl;
