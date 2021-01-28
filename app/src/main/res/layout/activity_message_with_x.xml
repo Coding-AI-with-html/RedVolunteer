@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MessageActivity">
+    tools:context=".MessageActivity"
+    android:background="@color/white">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar_layout"
@@ -47,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/mainColorRed"
         android:layout_alignParentBottom="true">
 
         <EditText
@@ -65,7 +66,5 @@
             android:layout_alignParentEnd="true"
             android:id="@+id/btn_send_msg"
             android:layout_alignParentRight="true"/>
-
-
     </RelativeLayout>
 </RelativeLayout>

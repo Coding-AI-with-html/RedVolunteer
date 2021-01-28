@@ -7,8 +7,8 @@
     <string name="loading_popup_message_spinner">Krauname. Prasome Palaukti…</string>
     <string name="loading_text">Kraunama. Prasome palaukti…</string>
     <string name="ok_button">Gerai</string>
-    <string name="no_request_around_label">Sorry, it seems that there are no events around!</string>
-    <string name="add_request_suggestion_label">Press + to add one</string>
+    <string name="no_request_around_label">Atsiprasome, bet pasirodo nera nei vieno pagalbos prasymo aplink!</string>
+    <string name="add_request_suggestion_label">Spauskite + kad prideti</string>
     <string name="your_requests_title">Jusu prasymo uzklausos</string>
     <string name="recconnecting_request">No internet connection. Once reconnected it could take a while to recontact the server</string>
     <string name="description_input_label">Type a description about what help you need!</string>

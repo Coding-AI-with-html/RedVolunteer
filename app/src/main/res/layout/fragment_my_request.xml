@@ -2,36 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/cardview_light_background">
 
     <!--TopBar-->
     <RelativeLayout
         android:id="@+id/attendances_top_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:layout_alignParentTop="true"
         android:layout_gravity="top"
-        android:background="@color/mainColorRed"
+        android:background="@drawable/ic_wavetop"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
             android:text="@string/your_requests_title"
             android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:fontFamily="@font/aclonica" />
 
-        <ImageView
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/myrequest_new_request_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/ic_new_event_plus" />
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="-5dp"
+            android:layout_marginRight="-5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_request"
+            android:scaleType="center"
+            app:fabSize="normal"
+            app:borderWidth="0dp"
+            android:backgroundTint="@color/mainColorRed"
+            android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>
 

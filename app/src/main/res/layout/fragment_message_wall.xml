@@ -4,10 +4,28 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.redvolunteer.fragments.UserMessageFragment">
+    <RelativeLayout
+        android:id="@+id/topBarMessg"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/ic_wavetop">
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="Jusu zinutes"
+            android:layout_margin="5dp"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:fontFamily="@font/aclonica"
+            />
+</RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_viewer_msg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+       android:layout_marginTop="75dp"
         />
 
 
