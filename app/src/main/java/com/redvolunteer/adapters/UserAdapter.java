@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.redvolunteer.MessageActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
@@ -45,10 +47,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         User user = mUserList.get(position);
         holder.username.setText(user.getName());
 
+
         if(user.getPhoto().equals("default_photo")){
             holder.profile_photo_list.setImageResource(R.drawable.ic_default_profile);
         } else {
-            Glide.with(mContext).load(user.getPhoto()).centerCrop().into(holder.profile_photo_list);
+            Glide.with(mContext).load(user.getPhoto()).into(holder.profile_photo_list);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

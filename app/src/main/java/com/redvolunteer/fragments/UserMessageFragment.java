@@ -1,5 +1,6 @@
 package com.redvolunteer.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,11 +41,12 @@ public class UserMessageFragment extends Fragment {
     private UserAdapter mUserAdapter;
 
     private UserViewModel mUserViewModel;
+    private HelpRequestViewModel mHelpRequestViewModel;
 
     private FragmentInteractionListener mListener;
     private List<String> mUserChatList;
-    private FirebaseUser mCurentUser;
-    CircularImageView profPicture;
+    //private FirebaseUser mCurentUser;
+    User mShowedUSer;
 
 
     DatabaseReference DataRefs;
@@ -58,6 +60,9 @@ public class UserMessageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserViewModel = mListener.getUserViewModel();
+        mShowedUSer = mUserViewModel.retrieveCachedUser();
+        mHelpRequestViewModel = mListener.getHelpRequestViewModel();
 
     }
 
@@ -65,9 +70,8 @@ public class UserMessageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.fragment_message_wall, container, false);
-        mCurentUser = FirebaseAuth.getInstance().getCurrentUser();
+        //mCurentUser = FirebaseAuth.getInstance().getCurrentUser();
         mRecycleView = view.findViewById(R.id.recycler_viewer_msg);
-        profPicture = view.findViewById(R.id.profile_photo);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -84,10 +88,10 @@ public class UserMessageFragment extends Fragment {
                 for(DataSnapshot snapshot: Dsnapshot.getChildren()){
                     Chat chatting =  snapshot.getValue(Chat.class);
 
-                    if(chatting.getSender().equals(mCurentUser.getUid())){
+                    if(chatting.getSender().equals(mShowedUSer.getId())){
                         mUserChatList.add(chatting.getReceiver());
                     }
-                    if(chatting.getReceiver().equals(mCurentUser.getUid())){
+                    if(chatting.getReceiver().equals(mShowedUSer.getId())){
                         mUserChatList.add(chatting.getSender());
                     }
                 }
@@ -140,5 +144,22 @@ public class UserMessageFragment extends Fragment {
 
             }
         });
+    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof FragmentInteractionListener){
+            mListener = (FragmentInteractionListener) context;
+
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement FragmentsInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener= null;
     }
 }

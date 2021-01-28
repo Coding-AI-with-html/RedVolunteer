@@ -127,7 +127,7 @@ public class MessageActivity extends AppCompatActivity {
      */
     private void BindLayoutComponents(){
 
-        prof_image = (CircularImageView) findViewById(R.id.profile_photo_msg_user);
+        prof_image = findViewById(R.id.profile_photo_msg_user);
         HelpUserName = findViewById(R.id.name_user);
         send_message = findViewById(R.id.btn_send_msg);
         message_field = findViewById(R.id.text_send_field);
@@ -156,7 +156,7 @@ public class MessageActivity extends AppCompatActivity {
 
         HelpUserName.setText(mRetrievedUserCreator.getName());
 
-        dataRef = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(mRetrievedUserCreator.getId());
+        dataRef = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(userID);
         dataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
@@ -166,9 +166,9 @@ public class MessageActivity extends AppCompatActivity {
                     prof_image.setImageResource(R.drawable.ic_default_profile);
                 } else {
 
-                    Glide.with(MessageActivity.this).load(usr.getPhoto()).centerCrop().into(prof_image);
+                    Glide.with(MessageActivity.this).load(usr.getPhoto()).into(prof_image);
                 }
-                readMessages(userID, userSenderUID, usr.getPhoto());
+                readMessages(userSenderUID, userID, usr.getPhoto());
             }
 
             @Override
