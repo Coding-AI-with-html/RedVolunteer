@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lighterGrey">
+    android:background="@color/white">
 
     <!--TopBar-->
     <RelativeLayout
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="New Help Request"
+            android:text="@string/help_request_name"
             android:textColor="@color/white"
             android:textSize="25sp"
             android:textStyle="italic"/>
@@ -68,7 +68,7 @@
                     android:id="@+id/position_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Select a position for the event"
+                    android:text="@string/select_position_of_the_help_request"
                     android:textAlignment="center"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="18sp" />
@@ -92,8 +92,8 @@
         android:background="@color/mainlyColor"
         android:padding="20dp"
         android:textStyle="italic"
-        android:text="Sukurti pagalbos prasyma"
+        android:text="@string/create_help_request"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
 </RelativeLayout>

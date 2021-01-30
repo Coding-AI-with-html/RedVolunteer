@@ -1,9 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/lighterGrey"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     tools:context="com.redvolunteer.fragments.RequestWallFragment">
 
 
@@ -22,6 +22,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:text="Visos uzklausos"
+            android:textColor="@color/white"
             android:textAlignment="center"
             android:textSize="25sp"
             android:fontFamily="@font/aclonica"/>
@@ -66,13 +67,14 @@
     </LinearLayout>
 
     <ListView
+        android:layout_marginTop="-20dp"
         android:visibility="gone"
         android:id="@+id/request_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/helpRequestList_top_bar"
         android:divider="@color/cardview_light_background"
-        android:dividerHeight="10dp" />
+        android:dividerHeight="-1dp" />
 
 
 </RelativeLayout>
