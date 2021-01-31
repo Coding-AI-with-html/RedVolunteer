@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.redvolunteer.ExplanationApp;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
@@ -89,6 +91,8 @@ public class Login extends AppCompatActivity {
      */
     private ProgressDialog popupProgDialog;
 
+    ImageView mExplanationApp;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -109,10 +113,20 @@ public class Login extends AppCompatActivity {
 
         this.bindFacebookButton();
         this.BindGoogleButton();
-
-
+        this.bindExplanationButton();
     }
 
+    private void bindExplanationButton(){
+
+        mExplanationApp = (ImageView) findViewById(R.id.explanation_app);
+
+        mExplanationApp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ExplanationApp.class));
+            }
+        });
+    }
 
 
     private void setupFirebaseAuth(){
@@ -129,6 +143,7 @@ public class Login extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         fbCallBackManager  = CallbackManager.Factory.create();
     }
+
 
 
 

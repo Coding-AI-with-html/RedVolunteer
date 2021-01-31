@@ -47,6 +47,10 @@
     <string name="facebook_error_credential_string">Ops, klaida su programėles serveriu!</string>
     <string name="redVolunteer_logo">RedVolunteer Logo</string>
     <string name="hint_resource">Pasirinkite lyti</string>
+    <string name="why_explanation_app"> Jau metus gyvename laikotarpyje, kai viskas vyksta nuotoliniu būdu, todėl ši programėlės pagalbą galima sužinoti kam tos pagalbos reikia, bei patiems jos paprašyti nesusitikus</string>
+    <string name="explanation_app">Pagrindinis programėlės principas yra suteikti ir gauti pagalbos. Prisijungus pagal lokaciją nustatomos artimiausios žmonų sukurtos pagalbos užklausos, norint padėti tam žmogui, paspaudžiate ant mygtuko "Padėti asmeniui", ir užklausos sukurėjas ir Jus nukeliamas į žinutės pokalbį, per kurį Jus susitariate dėl tolimesnių veiksmų.  </string>
+    <string name="motivation_words">„Tu pragyveni iš to, ką gauni. Jūs kuriate gyvenimą tuo, ką duodate“</string>
+    <string name="winston_churchill_words">W.Churchill</string>
     <string name="location_permission_notallowed_toast">Hey, mes gerbiame jusu privatumą, todėl pasirinksime numatytą lokaciją kuri yra Kaunas</string>
 
     <string name="facebook_app_id">2412401272386027</string>
@@ -58,6 +62,7 @@
     <string name="go_to_picker_activity">Go to place picker activity</string>
     <string name="join_request_label_btn">Parasyti asmeniui</string>
     <string name="edit_description_label_btn"> Pakeisti Uzklausos aprasyma</string>
+    <string name="delete_request_help">Istrinti Pagalbos Uzklausa</string>
     <string name="accept_edit_label_btn">Isaugoti pakeitimus</string>
     <string name="landmark_icon_descr">Landmark icon</string>
     <string name="view_on_map_label">Perziureti uzklausos lokacija</string>

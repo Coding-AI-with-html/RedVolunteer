@@ -169,6 +169,12 @@ public class HelpRequestModellmpl implements RequestHelpModel {
         return availableRequests;
     }
 
+    @Override
+    public void deleteRequest(RequestHelp requestID) {
+
+        remoteRequestDao.deleteRequest(requestID);
+    }
+
     private class FillRequestDetails implements FlowableOnSubscribe<List<RequestHelp>> {
 
 

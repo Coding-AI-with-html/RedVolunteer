@@ -39,6 +39,9 @@ public class HelpRequestViewModel {
     public Flowable<List<RequestHelp>> getNewRequests(){
         return mRequestHelpModel.getNewRequests();
     }
+    public void deleteRequestFromStore(RequestHelp requestID){
+        mRequestHelpModel.deleteRequest(requestID);
+    }
 
 
     public RequestLocation getUserLocation(){

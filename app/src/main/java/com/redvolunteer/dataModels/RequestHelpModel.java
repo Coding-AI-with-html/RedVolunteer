@@ -42,12 +42,5 @@ public interface RequestHelpModel {
      */
     Flowable<RequestHelp> getEventByID(String requestID);
 
-
-
-
-
-
-
-
-
+    void deleteRequest(RequestHelp requestID);
 }

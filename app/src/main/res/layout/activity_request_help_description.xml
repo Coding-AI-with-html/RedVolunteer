@@ -91,6 +91,14 @@
                         android:text="@string/edit_description_label_btn"
                         android:textColor="@color/colorPrimaryDark"
                         tools:ignore="ButtonStyle" />
+                    <Button
+                        android:id="@+id/delete_request_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_primary"
+                        android:text="@string/delete_request_help"
+                        android:textColor="@color/colorPrimaryDark"
+                        tools:ignore="ButtonStyle" />
 
                     <Button
                         android:id="@+id/accept_modification_btn"

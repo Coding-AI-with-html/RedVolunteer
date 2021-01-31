@@ -10,7 +10,7 @@ import io.reactivex.Flowable;
 public interface RemoteUserDao {
 
     /**
-     * Load user from the Sutore, this operation might can be aSync;
+     * Load user from the Store, this operation might can be aSync;
      * @param userID
      * @return
      */

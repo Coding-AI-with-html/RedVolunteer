@@ -66,6 +66,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
     private Button mModifyRequest;
     private Button mAcceptModifyRequest;
     private Button mAcceptHelpRequest;
+    private Button mDeleteRequestHelp;
     private ProgressDialog popupDialogProgress;
 
     /**
@@ -151,6 +152,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
         this.mAcceptHelpRequest  = (Button) findViewById(R.id.accept_request_btn);
         this.mModifyRequest = (Button) findViewById(R.id.modify_request_btn);
         this.mAcceptModifyRequest = (Button) findViewById(R.id.accept_modification_btn);
+        this.mDeleteRequestHelp = (Button) findViewById(R.id.delete_request_btn);
 
         ImageView mBackButton = (ImageView) findViewById(R.id.request_description_backbutton);
 
@@ -245,6 +247,13 @@ public class RequestDescriptionActivity extends AppCompatActivity {
                 mRequestDescription.setSelection(mRequestDescription.getText().length());
 
                 mAcceptModifyRequest.setVisibility(View.VISIBLE);
+            }
+        });
+        mDeleteRequestHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mHelpRequestViewModel.deleteRequestFromStore(mRetrievedRequest);
             }
         });
 
