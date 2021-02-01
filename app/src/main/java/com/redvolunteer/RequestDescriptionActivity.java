@@ -66,7 +66,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
     private Button mModifyRequest;
     private Button mAcceptModifyRequest;
     private Button mAcceptHelpRequest;
-    private Button mDeleteRequestHelp;
+    private ImageView mDeleteRequestHelp;
     private ProgressDialog popupDialogProgress;
 
     /**
@@ -152,7 +152,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
         this.mAcceptHelpRequest  = (Button) findViewById(R.id.accept_request_btn);
         this.mModifyRequest = (Button) findViewById(R.id.modify_request_btn);
         this.mAcceptModifyRequest = (Button) findViewById(R.id.accept_modification_btn);
-        this.mDeleteRequestHelp = (Button) findViewById(R.id.delete_request_btn);
+        this.mDeleteRequestHelp = (ImageView) findViewById(R.id.delete_request_btn);
 
         ImageView mBackButton = (ImageView) findViewById(R.id.request_description_backbutton);
 
@@ -221,9 +221,6 @@ public class RequestDescriptionActivity extends AppCompatActivity {
  }
  private void setRequestActionButtons(){
 
-
-
-
         mAcceptHelpRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,7 +250,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mHelpRequestViewModel.deleteRequestFromStore(mRetrievedRequest);
+                showDeleteConfirmationDialog();
             }
         });
 
@@ -285,12 +282,13 @@ public class RequestDescriptionActivity extends AppCompatActivity {
             }
         });
 
+        mDeleteRequestHelp.setVisibility(View.GONE);
         mAcceptModifyRequest.setVisibility(View.GONE);
 
         if(checkIfUserIsAdmin()){
 
             mAcceptHelpRequest.setVisibility(View.GONE);
-
+            mDeleteRequestHelp.setVisibility(View.VISIBLE);
 
         } else {
 
@@ -325,6 +323,38 @@ public class RequestDescriptionActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    public void showDeleteConfirmationDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        String title = getString(R.string.delete_confirmation);
+        String message = getString(R.string.ask_delete_request);
+        String positive = getString(R.string.yes_delete_request);
+        String negative = getString(R.string.no_delete_request);
+
+        builder.setTitle(title);
+        builder.setMessage(message);
+
+        builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                mHelpRequestViewModel.deleteRequestFromStore(mRetrievedRequest);
+                Intent goToMain = new Intent(RequestDescriptionActivity.this, MainActivity.class);
+                startActivity(goToMain);
+            }
+        });
+        builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mHelpRequestViewModel.updateHelpRequest(mRetrievedRequest);
+                refresh();
+            }
+        });
+
+        builder.show();
     }
 
 

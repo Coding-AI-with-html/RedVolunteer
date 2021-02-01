@@ -137,6 +137,15 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
         return requestToStore;
     }
 
+    @Override
+    public RequestHelp deleteRequest(RequestHelp requestHelpDeleteID) {
+
+        this.mRequestStore.child(requestHelpDeleteID.getId()).removeValue();
+
+        return requestHelpDeleteID;
+
+    }
+
     private void updateRequest(RequestHelp requestToUpdate){
         // you can just edit the description of the request
         this.mRequestStore.child(requestToUpdate.getId()).child(DESCRIPTION_FIELD).setValue(requestToUpdate.getDescription());

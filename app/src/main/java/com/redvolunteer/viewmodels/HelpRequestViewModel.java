@@ -47,4 +47,5 @@ public class HelpRequestViewModel {
     public RequestLocation getUserLocation(){
         return mRequestHelpModel.getUserLocation();
     }
+
 }
