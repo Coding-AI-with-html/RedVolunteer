@@ -1,6 +1,7 @@
 package com.redvolunteer.viewmodels;
 
 import com.redvolunteer.dataModels.RequestHelpModel;
+import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 
@@ -18,6 +19,9 @@ public class HelpRequestViewModel {
 
     public Flowable<List<RequestHelp>> getUserHelpRequests(){
         return mRequestHelpModel.getUserHelpRequests();
+    }
+    public Flowable<List<Chat>> getUserChats(){
+        return mRequestHelpModel.getUserMessages();
     }
     public Flowable<List<RequestHelp>> getRequests() {
         return mRequestHelpModel.getRequests();

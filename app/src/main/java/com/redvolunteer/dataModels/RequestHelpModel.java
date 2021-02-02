@@ -1,5 +1,6 @@
 package com.redvolunteer.dataModels;
 
+import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 
@@ -21,11 +22,12 @@ public interface RequestHelpModel {
      */
     Flowable<List<RequestHelp>> getNewRequests();
 
+    Flowable<List<Chat>> getUserMessages();
+
     /**
      * set the location of the user
      */
     void setLocation(RequestLocation location);
-
 
     /**
      * Store new HelpRequest
@@ -42,5 +44,9 @@ public interface RequestHelpModel {
      */
     Flowable<RequestHelp> getEventByID(String requestID);
 
+
+    /**
+     * Delete request Method
+     */
     void deleteRequest(RequestHelp requestID);
 }

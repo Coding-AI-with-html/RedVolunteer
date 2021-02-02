@@ -7,6 +7,7 @@
     <string name="loading_popup_message_spinner">Krauname. Prašome Palaukti…</string>
     <string name="loading_text">Kraunama. Prašome palaukti…</string>
     <string name="ok_button">Gerai</string>
+    <string name="no_request_my_request">Jus dar neturite sukure nei vienos pagalbos uzklausos!</string>
     <string name="no_request_around_label">Atsiprašome, bet pasirodo nėra nei vieno pagalbos prasymo aplink!</string>
     <string name="add_request_suggestion_label">Spauskite + kad pridėti</string>
     <string name="your_requests_title">Jusu prašymo užklausos</string>
