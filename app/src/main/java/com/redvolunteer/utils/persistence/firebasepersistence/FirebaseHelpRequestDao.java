@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.utils.persistence.RemoteRequestDao;
 
@@ -37,6 +38,7 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
      * Holds the ref of the data store
      */
     private DatabaseReference mRequestStore;
+    private DatabaseReference mChatStore;
 
     public FirebaseHelpRequestDao(FirebaseDatabase FireDatabase, String requestStoreName) {
         //access to the remote user store
@@ -113,6 +115,43 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
                         });
             }
         }, BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<Chat>> LoadUserMessages(String UserID) {
+
+        return Flowable.create(new FlowableOnSubscribe<List<Chat>>() {
+            @Override
+            public void subscribe(@NonNull FlowableEmitter<List<Chat>> FlowEmitter) throws Exception {
+
+                mChatStore = FirebaseDatabase.getInstance().getReference("Chats");
+                mChatStore
+                        .orderByKey()
+                        .equalTo(UserID)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                                Chat retrievedChats;
+
+                                try {
+                                    DataSnapshot ChatWrapper = snapshot.getChildren().iterator().next();
+                                    retrievedChats = ChatWrapper.getValue(Chat.class);
+                                    Log.d(TAG, "onDataChange: " + retrievedChats);
+                                } catch (NoSuchElementException e) {
+                                    retrievedChats = new Chat();
+                                }
+                               // FlowEmitter.onNext(retrievedChats);
+                            }
+
+                            @Override
+                            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+                            }
+                        });
+            }
+        }, BackpressureStrategy.BUFFER);
+
     }
 
     @Override

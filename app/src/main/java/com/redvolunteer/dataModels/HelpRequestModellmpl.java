@@ -3,6 +3,7 @@ package com.redvolunteer.dataModels;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;
@@ -20,6 +21,7 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 
 public class HelpRequestModellmpl implements RequestHelpModel {
@@ -102,6 +104,29 @@ public class HelpRequestModellmpl implements RequestHelpModel {
     public Flowable<List<RequestHelp>> getNewRequests() {
         return Flowable.create(new FillRequestDetails(), BackpressureStrategy.BUFFER);
     }
+
+    @Override
+    public Flowable<List<Chat>> getUserMessages() {
+
+
+        return Flowable.create(new FlowableOnSubscribe<List<Chat>>() {
+            @Override
+            public void subscribe(@NonNull FlowableEmitter<List<Chat>> FlowEmiiter) throws Exception {
+
+                remoteRequestDao
+                        .LoadUserMessages(userModel.GetLocalUser().getId())
+                        .subscribe(new Consumer<List<Chat>>() {
+                            @Override
+                            public void accept(List<Chat> chats) throws Exception {
+                                Collections.reverse(chats);
+                                FlowEmiiter.onNext(chats);
+
+                            }
+                        });
+            }
+        }, BackpressureStrategy.BUFFER);
+    }
+
     @Override
     public Flowable<List<RequestHelp>> getUserHelpRequests() {
 

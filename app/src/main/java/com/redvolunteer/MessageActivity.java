@@ -111,12 +111,9 @@ public class MessageActivity extends AppCompatActivity {
             });
 
 
+        } else {
+            Toast.makeText(MessageActivity.this, getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
         }
-
-
-
-    }
-    private void setLayout(){
 
 
 

@@ -1,5 +1,6 @@
 package com.redvolunteer.utils.persistence;
 
+import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.RequestHelp;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface RemoteRequestDao {
      * Loads requestHelp based on its id
      */
     Flowable<RequestHelp> LoadRequestById(String requestID);
+
+    Flowable<List<Chat>> LoadUserMessages(String UserID);
 
     /**
      * Saves new help request
