@@ -2,6 +2,7 @@ package com.redvolunteer.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,14 +28,21 @@ import com.redvolunteer.RedVolunteerApplication;
 import com.redvolunteer.adapters.UserAdapter;
 import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.User;
+import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
+
+import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.FlowableSubscriber;
+
 public class UserMessageFragment extends Fragment {
 
+
+    private static final String TAG = "UserMessageFragment";
     private RecyclerView mRecycleView;
 
     private List<User> mUsers;
@@ -66,11 +74,11 @@ public class UserMessageFragment extends Fragment {
 
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view  = inflater.inflate(R.layout.fragment_message_wall, container, false);
-        //mCurentUser = FirebaseAuth.getInstance().getCurrentUser();
         mRecycleView = view.findViewById(R.id.recycler_viewer_msg);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -106,6 +114,24 @@ public class UserMessageFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden) {
+
+
+
+
+            if(NetworkCheker.getInstance().isNetworkAvailable(getContext())){
+
+
+
+
+            }
+        }
+    }
+
     private void readChats(){
 
         mUsers = new ArrayList<>();

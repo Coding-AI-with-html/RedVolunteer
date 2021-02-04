@@ -26,7 +26,6 @@ public interface RemoteRequestDao {
      */
     Flowable<RequestHelp> LoadRequestById(String requestID);
 
-    Flowable<List<Chat>> LoadUserMessages(String UserID);
 
     /**
      * Saves new help request

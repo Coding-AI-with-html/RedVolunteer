@@ -30,10 +30,6 @@ public class HelpRequestModellmpl implements RequestHelpModel {
     /**
      * Firebase
      */
-    private DatabaseReference dataRef;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase mFirebaseDatabase;
     private String userID;
 
 
@@ -105,27 +101,7 @@ public class HelpRequestModellmpl implements RequestHelpModel {
         return Flowable.create(new FillRequestDetails(), BackpressureStrategy.BUFFER);
     }
 
-    @Override
-    public Flowable<List<Chat>> getUserMessages() {
 
-
-        return Flowable.create(new FlowableOnSubscribe<List<Chat>>() {
-            @Override
-            public void subscribe(@NonNull FlowableEmitter<List<Chat>> FlowEmiiter) throws Exception {
-
-                remoteRequestDao
-                        .LoadUserMessages(userModel.GetLocalUser().getId())
-                        .subscribe(new Consumer<List<Chat>>() {
-                            @Override
-                            public void accept(List<Chat> chats) throws Exception {
-                                Collections.reverse(chats);
-                                FlowEmiiter.onNext(chats);
-
-                            }
-                        });
-            }
-        }, BackpressureStrategy.BUFFER);
-    }
 
     @Override
     public Flowable<List<RequestHelp>> getUserHelpRequests() {

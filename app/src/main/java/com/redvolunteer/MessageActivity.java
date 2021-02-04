@@ -65,7 +65,6 @@ public class MessageActivity extends AppCompatActivity {
     private User mRetrievedUserCreator;
     private Subscription retrievedUserSubscription;
     DatabaseReference dataRef;
-    StorageReference storageReference;
 
 
     /**
@@ -173,13 +172,6 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
-
-
-    }
-
-    private void fillActivityWithUSerInfo(){
-
-        HelpUserName.setText(mRetrievedUserCreator.getName());
 
 
     }

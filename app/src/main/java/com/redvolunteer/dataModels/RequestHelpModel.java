@@ -22,7 +22,6 @@ public interface RequestHelpModel {
      */
     Flowable<List<RequestHelp>> getNewRequests();
 
-    Flowable<List<Chat>> getUserMessages();
 
     /**
      * set the location of the user

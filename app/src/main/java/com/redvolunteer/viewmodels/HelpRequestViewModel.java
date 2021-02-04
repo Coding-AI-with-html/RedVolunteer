@@ -20,9 +20,7 @@ public class HelpRequestViewModel {
     public Flowable<List<RequestHelp>> getUserHelpRequests(){
         return mRequestHelpModel.getUserHelpRequests();
     }
-    public Flowable<List<Chat>> getUserChats(){
-        return mRequestHelpModel.getUserMessages();
-    }
+
     public Flowable<List<RequestHelp>> getRequests() {
         return mRequestHelpModel.getRequests();
     }
