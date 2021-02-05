@@ -50,6 +50,7 @@ import com.redvolunteer.pojo.RequestLocation;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.ValidateUtils;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
+import com.redvolunteer.viewmodels.MessageViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.fragments.ProfileFragment;
 import com.redvolunteer.fragments.RequestWallFragment;
@@ -92,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
      * Help Request View Model
      */
     private HelpRequestViewModel mHelpRequestViewModel;
+
+    /**
+     * Message View Model
+     */
+    private MessageViewModel mMessageViewModel;
 
     /**
      * Help request who created user fragment
@@ -148,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
         super.onCreate(savedInstanceState);
         mUserViewModel = getUserViewModel();
         mHelpRequestViewModel = getHelpRequestViewModel();
+        mMessageViewModel = getMessageViewModel();
 
         if (!mUserViewModel.isAuth()) {
             signOut();
@@ -337,6 +344,15 @@ public class MainActivity extends AppCompatActivity implements FragmentInteracti
             mHelpRequestViewModel = ((RedVolunteerApplication) getApplication()).getHelpRequestViewModel();
         }
         return mHelpRequestViewModel;
+    }
+
+    @Override
+    public MessageViewModel getMessageViewModel() {
+
+        if(mMessageViewModel == null){
+            mMessageViewModel = ((RedVolunteerApplication) getApplication()).getMessageViewModel();
+        }
+        return mMessageViewModel;
     }
 
     private void openWall() {

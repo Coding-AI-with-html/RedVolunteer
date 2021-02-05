@@ -47,6 +47,7 @@ import com.redvolunteer.R;
 import com.redvolunteer.utils.calendar.CalendarFormatter;
 import com.redvolunteer.utils.imagemarshalling.ImageBase64Marshaller;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
+import com.redvolunteer.viewmodels.MessageViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 import com.redvolunteer.pojo.User;
 
@@ -111,6 +112,7 @@ public class ProfileFragment extends Fragment {
     private LinearLayout mActionModifyButton;
     private ImageView mEditPhotoIndicator;
     private HelpRequestViewModel mHelpRequestViewModel;
+    private MessageViewModel mMessageViewModel;
 
     /**
      * Backup for old data
@@ -279,6 +281,7 @@ public class ProfileFragment extends Fragment {
         //retrieve the user from the local store
         mShowedUSer = mUserViewModel.retrieveCachedUser();
         this.mHelpRequestViewModel = mFragListener.getHelpRequestViewModel();
+        this.mMessageViewModel = mFragListener.getMessageViewModel();
 
     }
 

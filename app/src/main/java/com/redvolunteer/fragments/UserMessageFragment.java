@@ -30,8 +30,10 @@ import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
+import com.redvolunteer.viewmodels.MessageViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 
+import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
@@ -44,12 +46,14 @@ public class UserMessageFragment extends Fragment {
 
     private static final String TAG = "UserMessageFragment";
     private RecyclerView mRecycleView;
+    private Subscription MessageRetrievedSubscription;
 
     private List<User> mUsers;
     private UserAdapter mUserAdapter;
 
     private UserViewModel mUserViewModel;
     private HelpRequestViewModel mHelpRequestViewModel;
+    private MessageViewModel mMainModel;
 
     private FragmentInteractionListener mListener;
     private List<String> mUserChatList;
@@ -71,6 +75,7 @@ public class UserMessageFragment extends Fragment {
         mUserViewModel = mListener.getUserViewModel();
         mShowedUSer = mUserViewModel.retrieveCachedUser();
         mHelpRequestViewModel = mListener.getHelpRequestViewModel();
+        mMainModel = mListener.getMessageViewModel();
 
     }
 
@@ -125,11 +130,42 @@ public class UserMessageFragment extends Fragment {
 
             if(NetworkCheker.getInstance().isNetworkAvailable(getContext())){
 
+                mMainModel.getUserMessages().subscribe(new Subscriber<List<Chat>>() {
+                    @Override
+                    public void onSubscribe(Subscription subscription) {
+                        subscription.request(1L);
 
+                        if(MessageRetrievedSubscription !=null){
+                            MessageRetrievedSubscription.cancel();
+                        }
+                        MessageRetrievedSubscription = subscription;
+                    }
+
+                    @Override
+                    public void onNext(List<Chat> chats) {
+
+                        if(chats.size()!=0){
+                            InitiliazeMessageView(chats);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
 
             }
         }
+    }
+    private void InitiliazeMessageView(final List<Chat> chatsList){
+        UserAdapter mUserAdapter = new UserAdapter(getContext(), mUsers);
     }
 
     private void readChats(){

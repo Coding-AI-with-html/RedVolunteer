@@ -18,7 +18,8 @@ import io.reactivex.functions.Consumer;
 public class MessageModellimp implements MessageModel {
 
 
-    /***
+
+    /**
      *
      */
     private RemoteMessageDao remoteMessageDao;

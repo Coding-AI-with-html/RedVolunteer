@@ -61,6 +61,7 @@
     <string name="facebook_app_id">2412401272386027</string>
     <string name="fb_login_protocol_scheme">fb2412401272386027</string>
     <string name="firebase_request_store_name">Request_Store</string>
+    <string name="firebase_message_store_name">Chats</string>
     <string name="request_description_top_label">Užklausos aprašymas</string>
     <string name="database_Help_seekers">Help_Seekers</string>
     <string name="gps_not_available">Jusu pozicija nera priieinama!</string>
