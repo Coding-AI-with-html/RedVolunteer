@@ -152,6 +152,7 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
     private void updateRequest(RequestHelp requestToUpdate){
         // you can just edit the description of the request
         this.mRequestStore.child(requestToUpdate.getId()).child(DESCRIPTION_FIELD).setValue(requestToUpdate.getDescription());
+
     }
 
     @Override
@@ -195,7 +196,6 @@ public class FirebaseHelpRequestDao implements RemoteRequestDao {
         /**
          * value of anchor
          */
-
         private int mAnchor;
 
         /**

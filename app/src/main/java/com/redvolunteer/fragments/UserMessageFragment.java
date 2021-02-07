@@ -57,7 +57,6 @@ public class UserMessageFragment extends Fragment {
 
     private FragmentInteractionListener mListener;
     private List<String> mUserChatList;
-    //private FirebaseUser mCurentUser;
     User mShowedUSer;
 
 
@@ -144,9 +143,11 @@ public class UserMessageFragment extends Fragment {
                     @Override
                     public void onNext(List<Chat> chats) {
 
+
                         if(chats.size()!=0){
                             InitiliazeMessageView(chats);
                         }
+                        Log.d(TAG, "onNext: " + chats);
                     }
 
                     @Override
@@ -161,11 +162,15 @@ public class UserMessageFragment extends Fragment {
                 });
 
 
+
+
+
             }
         }
     }
     private void InitiliazeMessageView(final List<Chat> chatsList){
         UserAdapter mUserAdapter = new UserAdapter(getContext(), mUsers);
+        mRecycleView.setAdapter(mUserAdapter);
     }
 
     private void readChats(){

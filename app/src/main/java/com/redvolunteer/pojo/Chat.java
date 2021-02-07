@@ -3,6 +3,10 @@ package com.redvolunteer.pojo;
 public class Chat {
 
     /**
+     * Chat unique ID
+     */
+    private String id;
+    /**
      * User who Sends message
      */
     private String sender;
@@ -22,6 +26,14 @@ public class Chat {
         this.message = message;
     }
     public Chat() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSender() {
@@ -48,5 +60,13 @@ public class Chat {
         this.message = message;
     }
 
-
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id='" + id + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

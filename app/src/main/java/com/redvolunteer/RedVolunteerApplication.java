@@ -9,6 +9,7 @@ import com.redvolunteer.dataModels.HelpRequestModellmpl;
 import com.redvolunteer.dataModels.MessageModel;
 import com.redvolunteer.dataModels.MessageModellimp;
 import com.redvolunteer.dataModels.UserModeAsynclmlp;
+import com.redvolunteer.utils.LocalMessageDao;
 import com.redvolunteer.utils.auth.Auth20FirebaseHandlerlmpl;
 import com.redvolunteer.utils.auth.Auth20Handler;
 import com.redvolunteer.utils.persistence.LocalRequestDao;
@@ -20,6 +21,7 @@ import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseHelpReques
 import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseMessageDao;
 import com.redvolunteer.utils.persistence.firebasepersistence.FirebaseUserDao;
 import com.redvolunteer.utils.persistence.sharedpreferencespersistence.LocalUserDaolmpl;
+import com.redvolunteer.utils.persistence.sqlitelocalpersistence.LocalSQLiteMessageDao;
 import com.redvolunteer.utils.persistence.sqlitelocalpersistence.LocalSQLiteRequestDao;
 import com.redvolunteer.utils.requestutils.DistanceManager;
 import com.redvolunteer.utils.requestutils.DistanceManagerlimp;
@@ -53,12 +55,13 @@ public class RedVolunteerApplication extends Application {
 
         LocalUserDao localUserDao = new LocalUserDaolmpl(this);
         LocalRequestDao localRequestDao = new LocalSQLiteRequestDao(this);
+        LocalMessageDao localMessageDao = new LocalSQLiteMessageDao(this);
 
         //Utilities
         DefaultUSerFiller.getInstance().init(this);
         DistanceManager distanceManager = new DistanceManagerlimp();
         mUserModel = new UserModeAsynclmlp(localUserDao, loginHandler, remoteUserDao);
-        mMessageModel = new MessageModellimp(remoteMessageDao,remoteRequestDao, remoteUserDao, mUserModel);
+        mMessageModel = new MessageModellimp(remoteMessageDao,remoteRequestDao, remoteUserDao,mUserModel, localMessageDao);
         mRequestHelpModel = new HelpRequestModellmpl(remoteRequestDao, remoteUserDao, mUserModel, localRequestDao, distanceManager);
     }
 

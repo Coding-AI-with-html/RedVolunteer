@@ -1,6 +1,7 @@
 package com.redvolunteer.dataModels;
 
 import com.redvolunteer.pojo.Chat;
+import com.redvolunteer.utils.LocalMessageDao;
 import com.redvolunteer.utils.persistence.RemoteMessageDao;
 import com.redvolunteer.utils.persistence.RemoteRequestDao;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
@@ -20,6 +21,11 @@ public class MessageModellimp implements MessageModel {
 
 
     /**
+     * Numbers of Message's requested
+     */
+    private static final int NUMBER_MESSAGE_REQUESTED = 10;
+
+    /**
      *
      */
     private RemoteMessageDao remoteMessageDao;
@@ -37,12 +43,20 @@ public class MessageModellimp implements MessageModel {
      */
     private UserModel userModel;
 
-    public MessageModellimp(RemoteMessageDao remoteMessageDao, RemoteRequestDao remoteRequestDao, RemoteUserDao remoteUserDao, UserModel userModel) {
+    private LocalMessageDao localMessageDao;
+    /**
+     * messageID of the current list of Message's
+     */
+    private int messageID = 0;
+
+    public MessageModellimp(RemoteMessageDao remoteMessageDao, RemoteRequestDao remoteRequestDao, RemoteUserDao remoteUserDao, UserModel userModel, LocalMessageDao localMessageDao) {
         this.remoteMessageDao = remoteMessageDao;
         this.remoteRequestDao = remoteRequestDao;
         this.remoteUserDao = remoteUserDao;
         this.userModel = userModel;
+        this.localMessageDao = localMessageDao;
     }
+
 
 
     @Override
@@ -71,4 +85,7 @@ public class MessageModellimp implements MessageModel {
     public void StoreMessage(Chat chatToStore) {
         remoteMessageDao.saveChat(chatToStore);
     }
+
+
+
 }

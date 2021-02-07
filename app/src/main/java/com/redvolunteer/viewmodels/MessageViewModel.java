@@ -18,7 +18,7 @@ public class MessageViewModel {
     public Flowable<List<Chat>> getUserMessages(){
        return mMessageModel.loadUserMessages();
     }
-    void StoreChat(Chat storeMessages){
+   public void StoreChat(Chat storeMessages){
         mMessageModel.StoreMessage(storeMessages);
     }
 

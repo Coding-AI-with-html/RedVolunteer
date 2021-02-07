@@ -33,6 +33,7 @@ import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
 import com.redvolunteer.utils.persistence.ExtraLabels;
+import com.redvolunteer.viewmodels.MessageViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 
 import org.reactivestreams.Subscription;
@@ -51,6 +52,8 @@ public class MessageActivity extends AppCompatActivity {
      * UserViewModel to recognize  who send message
     */
     private UserViewModel mUserViewModel;
+
+    private MessageViewModel mMainViewModel;
 
     ImageButton send_message;
     EditText message_field;
@@ -76,6 +79,7 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
+        mMainViewModel = ((RedVolunteerApplication) getApplication()).getMessageViewModel();
 
         setContentView(R.layout.activity_message_with_x);
 
@@ -140,9 +144,14 @@ public class MessageActivity extends AppCompatActivity {
         send_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Chat cht = new Chat();
                 String msg = message_field.getText().toString();
                 if(!msg.equals("")){
-                    sendMessage(userSenderUID, userID, msg);
+                    cht.setMessage(msg);
+                    cht.setSender(userSenderUID);
+                    cht.setReceiver(userID);
+                    mMainViewModel.StoreChat(cht);
+                    //sendMessage(userSenderUID, userID, msg);
                 } else {
                     Toast.makeText(MessageActivity.this, "Negalima rasyti tuscia zinute!", Toast.LENGTH_SHORT).show();
                 }
