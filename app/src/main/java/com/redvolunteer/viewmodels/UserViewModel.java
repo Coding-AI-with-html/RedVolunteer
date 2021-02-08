@@ -3,6 +3,8 @@ package com.redvolunteer.viewmodels;
 import com.redvolunteer.dataModels.UserModel;
 import com.redvolunteer.pojo.User;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 
 public class UserViewModel {
@@ -33,6 +35,10 @@ public class UserViewModel {
 
     public Flowable<User> retrieveUserByID(String userID){
         return mUserModel.retrievedUserById(userID);
+    }
+    public Flowable<List<User>> retrieveUserForMEssages(){
+
+        return mUserModel.LoadUserForMessages();
     }
 
 

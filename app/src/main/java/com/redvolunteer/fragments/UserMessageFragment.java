@@ -143,7 +143,6 @@ public class UserMessageFragment extends Fragment {
                     @Override
                     public void onNext(List<Chat> chats) {
 
-
                         if(chats.size()!=0){
                             InitiliazeMessageView(chats);
                         }
@@ -169,8 +168,38 @@ public class UserMessageFragment extends Fragment {
         }
     }
     private void InitiliazeMessageView(final List<Chat> chatsList){
-        UserAdapter mUserAdapter = new UserAdapter(getContext(), mUsers);
-        mRecycleView.setAdapter(mUserAdapter);
+        if(chatsList.size() !=0 ){
+
+        }
+    }
+
+    private void getUsers(){
+
+        mUserViewModel
+                .retrieveUserForMEssages().subscribe(new Subscriber<List<User>>() {
+            @Override
+            public void onSubscribe(Subscription s) {
+
+
+            }
+
+            @Override
+            public void onNext(List<User> users) {
+
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
     }
 
     private void readChats(){

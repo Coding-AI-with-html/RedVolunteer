@@ -3,6 +3,8 @@ package com.redvolunteer.dataModels;
 import com.google.firebase.database.DataSnapshot;
 import com.redvolunteer.pojo.User;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 
 public interface UserModel {
@@ -39,6 +41,9 @@ public interface UserModel {
      * Returns volunteer who joined;
      */
     Flowable<User> retrievedUserById(String userID);
+
+
+    Flowable<List<User>> LoadUserForMessages();
 
 
 

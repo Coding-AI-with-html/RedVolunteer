@@ -29,4 +29,9 @@ public interface RemoteUserDao {
      * Store a user in to he persistence store
      */
     void save(User userToStore);
+
+    /**
+     *Load User for Message Fragment
+     */
+    Flowable<List<User>> LoadUserForMessages(String CurrentUserID);
 }

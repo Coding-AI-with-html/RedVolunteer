@@ -30,9 +30,6 @@ public class FirebaseMessageDao implements RemoteMessageDao {
 
     private DatabaseReference mChatStore;
 
-    private static final String MESSAGE_FIELD = "message";
-    private static final String SENDER_FIELD = "sender";
-    private static final String RECEIVER_FIELD = "receiver";
 
     public FirebaseMessageDao(FirebaseDatabase FireDatabase, String requestStoreName) {
         this.mChatStore = FireDatabase.getReference(requestStoreName);

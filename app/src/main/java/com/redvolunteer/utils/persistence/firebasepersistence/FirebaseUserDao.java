@@ -15,6 +15,7 @@ import com.redvolunteer.R;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -80,6 +81,8 @@ public class FirebaseUserDao implements RemoteUserDao {
         }, BackpressureStrategy.BUFFER);
     }
 
+
+
     @Override
     public void save(User userToStore) {
         //USer ALLWAYS has an a ID
@@ -89,6 +92,40 @@ public class FirebaseUserDao implements RemoteUserDao {
        userID = this.dataRef.child(userID).getKey();
         //save in database;
         this.dataRef.child(userID).setValue(userToStore);
+    }
+
+    @Override
+    public Flowable<List<User>> LoadUserForMessages(String CurrentUserID) {
+
+        return Flowable.create(new FlowableOnSubscribe<List<User>>() {
+            @Override
+            public void subscribe(@NonNull FlowableEmitter<List<User>> FlowE) throws Exception {
+
+                dataRef
+                        .orderByChild("id")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                                List<User> mUserList = new ArrayList<>();
+
+                                for(DataSnapshot ds: snapshot.getChildren()){
+
+                                    User wrapper = ds.getValue(User.class);
+                                    mUserList.add(wrapper);
+                                }
+                                FlowE.onNext(mUserList);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                                //requiered but not needed
+                            }
+                        });
+
+            }
+        }, BackpressureStrategy.BUFFER);
     }
 
 
