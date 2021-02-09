@@ -12,6 +12,8 @@ import com.redvolunteer.utils.auth.Auth20Handler;
 import com.redvolunteer.utils.persistence.LocalUserDao;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
 
+import java.util.List;
+
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
@@ -88,6 +90,11 @@ public class UserModeAsynclmlp implements UserModel {
     @Override
     public Flowable<User> retrievedUserById(String userID) {
         return remoteUserStore.loadById(userID);
+    }
+
+    @Override
+    public Flowable<List<User>> LoadUserForMessages() {
+        return remoteUserStore.LoadUserForMessages();
     }
 
     public UserModeAsynclmlp(LocalUserDao localUserDao, Auth20Handler loginHandler, RemoteUserDao remoteUserStore) {

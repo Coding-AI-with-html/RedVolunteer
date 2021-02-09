@@ -95,38 +95,38 @@ public class FirebaseUserDao implements RemoteUserDao {
     }
 
     @Override
-    public Flowable<List<User>> LoadUserForMessages(String CurrentUserID) {
-
+    public Flowable<List<User>> LoadUserForMessages() {
         return Flowable.create(new FlowableOnSubscribe<List<User>>() {
-            @Override
-            public void subscribe(@NonNull FlowableEmitter<List<User>> FlowE) throws Exception {
+                    @Override
+                    public void subscribe(@NonNull FlowableEmitter<List<User>> FlowE) throws Exception {
 
-                dataRef
-                        .orderByChild("id")
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+                        dataRef
+                                .orderByChild("id")
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
-                                List<User> mUserList = new ArrayList<>();
+                                        List<User> mUserList = new ArrayList<>();
 
-                                for(DataSnapshot ds: snapshot.getChildren()){
+                                        for(DataSnapshot ds: snapshot.getChildren()){
 
-                                    User wrapper = ds.getValue(User.class);
-                                    mUserList.add(wrapper);
-                                }
-                                FlowE.onNext(mUserList);
+                                            User wrapper = ds.getValue(User.class);
+                                            mUserList.add(wrapper);
+                                        }
+                                        FlowE.onNext(mUserList);
 
-                            }
+                                    }
 
-                            @Override
-                            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-                                //requiered but not needed
-                            }
-                        });
+                                    @Override
+                                    public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                                        //requiered but not needed
+                                    }
+                                });
 
-            }
-        }, BackpressureStrategy.BUFFER);
+                    }
+                }, BackpressureStrategy.BUFFER);
     }
+
 
 
     public FirebaseUserDao(FirebaseDatabase firebaseDatabase, String userStoreName){

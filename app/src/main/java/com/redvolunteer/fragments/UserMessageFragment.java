@@ -47,6 +47,7 @@ public class UserMessageFragment extends Fragment {
     private static final String TAG = "UserMessageFragment";
     private RecyclerView mRecycleView;
     private Subscription MessageRetrievedSubscription;
+    private Subscription mUserSubscription;
 
     private List<User> mUsers;
     private UserAdapter mUserAdapter;
@@ -58,6 +59,7 @@ public class UserMessageFragment extends Fragment {
     private FragmentInteractionListener mListener;
     private List<String> mUserChatList;
     User mShowedUSer;
+    List<User> mUserList;
 
 
     DatabaseReference DataRefs;
@@ -75,7 +77,6 @@ public class UserMessageFragment extends Fragment {
         mShowedUSer = mUserViewModel.retrieveCachedUser();
         mHelpRequestViewModel = mListener.getHelpRequestViewModel();
         mMainModel = mListener.getMessageViewModel();
-
     }
 
 
@@ -89,33 +90,6 @@ public class UserMessageFragment extends Fragment {
 
 
 
-        mUserChatList = new ArrayList<>();
-
-        DataRefs = FirebaseDatabase.getInstance().getReference("Chats");
-        DataRefs.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot Dsnapshot) {
-
-                mUserChatList.clear();
-                for(DataSnapshot snapshot: Dsnapshot.getChildren()){
-                    Chat chatting =  snapshot.getValue(Chat.class);
-
-                    if(chatting.getSender().equals(mShowedUSer.getId())){
-                        mUserChatList.add(chatting.getReceiver());
-                    }
-                    if(chatting.getReceiver().equals(mShowedUSer.getId())){
-                        mUserChatList.add(chatting.getSender());
-                    }
-                }
-                readChats();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         return view;
     }
 
@@ -126,9 +100,8 @@ public class UserMessageFragment extends Fragment {
 
 
 
-
             if(NetworkCheker.getInstance().isNetworkAvailable(getContext())){
-
+                mUserChatList = new ArrayList<>();
                 mMainModel.getUserMessages().subscribe(new Subscriber<List<Chat>>() {
                     @Override
                     public void onSubscribe(Subscription subscription) {
@@ -142,8 +115,7 @@ public class UserMessageFragment extends Fragment {
 
                     @Override
                     public void onNext(List<Chat> chats) {
-
-                        if(chats.size()!=0){
+                        if(chats.size() != 0){
                             InitiliazeMessageView(chats);
                         }
                         Log.d(TAG, "onNext: " + chats);
@@ -160,6 +132,35 @@ public class UserMessageFragment extends Fragment {
                     }
                 });
 
+                mUserViewModel
+                        .retrieveUserForMEssages().subscribe(new Subscriber<List<User>>() {
+                    @Override
+                    public void onSubscribe(Subscription subscription) {
+                        subscription.request(1L);
+                        if(mUserSubscription != null){
+                            mUserSubscription.cancel();
+
+                        }
+                        mUserSubscription = subscription;
+
+                    }
+
+                    @Override
+                    public void onNext(List<User> users) {
+
+                        mUserList = users;
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
 
 
 
@@ -169,78 +170,47 @@ public class UserMessageFragment extends Fragment {
     }
     private void InitiliazeMessageView(final List<Chat> chatsList){
         if(chatsList.size() !=0 ){
+            for(Chat chatting: chatsList){
+                if(chatting.getSender().equals(mShowedUSer.getId())){
+                    mUserChatList.add(chatting.getReceiver());
+                }
+                if(chatting.getReceiver().equals(mShowedUSer.getId())){
+                    mUserChatList.add(chatting.getSender());
+                }
+            }
+            readChats();
 
         }
     }
 
-    private void getUsers(){
-
-        mUserViewModel
-                .retrieveUserForMEssages().subscribe(new Subscriber<List<User>>() {
-            @Override
-            public void onSubscribe(Subscription s) {
-
-
-            }
-
-            @Override
-            public void onNext(List<User> users) {
-
-
-            }
-
-            @Override
-            public void onError(Throwable t) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-    }
 
     private void readChats(){
 
         mUsers = new ArrayList<>();
 
-        DataRefs = FirebaseDatabase.getInstance().getReference("Help_Seekers");
-
-        DataRefs.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot Dsnapshot) {
                 mUsers.clear();
 
-                for(DataSnapshot ds: Dsnapshot.getChildren()){
-                    User user = ds.getValue(User.class);
+                    for(User user: mUserList){
 
-                    //display user from chat's
-                    for(String id: mUserChatList){
-                        if(user.getId().equals(id)){
-                            if(mUsers.size() != 0){
-                                for(User user1: mUsers){
-                                    if(!user.getId().equals(user1.getId())){
-                                        mUsers.add(user);
+                        for(String id: mUserChatList){
+                            if(user.getId().equals(id)){
+                                if(mUsers.size() != 0){
+                                    for(User user1: mUsers){
+                                        if(!user.getId().equals(user1.getId())){
+                                            mUsers.add(user);
+                                        }
                                     }
+                                } else {
+                                    mUsers.add(user);
                                 }
-                            } else {
-                                mUsers.add(user);
                             }
                         }
                     }
-                }
+
                 mUserAdapter = new UserAdapter(getContext(), mUsers);
                 mRecycleView.setAdapter(mUserAdapter);
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

@@ -33,5 +33,5 @@ public interface RemoteUserDao {
     /**
      *Load User for Message Fragment
      */
-    Flowable<List<User>> LoadUserForMessages(String CurrentUserID);
+    Flowable<List<User>> LoadUserForMessages();
 }
