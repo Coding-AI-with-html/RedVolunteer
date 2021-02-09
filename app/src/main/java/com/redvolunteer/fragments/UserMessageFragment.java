@@ -1,11 +1,18 @@
 package com.redvolunteer.fragments;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,12 +30,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.FragmentInteractionListener;
+import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
 import com.redvolunteer.RedVolunteerApplication;
+import com.redvolunteer.RequestDescriptionActivity;
 import com.redvolunteer.adapters.UserAdapter;
+import com.redvolunteer.newrequesthelp.NewRequestHelpActivity;
 import com.redvolunteer.pojo.Chat;
+import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
+import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.HelpRequestViewModel;
 import com.redvolunteer.viewmodels.MessageViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
@@ -60,9 +72,13 @@ public class UserMessageFragment extends Fragment {
     private List<String> mUserChatList;
     User mShowedUSer;
     List<User> mUserList;
+    private ProgressDialog popupDialogProgress;
 
 
-    DatabaseReference DataRefs;
+    /**
+     * LinearLayout if User Dont have Messages
+     */
+    private LinearLayout mNoMessageShow;
 
 
     public UserMessageFragment(){
@@ -83,15 +99,25 @@ public class UserMessageFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view  = inflater.inflate(R.layout.fragment_message_wall, container, false);
+
+        return  inflater.inflate(R.layout.fragment_message_wall, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        bind(view);
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void bind(View view){
+
+        mNoMessageShow = (LinearLayout) view.findViewById(R.id.no_messages);
+
         mRecycleView = view.findViewById(R.id.recycler_viewer_msg);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
-
-        return view;
     }
+
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -102,35 +128,8 @@ public class UserMessageFragment extends Fragment {
 
             if(NetworkCheker.getInstance().isNetworkAvailable(getContext())){
                 mUserChatList = new ArrayList<>();
-                mMainModel.getUserMessages().subscribe(new Subscriber<List<Chat>>() {
-                    @Override
-                    public void onSubscribe(Subscription subscription) {
-                        subscription.request(1L);
+                ShowWhaitSpinner();
 
-                        if(MessageRetrievedSubscription !=null){
-                            MessageRetrievedSubscription.cancel();
-                        }
-                        MessageRetrievedSubscription = subscription;
-                    }
-
-                    @Override
-                    public void onNext(List<Chat> chats) {
-                        if(chats.size() != 0){
-                            InitiliazeMessageView(chats);
-                        }
-                        Log.d(TAG, "onNext: " + chats);
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
 
                 mUserViewModel
                         .retrieveUserForMEssages().subscribe(new Subscriber<List<User>>() {
@@ -147,14 +146,46 @@ public class UserMessageFragment extends Fragment {
 
                     @Override
                     public void onNext(List<User> users) {
-
+                        StopWhaitSpinner();
                         mUserList = users;
                         readChats();
                     }
 
                     @Override
                     public void onError(Throwable t) {
+                        StopWhaitSpinner();
+                        ShowRetrievedErrorPopupDialog();
+                    }
 
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+                mMainModel.getUserMessages().subscribe(new Subscriber<List<Chat>>() {
+                    @Override
+                    public void onSubscribe(Subscription subscription) {
+                        subscription.request(1L);
+
+                        if(MessageRetrievedSubscription !=null){
+                            MessageRetrievedSubscription.cancel();
+                        }
+                        MessageRetrievedSubscription = subscription;
+                    }
+
+                    @Override
+                    public void onNext(List<Chat> chats) {
+                        StopWhaitSpinner();
+                        InitiliazeMessageView(chats);
+
+                        //Log.d(TAG, "onNext: " + chats);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        StopWhaitSpinner();
+                        ShowRetrievedErrorPopupDialog();
                     }
 
                     @Override
@@ -166,11 +197,16 @@ public class UserMessageFragment extends Fragment {
 
 
 
+
+            } else {
+                ShowNoInternetConnection();
             }
         }
     }
     private void InitiliazeMessageView(final List<Chat> chatsList){
         if(chatsList.size() !=0 ){
+            mRecycleView.setVisibility(View.VISIBLE);
+            mNoMessageShow.setVisibility(View.GONE);
             for(Chat chatting: chatsList){
                 if(chatting.getSender().equals(mShowedUSer.getId())){
                     mUserChatList.add(chatting.getReceiver());
@@ -226,5 +262,60 @@ public class UserMessageFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener= null;
+    }
+    /**
+     * Show's whait spinner
+     */
+    private void ShowWhaitSpinner() {
+
+        this.popupDialogProgress = ProgressDialog.show(getActivity(), null, getString(R.string.loading_popup_message_spinner), true);
+    }
+
+    private void StopWhaitSpinner(){
+        if(this.popupDialogProgress != null) {
+            this.popupDialogProgress.dismiss();
+        }
+
+    }
+
+    /**
+     * It show's a no internet connection popup
+     */
+    private void ShowNoInternetConnection(){
+        StopWhaitSpinner();
+        //There was an error show error message
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.recconnecting_request)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(getContext(), MainActivity.class));
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    /**
+     * It shows a Dialog containing an error to the user
+     */
+    private void ShowRetrievedErrorPopupDialog(){
+        ShowWhaitSpinner();
+        //there is an error, show popup message
+        Context context;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage(R.string.error_message_download_resources)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(getContext(), MainActivity.class));
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
     }
 }

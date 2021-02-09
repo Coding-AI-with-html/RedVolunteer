@@ -9,9 +9,10 @@
     <string name="ok_button">Gerai</string>
     <string name="no_request_my_request">Jus dar neturite sukure nei vienos pagalbos uzklausos!</string>
     <string name="no_request_around_label">Atsiprašome, bet pasirodo nėra nei vieno pagalbos prasymo aplink!</string>
+    <string name="no_messages"> Jus dar neturite zinuciu! </string>
     <string name="add_request_suggestion_label">Spauskite + kad pridėti</string>
     <string name="your_requests_title">Jusu prašymo užklausos</string>
-    <string name="recconnecting_request">No internet connection. Once reconnected it could take a while to recontact the server</string>
+    <string name="recconnecting_request">Nera prisijungta prie interneto, prisijungus, teks palaukti kol programele prisijungs prie serverio</string>
     <string name="description_input_label">Parašykite trumpą aprašymą kokios pagalbos jums reikia!</string>
     <string name="create_new_help_request_field">Pagalbos prašymo anketa</string>
     <string name="select_position_of_the_help_request"> Pasirinkite poziciją kurią užregistruosit</string>

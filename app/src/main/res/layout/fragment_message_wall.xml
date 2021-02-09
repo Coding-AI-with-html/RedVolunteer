@@ -21,7 +21,24 @@
             android:fontFamily="@font/aclonica"
             />
 </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/no_messages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/no_request_around_label"
+            android:textAlignment="center" />
+
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
         android:id="@+id/recycler_viewer_msg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
