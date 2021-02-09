@@ -149,6 +149,7 @@ public class UserMessageFragment extends Fragment {
                     public void onNext(List<User> users) {
 
                         mUserList = users;
+                        readChats();
                     }
 
                     @Override
@@ -178,7 +179,7 @@ public class UserMessageFragment extends Fragment {
                     mUserChatList.add(chatting.getSender());
                 }
             }
-            readChats();
+
 
         }
     }
@@ -187,8 +188,6 @@ public class UserMessageFragment extends Fragment {
     private void readChats(){
 
         mUsers = new ArrayList<>();
-
-                mUsers.clear();
 
                     for(User user: mUserList){
 
