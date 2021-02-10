@@ -1,6 +1,9 @@
 package com.redvolunteer;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,6 +39,7 @@ import com.redvolunteer.utils.persistence.ExtraLabels;
 import com.redvolunteer.viewmodels.MessageViewModel;
 import com.redvolunteer.viewmodels.UserViewModel;
 
+import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
@@ -55,6 +59,8 @@ public class MessageActivity extends AppCompatActivity {
 
     private MessageViewModel mMainViewModel;
 
+    private Subscription MessageRetrievedSubscription;
+
     ImageButton send_message;
     EditText message_field;
     CircularImageView prof_image;
@@ -69,6 +75,7 @@ public class MessageActivity extends AppCompatActivity {
     private Subscription retrievedUserSubscription;
     DatabaseReference dataRef;
 
+    private ProgressDialog popuDialogProg;
 
     /**
      *
@@ -78,10 +85,10 @@ public class MessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
+        this.mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
         mMainViewModel = ((RedVolunteerApplication) getApplication()).getMessageViewModel();
 
-        setContentView(R.layout.activity_message_with_x);
+        this.popuDialogProg = ProgressDialog.show(this, null,getString(R.string.loading_popup_message_spinner), true);
 
         Intent receivedIntent = this.getIntent();
         final String userID = receivedIntent.getStringExtra(ExtraLabels.USER_ID);
@@ -99,7 +106,8 @@ public class MessageActivity extends AppCompatActivity {
                 public void onNext(User user) {
 
                     mRetrievedUserCreator = user;
-                    BindLayoutComponents();
+
+                    setLayout();
                 }
 
                 @Override
@@ -114,6 +122,37 @@ public class MessageActivity extends AppCompatActivity {
             });
 
 
+            mMainViewModel.getUserMessages().subscribe(new Subscriber<List<Chat>>() {
+                @Override
+                public void onSubscribe(Subscription subscription) {
+                    subscription.request(1L);
+
+                    if(MessageRetrievedSubscription !=null){
+                        MessageRetrievedSubscription.cancel();
+                    }
+                    MessageRetrievedSubscription = subscription;
+                }
+
+                @Override
+                public void onNext(List<Chat> chats) {
+                    stopSpinner();
+                    InitiliazeMessageView(chats);
+
+                    //Log.d(TAG, "onNext: " + chats);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    stopSpinner();
+                    showRetrievedErrorPopupDialog();
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
         } else {
             Toast.makeText(MessageActivity.this, getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
         }
@@ -122,10 +161,19 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+
+    private void setLayout(){
+
+        stopSpinner();
+        setContentView(R.layout.activity_message_with_x);
+        BindLayoutComponents();
+        fillActivity();
+    }
     /**
      * Bind Layout Components for messaging
      */
     private void BindLayoutComponents(){
+
 
         prof_image = findViewById(R.id.profile_photo_msg_user);
         HelpUserName = findViewById(R.id.name_user);
@@ -137,9 +185,15 @@ public class MessageActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+    }
+
+    private void InitiliazeMessageView(List<Chat> mChat){
+
+    }
+
+    private void fillActivity(){
+
         String userSenderUID = mUserViewModel.retrieveCachedUser().getId();
-
-
         String userID = mRetrievedUserCreator.getId();
         send_message.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,43 +215,16 @@ public class MessageActivity extends AppCompatActivity {
 
         HelpUserName.setText(mRetrievedUserCreator.getName());
 
-        dataRef = FirebaseDatabase.getInstance().getReference("Help_Seekers").child(userID);
-        dataRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
-                User usr = snapshot.getValue(User.class);
-                if(usr.getPhoto().equals("default_photo")){
-                    prof_image.setImageResource(R.drawable.ic_default_profile);
-                } else {
+        if(mRetrievedUserCreator.getPhoto().equals("default_photo")){
+            prof_image.setImageResource(R.drawable.ic_default_profile);
+        } else {
+            Glide.with(MessageActivity.this).load(mRetrievedUserCreator.getPhoto()).into(prof_image);
+        }
 
-                    Glide.with(MessageActivity.this).load(usr.getPhoto()).into(prof_image);
-                }
-                readMessages(userSenderUID, userID, usr.getPhoto());
+                readMessages(userSenderUID, userID, mRetrievedUserCreator.getPhoto());
             }
 
-            @Override
-            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
-
-    private void sendMessage(String sender, String receiver, String message){
-
-        DatabaseReference DatRef = FirebaseDatabase.getInstance().getReference();
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-
-        hashMap.put("sender", sender);
-        hashMap.put("receiver", receiver);
-        hashMap.put("message", message);
-
-        DatRef.child("Chats").push().setValue(hashMap);
-
-    }
 
     private void readMessages(final String myID,final  String userID, final String photo){
         mChating = new ArrayList<>();
@@ -227,6 +254,61 @@ public class MessageActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void stopSpinner(){
+        if (popuDialogProg!= null)
+            popuDialogProg.dismiss();
+        popuDialogProg = null;
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(retrievedUserSubscription != null){
+            retrievedUserSubscription.cancel();
+        }
+    }
+
+    private void showRetrievedErrorPopupDialog(){
+
+        this.popuDialogProg.dismiss();
+
+
+        AlertDialog.Builder builder =new AlertDialog.Builder(getApplicationContext());
+        builder.setMessage(R.string.error_message_download_resources)
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.ok_button), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+
+    }
+
+    private void showNoInternetionConnectionPopup(){
+
+        stopSpinner();
+
+        // there was an error, show a popup message
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.recconnecting_request)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //go to the main activity
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 

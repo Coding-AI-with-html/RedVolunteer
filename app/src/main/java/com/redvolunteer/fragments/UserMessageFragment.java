@@ -131,38 +131,6 @@ public class UserMessageFragment extends Fragment {
                 ShowWhaitSpinner();
 
 
-                mUserViewModel
-                        .retrieveUserForMEssages().subscribe(new Subscriber<List<User>>() {
-                    @Override
-                    public void onSubscribe(Subscription subscription) {
-                        subscription.request(1L);
-                        if(mUserSubscription != null){
-                            mUserSubscription.cancel();
-
-                        }
-                        mUserSubscription = subscription;
-
-                    }
-
-                    @Override
-                    public void onNext(List<User> users) {
-                        StopWhaitSpinner();
-                        mUserList = users;
-                        readChats();
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        StopWhaitSpinner();
-                        ShowRetrievedErrorPopupDialog();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
                 mMainModel.getUserMessages().subscribe(new Subscriber<List<Chat>>() {
                     @Override
                     public void onSubscribe(Subscription subscription) {
@@ -203,6 +171,8 @@ public class UserMessageFragment extends Fragment {
             }
         }
     }
+
+
     private void InitiliazeMessageView(final List<Chat> chatsList){
         if(chatsList.size() !=0 ){
             mRecycleView.setVisibility(View.VISIBLE);
@@ -215,11 +185,48 @@ public class UserMessageFragment extends Fragment {
                     mUserChatList.add(chatting.getSender());
                 }
             }
-
+            getUserForMessages();
 
         }
     }
 
+
+    private void getUserForMessages(){
+
+        if(NetworkCheker.getInstance().isNetworkAvailable(getContext())) {
+            mUserViewModel
+                    .retrieveUserForMEssages().subscribe(new Subscriber<List<User>>() {
+                @Override
+                public void onSubscribe(Subscription subscription) {
+                    subscription.request(1L);
+                    if (mUserSubscription != null) {
+                        mUserSubscription.cancel();
+
+                    }
+                    mUserSubscription = subscription;
+
+                }
+
+                @Override
+                public void onNext(List<User> users) {
+                    StopWhaitSpinner();
+                    mUserList = users;
+                    readChats();
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    StopWhaitSpinner();
+                    ShowRetrievedErrorPopupDialog();
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+        }
+    }
 
     private void readChats(){
 
@@ -241,9 +248,13 @@ public class UserMessageFragment extends Fragment {
                             }
                         }
                     }
+                    if(mUserAdapter == null){
+                        mUserAdapter = new UserAdapter(getContext(), mUsers);
+                        mRecycleView.setAdapter(mUserAdapter);
+                    } else
 
-                mUserAdapter = new UserAdapter(getContext(), mUsers);
-                mRecycleView.setAdapter(mUserAdapter);
+                        mUserAdapter.notifyDataSetChanged();
+
             }
 
     @Override
