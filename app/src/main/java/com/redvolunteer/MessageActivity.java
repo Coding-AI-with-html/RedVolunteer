@@ -69,6 +69,7 @@ public class MessageActivity extends AppCompatActivity {
 
     MessageAdapter messageAdapter;
     List<Chat> mChating;
+    List<Chat> mChat;
 
     RecyclerView recyclerView;
     private User mRetrievedUserCreator;
@@ -189,6 +190,22 @@ public class MessageActivity extends AppCompatActivity {
 
     private void InitiliazeMessageView(List<Chat> mChat){
 
+        if(mChat.size() != 0){
+
+            mChating = new ArrayList<>();
+
+            String myID = mUserViewModel.retrieveCachedUser().getId();
+            String userOtherID = mRetrievedUserCreator.getId();
+            for(Chat cht: mChat){
+                if(cht.getReceiver().equals(myID) && cht.getSender().equals(userOtherID) ||
+                        cht.getReceiver().equals(userOtherID) && cht.getSender().equals(myID)){
+                    mChating.add(cht);
+                }
+                messageAdapter = new MessageAdapter(MessageActivity.this, mChating, mRetrievedUserCreator.getPhoto());
+                recyclerView.setAdapter(messageAdapter);
+            }
+        }
+
     }
 
     private void fillActivity(){
@@ -205,7 +222,6 @@ public class MessageActivity extends AppCompatActivity {
                     cht.setSender(userSenderUID);
                     cht.setReceiver(userID);
                     mMainViewModel.StoreChat(cht);
-                    //sendMessage(userSenderUID, userID, msg);
                 } else {
                     Toast.makeText(MessageActivity.this, "Negalima rasyti tuscia zinute!", Toast.LENGTH_SHORT).show();
                 }
@@ -230,30 +246,14 @@ public class MessageActivity extends AppCompatActivity {
         mChating = new ArrayList<>();
 
 
-        DatabaseReference DatRef = FirebaseDatabase.getInstance().getReference("Chats");
-        DatRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@androidx.annotation.NonNull DataSnapshot Dsnapshot) {
-
-                mChating.clear();
-                for(DataSnapshot snapshot: Dsnapshot.getChildren()){
-                    Chat chat = snapshot.getValue(Chat.class);
-                    if(chat.getReceiver().equals(myID) && chat.getSender().equals(userID) ||
-                        chat.getReceiver().equals(userID) && chat.getSender().equals(myID)){
-                            mChating.add(chat);
-                        }
-
-                    messageAdapter = new MessageAdapter(MessageActivity.this, mChating, photo);
-                    recyclerView.setAdapter(messageAdapter);
-
-                }
+        for(Chat cht: mChat){
+            if(cht.getReceiver().equals(myID) && cht.getSender().equals(userID) ||
+                    cht.getReceiver().equals(userID) && cht.getSender().equals(myID)){
+                mChating.add(cht);
             }
-
-            @Override
-            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-
-            }
-        });
+            messageAdapter = new MessageAdapter(MessageActivity.this, mChating, photo);
+            recyclerView.setAdapter(messageAdapter);
+        }
     }
 
     private void stopSpinner(){
