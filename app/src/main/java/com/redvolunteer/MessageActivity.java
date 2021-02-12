@@ -137,7 +137,8 @@ public class MessageActivity extends AppCompatActivity {
                 @Override
                 public void onNext(List<Chat> chats) {
                     stopSpinner();
-                    InitiliazeMessageView(chats);
+                    mChat = chats;
+                    fillActivity();
 
                     //Log.d(TAG, "onNext: " + chats);
                 }
@@ -190,22 +191,6 @@ public class MessageActivity extends AppCompatActivity {
 
     private void InitiliazeMessageView(List<Chat> mChat){
 
-        if(mChat.size() != 0){
-
-            mChating = new ArrayList<>();
-
-            String myID = mUserViewModel.retrieveCachedUser().getId();
-            String userOtherID = mRetrievedUserCreator.getId();
-            for(Chat cht: mChat){
-                if(cht.getReceiver().equals(myID) && cht.getSender().equals(userOtherID) ||
-                        cht.getReceiver().equals(userOtherID) && cht.getSender().equals(myID)){
-                    mChating.add(cht);
-                }
-                messageAdapter = new MessageAdapter(MessageActivity.this, mChating, mRetrievedUserCreator.getPhoto());
-                recyclerView.setAdapter(messageAdapter);
-            }
-        }
-
     }
 
     private void fillActivity(){
@@ -238,11 +223,39 @@ public class MessageActivity extends AppCompatActivity {
             Glide.with(MessageActivity.this).load(mRetrievedUserCreator.getPhoto()).into(prof_image);
         }
 
-                readMessages(userSenderUID, userID, mRetrievedUserCreator.getPhoto());
+
+        mChating = new ArrayList<>();
+        for(Chat cht: mChat){
+            if(cht.getReceiver().equals(userSenderUID) && cht.getSender().equals(userID) ||
+                    cht.getReceiver().equals(userID) && cht.getSender().equals(userSenderUID)){
+                mChating.add(cht);
+            }
+            messageAdapter = new MessageAdapter(MessageActivity.this, mChating, mRetrievedUserCreator.getPhoto());
+            recyclerView.setAdapter(messageAdapter);
+
+        }
+
+
+        //readMessages(userSenderUID, userID, mRetrievedUserCreator.getPhoto());
             }
 
 
     private void readMessages(final String myID,final  String userID, final String photo){
+        mChating = new ArrayList<>();
+
+
+        for(Chat cht: mChat){
+            if(cht.getReceiver().equals(myID) && cht.getSender().equals(userID) ||
+                    cht.getReceiver().equals(userID) && cht.getSender().equals(myID)){
+                mChating.add(cht);
+            }
+            messageAdapter = new MessageAdapter(MessageActivity.this, mChating, photo);
+            recyclerView.setAdapter(messageAdapter);
+        }
+    }
+
+    private void fillMessageActivity(){
+
         mChating = new ArrayList<>();
 
 
