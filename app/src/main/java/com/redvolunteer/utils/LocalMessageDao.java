@@ -19,8 +19,4 @@ public interface LocalMessageDao {
      */
     List<Chat> getChat(int numResults, int startOffset);
 
-    /**
-     * load new chat based on its ID
-     */
-    Chat LoadRequestById(String ChatID);
 }

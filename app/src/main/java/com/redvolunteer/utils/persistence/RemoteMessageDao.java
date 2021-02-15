@@ -1,7 +1,6 @@
 package com.redvolunteer.utils.persistence;
 
 import com.redvolunteer.pojo.Chat;
-import com.redvolunteer.pojo.RequestHelp;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface RemoteMessageDao {
      */
     Flowable<List<Chat>> loadChats(int NumResult, int anchorID);
 
-
+    Flowable<Chat> LoadUserMessageByID(String CurrentID);
 
     Flowable<List<Chat>> LoadUserMessages(String userID);
 

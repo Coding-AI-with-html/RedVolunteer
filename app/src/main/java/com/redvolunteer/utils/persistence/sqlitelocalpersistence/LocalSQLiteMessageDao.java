@@ -106,42 +106,6 @@ public class LocalSQLiteMessageDao implements LocalMessageDao {
     }
 
     @Override
-    public Chat LoadRequestById(String ChatID) {
-        
-        Chat retrievedChats = null;
-
-        SQLiteHelper helper = new SQLiteHelper(appContext);
-
-        //Filter results WHere title = my title
-        String selection = LocalSQLiteRequestDao.RequestEntry._ID + " = ?";
-        String[] selectionArgs = {ChatID};
-
-
-        Cursor cursor = helper.getReadableDatabase().query(
-                LocalSQLiteRequestDao.RequestEntry.TABLE_NAME,
-                MESSAGE_PROJECTION,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-
-
-        //go to the first element of the cursor
-
-        cursor.moveToFirst();
-
-        retrievedChats = this.retrieveChat(cursor);
-
-        //free memory space
-        cursor.close();
-        helper.close();
-
-        return retrievedChats;
-    }
-
-    @Override
     public Chat save(Chat chatToSave) {
 
         SQLiteHelper helper = new SQLiteHelper(appContext);
@@ -151,21 +115,8 @@ public class LocalSQLiteMessageDao implements LocalMessageDao {
         valueToStore.put(MessageEntry.COLUMN_SENDER, chatToSave.getSender());
         valueToStore.put(MessageEntry.COLUMN_MESSAGE, chatToSave.getMessage());
 
-        if(chatToSave.getId() !=null){
-            helper.getWritableDatabase().update(
-                    MessageEntry.TABLE_NAME,
-                    valueToStore,
-                    MessageEntry._ID + "=" + chatToSave.getId(),
-                    null
-            );
-        } else {
 
-            long newId = helper.getWritableDatabase().insert(MessageEntry.TABLE_NAME, null, valueToStore);
-
-
-            chatToSave.setId(String.valueOf(newId));
-        }
-        return null;
+        return chatToSave;
     }
 
 
@@ -175,14 +126,12 @@ public class LocalSQLiteMessageDao implements LocalMessageDao {
         Chat retrievedChat = new Chat();
 
         //indexes from column name
-        int idC = cursor.getColumnIndex(LocalSQLiteRequestDao.RequestEntry._ID);
         int receiverC = cursor.getColumnIndex(MessageEntry.COLUMN_RECEIVER);
         int senderC = cursor.getColumnIndex(MessageEntry.COLUMN_SENDER);
         int messageC = cursor.getColumnIndex(MessageEntry.COLUMN_MESSAGE);
 
 
         //assign each value to the appropriate attribute
-        retrievedChat.setId(cursor.getString(idC));
         retrievedChat.setReceiver(cursor.getString(receiverC));
         retrievedChat.setSender(cursor.getString(senderC));
         retrievedChat.setMessage(cursor.getString(messageC));

@@ -4,20 +4,20 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.redvolunteer.dataModels.MessageModel;
 import com.redvolunteer.pojo.Chat;
+import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.persistence.RemoteMessageDao;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -31,6 +31,7 @@ public class FirebaseMessageDao implements RemoteMessageDao {
     private DatabaseReference mChatStore;
 
 
+
     public FirebaseMessageDao(FirebaseDatabase FireDatabase, String requestStoreName) {
         this.mChatStore = FireDatabase.getReference(requestStoreName);
     }
@@ -38,6 +39,38 @@ public class FirebaseMessageDao implements RemoteMessageDao {
     @Override
     public Flowable<List<Chat>> loadChats(int NumResult, int anchorID) {
         return null;
+    }
+
+    @Override
+    public Flowable<Chat>LoadUserMessageByID(String CurrentID) {
+        return Flowable.create(new FlowableOnSubscribe<Chat>() {
+            @Override
+            public void subscribe(@io.reactivex.annotations.NonNull FlowableEmitter<Chat> FlowableEmitter) throws Exception {
+
+
+              mChatStore
+                      .addValueEventListener(new ValueEventListener() {
+                          @Override
+                          public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                              for(DataSnapshot ds: snapshot.getChildren()){
+                                  Chat cht = ds.getValue(Chat.class);
+
+                                  if(cht.getReceiver().equals(CurrentID) || cht.getSender().equals(CurrentID)){
+                                      Log.d(TAG, "onDataChange: " + cht);
+                                      FlowableEmitter.onNext(cht);
+                                  }
+                              }
+                          }
+
+                          @Override
+                          public void onCancelled(@NonNull DatabaseError error) {
+
+                          }
+                      });
+
+            }
+        }, BackpressureStrategy.BUFFER);
     }
 
     @Override
@@ -106,15 +139,8 @@ public class FirebaseMessageDao implements RemoteMessageDao {
     @Override
     public Chat saveChat(Chat chatIntoStore) {
 
-        String chatID;
 
-        chatID = chatIntoStore.getId();
-        if(chatID == null){
-
-            chatID = this.mChatStore.push().getKey();
-            chatIntoStore.setId(chatID);
-            this.mChatStore.child(chatID).setValue(chatIntoStore);
-        }
+        this.mChatStore.push().setValue(chatIntoStore);
 
         return chatIntoStore;
     }

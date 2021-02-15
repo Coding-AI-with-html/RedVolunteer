@@ -1,11 +1,14 @@
 package com.redvolunteer.dataModels;
 
+import android.util.Log;
+
 import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.utils.LocalMessageDao;
 import com.redvolunteer.utils.persistence.RemoteMessageDao;
 import com.redvolunteer.utils.persistence.RemoteRequestDao;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,7 +21,7 @@ import io.reactivex.functions.Consumer;
 
 public class MessageModellimp implements MessageModel {
 
-
+    private static final String TAG = "MessageModellimp";
 
     /**
      * Numbers of Message's requested
@@ -74,6 +77,25 @@ public class MessageModellimp implements MessageModel {
                                 Collections.reverse(chats);
                                 FlowEmitter.onNext(chats);
 
+                            }
+                        });
+            }
+        }, BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<Chat> LoadMEssagesByUSerId(String CurrentID) {
+        return Flowable.create(new FlowableOnSubscribe<Chat>() {
+            @Override
+            public void subscribe(@NonNull FlowableEmitter<Chat> FlowEmitter) throws Exception {
+
+                remoteMessageDao
+                        .LoadUserMessageByID(userModel.GetLocalUser().getId())
+                        .subscribe(new Consumer<Chat>() {
+                            @Override
+                            public void accept(Chat chats) throws Exception {
+                                Log.d(TAG, "accept: " + chats);
+                                FlowEmitter.onNext(chats);
                             }
                         });
             }
