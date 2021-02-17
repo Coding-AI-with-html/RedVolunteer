@@ -30,8 +30,6 @@ public class FirebaseMessageDao implements RemoteMessageDao {
 
     private DatabaseReference mChatStore;
 
-
-
     public FirebaseMessageDao(FirebaseDatabase FireDatabase, String requestStoreName) {
         this.mChatStore = FireDatabase.getReference(requestStoreName);
     }
@@ -42,25 +40,23 @@ public class FirebaseMessageDao implements RemoteMessageDao {
     }
 
     @Override
-    public Flowable<Chat>LoadUserMessageByID(String CurrentID) {
+    public Flowable<Chat>LoadUserMessageByID() {
         return Flowable.create(new FlowableOnSubscribe<Chat>() {
             @Override
             public void subscribe(@io.reactivex.annotations.NonNull FlowableEmitter<Chat> FlowableEmitter) throws Exception {
 
-
+                List<Chat> mChatting = new ArrayList<>();
               mChatStore
                       .addValueEventListener(new ValueEventListener() {
                           @Override
                           public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                              for(DataSnapshot ds: snapshot.getChildren()){
-                                  Chat cht = ds.getValue(Chat.class);
+                             for(DataSnapshot ds: snapshot.getChildren()){
+                                 Chat retrievedChatting =  ds.getValue(Chat.class);
+                                 //mChatting.add(retrievedChatting);
+                                 FlowableEmitter.onNext(retrievedChatting);
+                             }
 
-                                  if(cht.getReceiver().equals(CurrentID) || cht.getSender().equals(CurrentID)){
-                                      Log.d(TAG, "onDataChange: " + cht);
-                                      FlowableEmitter.onNext(cht);
-                                  }
-                              }
                           }
 
                           @Override

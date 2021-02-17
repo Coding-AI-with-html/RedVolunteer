@@ -14,7 +14,7 @@ public interface RemoteMessageDao {
      */
     Flowable<List<Chat>> loadChats(int NumResult, int anchorID);
 
-    Flowable<Chat> LoadUserMessageByID(String CurrentID);
+    Flowable<Chat> LoadUserMessageByID();
 
     Flowable<List<Chat>> LoadUserMessages(String userID);
 

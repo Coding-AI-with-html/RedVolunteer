@@ -48,6 +48,7 @@ import java.util.List;
 
 import io.reactivex.FlowableSubscriber;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -61,6 +62,7 @@ public class MessageActivity extends AppCompatActivity {
 
     private Subscription MessageRetrievedSubscription;
 
+    String CurrentUserID;
     ImageButton send_message;
     EditText message_field;
     CircularImageView prof_image;
@@ -69,7 +71,7 @@ public class MessageActivity extends AppCompatActivity {
 
     MessageAdapter messageAdapter;
     List<Chat> mChating;
-    Chat mChat;
+    List<Chat> mChat;
 
     RecyclerView recyclerView;
     private User mRetrievedUserCreator;
@@ -90,7 +92,7 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
         mMainViewModel = ((RedVolunteerApplication) getApplication()).getMessageViewModel();
-
+        CurrentUserID = mUserViewModel.retrieveCachedUser().getId();
         this.popuDialogProg = ProgressDialog.show(this, null,getString(R.string.loading_popup_message_spinner), true);
         Intent receivedIntent = this.getIntent();
         final String userID = receivedIntent.getStringExtra(ExtraLabels.USER_ID);
@@ -124,36 +126,13 @@ public class MessageActivity extends AppCompatActivity {
                 }
             });
 
-            mMainViewModel.getMessagesByUSerID(userID).subscribe(new Subscriber<Chat>() {
+            mMainViewModel.getMessagesByUSerID().subscribe(new Consumer<Chat>() {
                 @Override
-                public void onSubscribe(Subscription subscription) {
-                    subscription.request(1L);
-                    if (MessageRetrievedSubscription != null) {
-                        MessageRetrievedSubscription.cancel();
+                public void accept(Chat chat) throws Exception {
 
-                    }
-                    MessageRetrievedSubscription = subscription;
-                }
-
-                @Override
-                public void onNext(Chat chat) {
-                    mChating.clear();
-                    Log.d(TAG, "onNextss: " + chat);
-                    mChating.add(chat);
-                }
-
-                @Override
-                public void onError(Throwable t) {
-
-                    showRetrievedErrorPopupDialog();
-                }
-
-                @Override
-                public void onComplete() {
-
+                    Log.d(TAG, "acceptdfdsf: "+ chat);
                 }
             });
-
 
 
         } else {
@@ -162,6 +141,12 @@ public class MessageActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void IntiliazeView(List<Chat> Chats){
+        for(Chat cht: Chats){
+            Log.d(TAG, "IntiliazeView: " + cht.getSender() + "" + cht.getReceiver());
+        }
     }
 
 
@@ -179,7 +164,6 @@ public class MessageActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        String userSenderUID = mUserViewModel.retrieveCachedUser().getId();
         String userID = mRetrievedUserCreator.getId();
         send_message.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,7 +172,7 @@ public class MessageActivity extends AppCompatActivity {
                 String msg = message_field.getText().toString();
                 if(!msg.equals("")){
                     cht.setMessage(msg);
-                    cht.setSender(userSenderUID);
+                    cht.setSender(CurrentUserID);
                     cht.setReceiver(userID);
                     mMainViewModel.StoreChat(cht);
                 } else {
@@ -246,8 +230,6 @@ public class MessageActivity extends AppCompatActivity {
 
 
     private void readMessages(final String myID,final  String userID, final String photo){
-
-
 
 
 

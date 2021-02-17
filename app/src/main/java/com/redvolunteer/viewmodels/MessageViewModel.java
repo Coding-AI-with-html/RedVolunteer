@@ -18,8 +18,8 @@ public class MessageViewModel {
     public Flowable<List<Chat>> getUserMessages(){
        return mMessageModel.loadUserMessages();
     }
-    public Flowable<Chat> getMessagesByUSerID(String CurrentID){
-        return mMessageModel.LoadMEssagesByUSerId(CurrentID);
+    public Flowable<Chat> getMessagesByUSerID(){
+        return mMessageModel.LoadMEssagesByUSerId();
     }
    public void StoreChat(Chat storeMessages){
         mMessageModel.StoreMessage(storeMessages);

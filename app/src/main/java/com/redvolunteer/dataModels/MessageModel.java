@@ -10,7 +10,7 @@ public interface MessageModel {
 
     Flowable<List<Chat>> loadUserMessages();
 
-    Flowable<Chat> LoadMEssagesByUSerId(String CurrentID);
+    Flowable<Chat> LoadMEssagesByUSerId();
     void StoreMessage(Chat chatToStore);
 
 

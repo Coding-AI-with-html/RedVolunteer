@@ -84,17 +84,19 @@ public class MessageModellimp implements MessageModel {
     }
 
     @Override
-    public Flowable<Chat> LoadMEssagesByUSerId(String CurrentID) {
+    public Flowable<Chat> LoadMEssagesByUSerId() {
         return Flowable.create(new FlowableOnSubscribe<Chat>() {
             @Override
             public void subscribe(@NonNull FlowableEmitter<Chat> FlowEmitter) throws Exception {
 
                 remoteMessageDao
-                        .LoadUserMessageByID(userModel.GetLocalUser().getId())
+                        .LoadUserMessageByID()
                         .subscribe(new Consumer<Chat>() {
                             @Override
                             public void accept(Chat chats) throws Exception {
+
                                 Log.d(TAG, "accept: " + chats);
+
                                 FlowEmitter.onNext(chats);
                             }
                         });
