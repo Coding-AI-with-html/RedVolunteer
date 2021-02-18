@@ -71,7 +71,7 @@ public class MessageActivity extends AppCompatActivity {
 
     MessageAdapter messageAdapter;
     List<Chat> mChating;
-    List<Chat> mChat;
+    Chat mChat;
 
     RecyclerView recyclerView;
     private User mRetrievedUserCreator;
@@ -87,7 +87,6 @@ public class MessageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
         mChating = new ArrayList<>();
         super.onCreate(savedInstanceState);
         this.mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
@@ -108,9 +107,8 @@ public class MessageActivity extends AppCompatActivity {
 
                 @Override
                 public void onNext(User user) {
-
+                    stopSpinner();
                     mRetrievedUserCreator = user;
-
                     setLayout();
                 }
 
@@ -130,24 +128,19 @@ public class MessageActivity extends AppCompatActivity {
                 @Override
                 public void accept(Chat chat) throws Exception {
 
-                    Log.d(TAG, "acceptdfdsf: "+ chat);
+                    mChating.add(chat);
                 }
             });
 
 
         } else {
-            Toast.makeText(MessageActivity.this, getString(R.string.no_internet_popup_label), Toast.LENGTH_LONG).show();
+            showNoInternetionConnectionPopup();
         }
 
 
 
     }
 
-    private void IntiliazeView(List<Chat> Chats){
-        for(Chat cht: Chats){
-            Log.d(TAG, "IntiliazeView: " + cht.getSender() + "" + cht.getReceiver());
-        }
-    }
 
 
     private void setLayout(){
@@ -176,7 +169,7 @@ public class MessageActivity extends AppCompatActivity {
                     cht.setReceiver(userID);
                     mMainViewModel.StoreChat(cht);
                 } else {
-                    Toast.makeText(MessageActivity.this, "Negalima rasyti tuscia zinute!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MessageActivity.this, getString(R.string.error_message), Toast.LENGTH_SHORT).show();
                 }
                 message_field.setText("");
             }
@@ -190,52 +183,36 @@ public class MessageActivity extends AppCompatActivity {
             Glide.with(MessageActivity.this).load(mRetrievedUserCreator.getPhoto()).into(prof_image);
         }
 
-        messageAdapter = new MessageAdapter(MessageActivity.this, mChating, mRetrievedUserCreator.getPhoto());
-        recyclerView.setAdapter(messageAdapter);
+        readMessages(CurrentUserID, userID, mRetrievedUserCreator.getPhoto());
+
     }
-
-    private void fillActivity(){
-
-        String userSenderUID = mUserViewModel.retrieveCachedUser().getId();
-        String userID = mRetrievedUserCreator.getId();
-        send_message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Chat cht = new Chat();
-                String msg = message_field.getText().toString();
-                if(!msg.equals("")){
-                    cht.setMessage(msg);
-                    cht.setSender(userSenderUID);
-                    cht.setReceiver(userID);
-                    mMainViewModel.StoreChat(cht);
-                } else {
-                    Toast.makeText(MessageActivity.this, "Negalima rasyti tuscia zinute!", Toast.LENGTH_SHORT).show();
-                }
-                message_field.setText("");
-            }
-        });
-
-        HelpUserName.setText(mRetrievedUserCreator.getName());
-
-
-        if(mRetrievedUserCreator.getPhoto().equals("default_photo")){
-            prof_image.setImageResource(R.drawable.ic_default_profile);
-        } else {
-            Glide.with(MessageActivity.this).load(mRetrievedUserCreator.getPhoto()).into(prof_image);
-        }
-
-
-       // readMessages(userSenderUID, userID, mRetrievedUserCreator.getPhoto());
-            }
 
 
     private void readMessages(final String myID,final  String userID, final String photo){
 
+        mMainViewModel.getMessagesByUSerID().subscribe(new Consumer<Chat>() {
+            @Override
+            public void accept(Chat chat) throws Exception {
 
+                if(chat.getReceiver().equals(myID) && chat.getSender().equals(userID) ||
+                        chat.getReceiver().equals(userID) && chat.getSender().equals(myID)){
+                    mChating.add(chat);
+                }
+            }
+        });
 
+        messageAdapter = new MessageAdapter(MessageActivity.this, mChating, photo);
+        recyclerView.setAdapter(messageAdapter);
     }
 
 
+    /**
+     * Show's whait spinner
+     */
+    private void ShowWhaitSpinner() {
+
+        this.popuDialogProg = ProgressDialog.show(this, null, getString(R.string.loading_popup_message_spinner), true);
+    }
 
     private void stopSpinner(){
         if (popuDialogProg!= null)
@@ -243,6 +220,8 @@ public class MessageActivity extends AppCompatActivity {
         popuDialogProg = null;
 
     }
+
+
 
 
     @Override
