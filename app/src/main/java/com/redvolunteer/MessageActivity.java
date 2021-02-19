@@ -67,16 +67,15 @@ public class MessageActivity extends AppCompatActivity {
     EditText message_field;
     CircularImageView prof_image;
     TextView HelpUserName;
+    ImageView blockUserFromMessage;
 
 
     MessageAdapter messageAdapter;
     List<Chat> mChating;
-    Chat mChat;
 
     RecyclerView recyclerView;
     private User mRetrievedUserCreator;
-    private Subscription retrievedUserSubscription;
-    DatabaseReference dataRef;
+    private Subscription retrievedUserSubscription;;
 
     private ProgressDialog popuDialogProg;
 
@@ -147,6 +146,7 @@ public class MessageActivity extends AppCompatActivity {
 
         stopSpinner();
         setContentView(R.layout.activity_message_with_x);
+        blockUserFromMessage = findViewById(R.id.block_user_message);
         prof_image = findViewById(R.id.profile_photo_msg_user);
         HelpUserName = findViewById(R.id.name_user);
         send_message = findViewById(R.id.btn_send_msg);
@@ -184,6 +184,14 @@ public class MessageActivity extends AppCompatActivity {
         }
 
         readMessages(CurrentUserID, userID, mRetrievedUserCreator.getPhoto());
+
+        blockUserFromMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mUserViewModel.blockUser(userID);
+            }
+        });
 
     }
 

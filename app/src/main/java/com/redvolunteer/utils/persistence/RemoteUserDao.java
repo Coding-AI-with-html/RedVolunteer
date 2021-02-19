@@ -24,7 +24,7 @@ public interface RemoteUserDao {
     Flowable<Map<String, User>> loadByIds(List<String> userIDs);
 
 
-
+    void blockUser(String userID);
     /**
      * Store a user in to he persistence store
      */

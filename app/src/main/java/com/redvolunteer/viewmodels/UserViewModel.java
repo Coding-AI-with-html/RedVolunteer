@@ -40,6 +40,9 @@ public class UserViewModel {
 
         return mUserModel.LoadUserForMessages();
     }
+    public void blockUser(String UserID){
+        mUserModel.blockUserByID(UserID);
+    }
 
 
 }

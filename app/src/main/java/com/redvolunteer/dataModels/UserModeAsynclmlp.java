@@ -88,6 +88,12 @@ public class UserModeAsynclmlp implements UserModel {
     }
 
     @Override
+    public void blockUserByID(String userID) {
+
+        remoteUserStore.blockUser(userID);
+    }
+
+    @Override
     public Flowable<User> retrievedUserById(String userID) {
         return remoteUserStore.loadById(userID);
     }

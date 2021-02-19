@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.R;
+import com.redvolunteer.dataModels.UserModel;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
 
@@ -34,10 +35,13 @@ public class FirebaseUserDao implements RemoteUserDao {
 
     private static final String TAG = "FirebaseUserDao";
 
+
+    private static final String BLOCKED_USER_LIST_FIELD =  "blocked_users";
     /**
      * ref to firebase
      */
     private DatabaseReference dataRef;
+    private UserModel userModel;
 
 
     @Override
@@ -81,6 +85,13 @@ public class FirebaseUserDao implements RemoteUserDao {
         }, BackpressureStrategy.BUFFER);
     }
 
+    @Override
+    public void blockUser(String userID) {
+
+        String currentUserID = userModel.GetLocalUser().getId();
+
+        this.dataRef.child(currentUserID).child(BLOCKED_USER_LIST_FIELD).push().setValue(userID);
+    }
 
 
     @Override
