@@ -88,9 +88,9 @@ public class UserModeAsynclmlp implements UserModel {
     }
 
     @Override
-    public void blockUserByID(String userID) {
+    public void blockUserByID(User CurrUser, String userID) {
 
-        remoteUserStore.blockUser(userID);
+        remoteUserStore.blockUser(CurrUser, userID);
     }
 
     @Override

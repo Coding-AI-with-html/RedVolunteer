@@ -40,8 +40,8 @@ public class UserViewModel {
 
         return mUserModel.LoadUserForMessages();
     }
-    public void blockUser(String UserID){
-        mUserModel.blockUserByID(UserID);
+    public void blockUser(User CurrentUSer, String BlockuserID){
+        mUserModel.blockUserByID(CurrentUSer, BlockuserID);
     }
 
 

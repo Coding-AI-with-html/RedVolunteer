@@ -45,7 +45,7 @@ public interface UserModel {
 
     Flowable<List<User>> LoadUserForMessages();
 
-    void blockUserByID(String userID);
+    void blockUserByID(User CurrUser, String userID);
 
 
 

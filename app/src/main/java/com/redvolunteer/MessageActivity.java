@@ -74,6 +74,7 @@ public class MessageActivity extends AppCompatActivity {
     List<Chat> mChating;
 
     RecyclerView recyclerView;
+    private User mCurUser;
     private User mRetrievedUserCreator;
     private Subscription retrievedUserSubscription;;
 
@@ -90,7 +91,8 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         this.mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
         mMainViewModel = ((RedVolunteerApplication) getApplication()).getMessageViewModel();
-        CurrentUserID = mUserViewModel.retrieveCachedUser().getId();
+        mCurUser = mUserViewModel.retrieveCachedUser();
+        CurrentUserID = mCurUser.getId();
         this.popuDialogProg = ProgressDialog.show(this, null,getString(R.string.loading_popup_message_spinner), true);
         Intent receivedIntent = this.getIntent();
         final String userID = receivedIntent.getStringExtra(ExtraLabels.USER_ID);
@@ -189,7 +191,7 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mUserViewModel.blockUser(userID);
+                mUserViewModel.blockUser(mCurUser, userID);
             }
         });
 

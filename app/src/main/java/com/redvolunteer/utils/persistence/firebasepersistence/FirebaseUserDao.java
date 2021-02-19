@@ -41,7 +41,6 @@ public class FirebaseUserDao implements RemoteUserDao {
      * ref to firebase
      */
     private DatabaseReference dataRef;
-    private UserModel userModel;
 
 
     @Override
@@ -86,11 +85,11 @@ public class FirebaseUserDao implements RemoteUserDao {
     }
 
     @Override
-    public void blockUser(String userID) {
+    public void blockUser(User CurrentUser, String BlockUserID) {
 
-        String currentUserID = userModel.GetLocalUser().getId();
+        String userID = CurrentUser.getId();
 
-        this.dataRef.child(currentUserID).child(BLOCKED_USER_LIST_FIELD).push().setValue(userID);
+        this.dataRef.child(userID).child(BLOCKED_USER_LIST_FIELD).push().setValue(BlockUserID);
     }
 
 
