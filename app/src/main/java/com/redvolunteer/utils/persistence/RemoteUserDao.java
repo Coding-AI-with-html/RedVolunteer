@@ -34,4 +34,9 @@ public interface RemoteUserDao {
      *Load User for Message Fragment
      */
     Flowable<List<User>> LoadUserForMessages();
+
+    /**
+     * Load's list of users who CurrentUser Blocked
+     */
+    Flowable<List<User>> LoadBlockedList(String CurrentUserID);
 }

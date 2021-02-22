@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -29,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.redvolunteer.BlockedUserListActivity;
 import com.redvolunteer.FragmentInteractionListener;
 import com.redvolunteer.MainActivity;
 import com.redvolunteer.R;
@@ -80,6 +82,11 @@ public class UserMessageFragment extends Fragment {
      */
     private LinearLayout mNoMessageShow;
 
+    /**
+     * Image View where on click goes to blocked user list
+     */
+    ImageView mBlockedUserList;
+
 
     public UserMessageFragment(){
 
@@ -116,6 +123,15 @@ public class UserMessageFragment extends Fragment {
         mRecycleView = view.findViewById(R.id.recycler_viewer_msg);
         mRecycleView.setHasFixedSize(true);
         mRecycleView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mBlockedUserList = view.findViewById(R.id.go_to_block_user_list);
+
+        mBlockedUserList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToBlockList = new Intent(getActivity(), BlockedUserListActivity.class);
+                startActivity(goToBlockList);
+            }
+        });
     }
 
 

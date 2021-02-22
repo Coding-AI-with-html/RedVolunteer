@@ -85,8 +85,6 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
         String requestID = this.getIntent().getStringExtra(ExtraLabels.REQUEST);
 
-
-
         this.popupDialogProgress = ProgressDialog.show(this, null, getString(R.string.loading_popup_message_spinner), true );
 
         this.mUserViewModel = ((RedVolunteerApplication) getApplication()).getUserViewModel();
@@ -212,7 +210,7 @@ public class RequestDescriptionActivity extends AppCompatActivity {
 
                     startActivity(mapIntent);
                 } catch(ActivityNotFoundException exception) {
-                    Toast.makeText(getApplicationContext(), "There is no application", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.no_map_app), Toast.LENGTH_SHORT).show();
                 }
 
                 

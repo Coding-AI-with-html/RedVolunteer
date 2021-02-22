@@ -1,5 +1,9 @@
 package com.redvolunteer.dataModels;
 
+import android.util.Log;
+
+import androidx.constraintlayout.helper.widget.Flow;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -7,12 +11,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.redvolunteer.R;
+import com.redvolunteer.pojo.RequestHelp;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.auth.Auth20Handler;
 import com.redvolunteer.utils.persistence.LocalUserDao;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
@@ -23,6 +30,8 @@ import io.reactivex.functions.Consumer;
 
 public class UserModeAsynclmlp implements UserModel {
 
+
+    private static final String TAG = "UserModeAsynclmlp";
 
     /**
      * Dao to operates on the Users stored locally
@@ -37,6 +46,7 @@ public class UserModeAsynclmlp implements UserModel {
      * Dao to operates on the Users stored on the remote database
      */
     private final RemoteUserDao remoteUserStore;
+    private UserModel mUserModel;
 
 
 
@@ -94,6 +104,13 @@ public class UserModeAsynclmlp implements UserModel {
     }
 
     @Override
+    public Flowable<List<User>> retrieveCurrentUSerBlockedUser(String CurrentUserID) {
+
+        return Flowable.create(new BlockedUserDetails(CurrentUserID), BackpressureStrategy.BUFFER);
+    }
+
+
+    @Override
     public Flowable<User> retrievedUserById(String userID) {
         return remoteUserStore.loadById(userID);
     }
@@ -108,4 +125,51 @@ public class UserModeAsynclmlp implements UserModel {
         this.loginHandler = loginHandler;
         this.remoteUserStore = remoteUserStore;
     }
+
+    private class BlockedUserDetails implements FlowableOnSubscribe<List<User>>{
+
+        private String  CurrUserID;
+        public BlockedUserDetails(String currentUserID) {
+            this.CurrUserID = currentUserID;
+        }
+
+        @Override
+        public void subscribe(@NonNull FlowableEmitter<List<User>> FlowEm) throws Exception {
+
+            String userID = localUserDao.load().getId();
+            remoteUserStore
+                    .LoadBlockedList(CurrUserID)
+                    .subscribe(new Consumer<List<User>>() {
+                        @Override
+                        public void accept(List<User> users) throws Exception {
+
+                            if(users.size()!=0){
+
+                                List<String> blockedIDs = new ArrayList<>();
+
+                                for(User usr: users){
+                                    blockedIDs.add(usr.getId());
+                                }
+
+                                List<User> finalUserList = users;
+                                remoteUserStore.loadByIds(blockedIDs).subscribe(new Consumer<Map<String, User>>() {
+                                    @Override
+                                    public void accept(Map<String, User> stringUserMap) throws Exception {
+
+                                        for (User retrievedUser : finalUserList) {
+                                            retrievedUser.setBlockedUser(stringUserMap.get(retrievedUser.getBlockedUser()));
+                                            Log.d(TAG, "acceptingg: " + stringUserMap.get(retrievedUser.getBlockedUser()));
+                                        }
+                                        FlowEm.onNext(finalUserList);
+                                    }
+                                });
+                            }
+
+                            FlowEm.onNext(users);
+
+                        }
+                    });
+        }
+    }
+
 }

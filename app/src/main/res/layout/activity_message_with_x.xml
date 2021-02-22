@@ -94,4 +94,20 @@
             android:id="@+id/btn_send_msg"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/blocked_user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:background="@color/mainColorRed"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/blocked_user_messages"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+    </RelativeLayout>
 </RelativeLayout>

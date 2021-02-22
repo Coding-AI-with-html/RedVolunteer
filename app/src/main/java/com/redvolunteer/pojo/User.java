@@ -20,6 +20,8 @@ public class User {
     private long Phone_Number;
     private String Gender;
 
+
+    private User blockedUser;
     /**
      * Encoded user pic
      */
@@ -33,9 +35,6 @@ public class User {
 
     /**
      * Constructor for creating new User
-     */
-    /**
-     * List of the ID's of the volunters who gonna help
      */
     public String getId() {
         return id;
@@ -93,6 +92,14 @@ public class User {
         Gender = gender;
     }
 
+    public User getBlockedUser() {
+        return blockedUser;
+    }
+
+    public void setBlockedUser(User blockedUser) {
+        this.blockedUser = blockedUser;
+    }
+
     public String getPhoto() {
         return photo;
     }
@@ -109,6 +116,9 @@ public class User {
         BirthDay = birthDay;
     }
 
+    /**
+     * List of the ID's of the volunters who gonna help
+     */
     @Override
     public String toString() {
         return "User{" +
@@ -119,6 +129,7 @@ public class User {
                 ", biography='" + biography + '\'' +
                 ", Phone_Number=" + Phone_Number +
                 ", Gender='" + Gender + '\'' +
+                ", blockedUser=" + blockedUser +
                 ", photo='" + photo + '\'' +
                 ", BirthDay=" + BirthDay +
                 '}';

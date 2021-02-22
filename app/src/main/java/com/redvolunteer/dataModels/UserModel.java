@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.redvolunteer.pojo.User;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Flowable;
 
@@ -46,6 +47,10 @@ public interface UserModel {
     Flowable<List<User>> LoadUserForMessages();
 
     void blockUserByID(User CurrUser, String userID);
+
+    Flowable<List<User>> retrieveCurrentUSerBlockedUser(String CurrentUserID);
+
+
 
 
 

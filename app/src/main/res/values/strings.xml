@@ -11,6 +11,9 @@
     <string name="no_request_around_label">Atsiprašome, bet pasirodo nėra nei vieno pagalbos prasymo aplink!</string>
     <string name="no_messages"> Jus dar neturite zinuciu! </string>
     <string name="block_user">Blokuoti vartotoja</string>
+    <string name="blocked_user_messages"> Jus esate uzblokuotas sio vartotojo, todel negalite rasyti, del daugiau informacijos susiekite NeVieniPagalba@gmail.com</string>
+    <string name="block_user_confirmation"> Vartotojo uzblokavimas</string>
+    <string name="ask_block_user">Ar tikrai norite uzblokuoti vartotoja? Po sio veiksnio negalesite nei rasyti, nei gauti zinuciu</string>
     <string name="error_message">Negalima rašyti tuščios žinutės!</string>
     <string name="add_request_suggestion_label">Spauskite + kad pridėti</string>
     <string name="your_requests_title">Jusu prašymo užklausos</string>
@@ -30,6 +33,7 @@
     <string name="contact_email_object">NeVieni programėlės vartotojas nori susisiekti su jumis</string>
     <string name="message_mail_user">Hi %1$s, I\'m %1$s from NeVieni</string>
     <string name="toast_email_user_agent_not_installed">Nėra instaliuota pašto programėlė!</string>
+    <string name="no_map_app"> Jus neturite maps programeles</string>
     <string name="send_email_picker_title">Siusti e-zinute…</string>
     <string name="create_request_button_label">Sukurti Užklausą!</string>
     <string name="create_help_request_move_forward">Eiti Toliau!</string>

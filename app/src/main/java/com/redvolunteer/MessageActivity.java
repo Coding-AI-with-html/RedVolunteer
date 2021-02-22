@@ -93,7 +93,7 @@ public class MessageActivity extends AppCompatActivity {
         mMainViewModel = ((RedVolunteerApplication) getApplication()).getMessageViewModel();
         mCurUser = mUserViewModel.retrieveCachedUser();
         CurrentUserID = mCurUser.getId();
-        this.popuDialogProg = ProgressDialog.show(this, null,getString(R.string.loading_popup_message_spinner), true);
+        ShowWhaitSpinner();
         Intent receivedIntent = this.getIntent();
         final String userID = receivedIntent.getStringExtra(ExtraLabels.USER_ID);
         if(NetworkCheker.getInstance().isNetworkAvailable(this)) {
@@ -108,7 +108,6 @@ public class MessageActivity extends AppCompatActivity {
 
                 @Override
                 public void onNext(User user) {
-                    stopSpinner();
                     mRetrievedUserCreator = user;
                     setLayout();
                 }
@@ -122,14 +121,6 @@ public class MessageActivity extends AppCompatActivity {
                 @Override
                 public void onComplete() {
 
-                }
-            });
-
-            mMainViewModel.getMessagesByUSerID().subscribe(new Consumer<Chat>() {
-                @Override
-                public void accept(Chat chat) throws Exception {
-
-                    mChating.add(chat);
                 }
             });
 
@@ -190,8 +181,7 @@ public class MessageActivity extends AppCompatActivity {
         blockUserFromMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                mUserViewModel.blockUser(mCurUser, userID);
+                showBlockConfirmationUserDialog();
             }
         });
 
@@ -203,7 +193,6 @@ public class MessageActivity extends AppCompatActivity {
         mMainViewModel.getMessagesByUSerID().subscribe(new Consumer<Chat>() {
             @Override
             public void accept(Chat chat) throws Exception {
-
                 if(chat.getReceiver().equals(myID) && chat.getSender().equals(userID) ||
                         chat.getReceiver().equals(userID) && chat.getSender().equals(myID)){
                     mChating.add(chat);
@@ -231,6 +220,38 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+
+    public void showBlockConfirmationUserDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        String title = getString(R.string.block_user_confirmation);
+        String message = getString(R.string.ask_block_user);
+        String positive = getString(R.string.yes_delete_request);
+        String negative = getString(R.string.no_delete_request);
+
+        builder.setTitle(title);
+        builder.setMessage(message);
+
+        builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                mUserViewModel.blockUser(mCurUser, mRetrievedUserCreator.getId());
+                Intent goToMain = new Intent(MessageActivity.this, MainActivity.class);
+                startActivity(goToMain);
+            }
+        });
+        builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent goToMain = new Intent(MessageActivity.this, MainActivity.class);
+                startActivity(goToMain);
+            }
+        });
+
+        builder.show();
+    }
 
 
 

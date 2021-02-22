@@ -74,6 +74,9 @@
         <activity android:name=".UserDetailsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".BlockedUserListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
         <activity android:name=".MessageActivity"
             android:screenOrientation="portrait"
