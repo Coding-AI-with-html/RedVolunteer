@@ -2,6 +2,8 @@ package com.redvolunteer.utils.persistence.firebasepersistence;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -135,23 +137,26 @@ public class FirebaseUserDao implements RemoteUserDao {
     }
 
     @Override
-    public Flowable<List<User>> LoadBlockedList(String CurrentUserID) {
-        return Flowable.create(new FlowableOnSubscribe<List<User>>() {
+    public Flowable<List<String>> LoadBlockedList(String CurrentUserID) {
+        return Flowable.create(new FlowableOnSubscribe<List<String>>() {
             @Override
-            public void subscribe(@NonNull FlowableEmitter<List<User>> FLOWe) throws Exception {
+            public void subscribe(@NonNull FlowableEmitter<List<String>> FLOWe) throws Exception {
 
+                FirebaseUser usrF = FirebaseAuth.getInstance().getCurrentUser();
+                String userID = usrF.getUid();
                 dataRef.child(CurrentUserID);
                 dataRef.child(BLOCKED_USER_LIST_FIELD);
                 dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
-                        List<User> userIds = new ArrayList<>();
+                        List<String> userIds = new ArrayList<>();
                         for (DataSnapshot ds : snapshot.getChildren()) {
-                            User userId = ds.getValue(User.class);
+                            String userId = ds.getValue(String.class);
                             Log.d(TAG, "onDataChange: " + userId);
                             userIds.add(userId);
                         }
+                        FLOWe.onNext(userIds);
 
                     }
 

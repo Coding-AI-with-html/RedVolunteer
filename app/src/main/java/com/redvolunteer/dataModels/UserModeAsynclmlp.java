@@ -139,34 +139,44 @@ public class UserModeAsynclmlp implements UserModel {
             String userID = localUserDao.load().getId();
             remoteUserStore
                     .LoadBlockedList(CurrUserID)
-                    .subscribe(new Consumer<List<User>>() {
+                    .subscribe(new Consumer<List<String>>() {
                         @Override
-                        public void accept(List<User> users) throws Exception {
+                        public void accept(List<String> ids) throws Exception {
 
-                            if(users.size()!=0){
+                            List<String> blockedUserList = new ArrayList<>();
 
-                                List<String> blockedIDs = new ArrayList<>();
+                            if(ids.size() !=0){
 
-                                for(User usr: users){
-                                    blockedIDs.add(usr.getId());
-                                }
+                                remoteUserStore
+                                        .LoadUserForMessages()
+                                        .subscribe(new Consumer<List<User>>() {
+                                            @Override
+                                            public void accept(List<User> users) throws Exception {
 
-                                List<User> finalUserList = users;
-                                remoteUserStore.loadByIds(blockedIDs).subscribe(new Consumer<Map<String, User>>() {
-                                    @Override
-                                    public void accept(Map<String, User> stringUserMap) throws Exception {
+                                                for(User UsrID: users){
+                                                    UsrID.getId();
+                                                    for(String id: ids){
+                                                        if(UsrID.getId() == id){
+                                                            blockedUserList.add(UsrID.getId());
+                                                        }
+                                                    }
 
-                                        for (User retrievedUser : finalUserList) {
-                                            retrievedUser.setBlockedUser(stringUserMap.get(retrievedUser.getBlockedUser()));
-                                            Log.d(TAG, "acceptingg: " + stringUserMap.get(retrievedUser.getBlockedUser()));
-                                        }
-                                        FlowEm.onNext(finalUserList);
-                                    }
-                                });
+                                                }
+                                                List<User> user = users;
+                                                remoteUserStore
+                                                        .loadByIds(blockedUserList).subscribe(new Consumer<Map<String, User>>() {
+                                                    @Override
+                                                    public void accept(Map<String, User> stringUserMap) throws Exception {
+                                                        for(User usr: user){
+                                                            usr.setBlockedUser(stringUserMap.get(usr.getId()));
+                                                        }
+                                                        Log.d(TAG, "accept: " + user);
+                                                        FlowEm.onNext(user);
+                                                    }
+                                                });
+                                            }
+                                        });
                             }
-
-                            FlowEm.onNext(users);
-
                         }
                     });
         }
