@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.constraintlayout.helper.widget.Flow;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -138,45 +139,45 @@ public class UserModeAsynclmlp implements UserModel {
 
             String userID = localUserDao.load().getId();
             remoteUserStore
-                    .LoadBlockedList(CurrUserID)
-                    .subscribe(new Consumer<List<String>>() {
+                    .LoadUserForMessages()
+                    .subscribe(new Consumer<List<User>>() {
                         @Override
-                        public void accept(List<String> ids) throws Exception {
+                        public void accept(List<User> users) throws Exception {
 
-                            List<String> blockedUserList = new ArrayList<>();
+                            List<String> userIds  = new ArrayList<>();
+                            remoteUserStore
+                                    .LoadBlockedList(CurrUserID)
+                                    .subscribe(new Consumer<List<String>>() {
+                                        @Override
+                                        public void accept(List<String> ids) throws Exception {
+                                            if(ids.size() != 0){
 
-                            if(ids.size() !=0){
+                                                for(User usr: users){
 
-                                remoteUserStore
-                                        .LoadUserForMessages()
-                                        .subscribe(new Consumer<List<User>>() {
-                                            @Override
-                                            public void accept(List<User> users) throws Exception {
-
-                                                for(User UsrID: users){
-                                                    UsrID.getId();
                                                     for(String id: ids){
-                                                        if(UsrID.getId() == id){
-                                                            blockedUserList.add(UsrID.getId());
+                                                        if(id.equals(usr.getId())){
+                                                            userIds.add(id);
                                                         }
                                                     }
-
                                                 }
-                                                List<User> user = users;
+                                                List<User> userList = users;
                                                 remoteUserStore
-                                                        .loadByIds(blockedUserList).subscribe(new Consumer<Map<String, User>>() {
+                                                        .loadByIds(userIds).subscribe(new Consumer<Map<String, User>>() {
                                                     @Override
                                                     public void accept(Map<String, User> stringUserMap) throws Exception {
-                                                        for(User usr: user){
-                                                            usr.setBlockedUser(stringUserMap.get(usr.getId()));
+
+                                                        for(User userr: userList){
+
+                                                            userr.setBlockedUser(stringUserMap.get(userr.getId()));
+                                                            Log.d(TAG, "acceptsss: " + userr);
                                                         }
-                                                        Log.d(TAG, "accept: " + user);
-                                                        FlowEm.onNext(user);
                                                     }
                                                 });
+
                                             }
-                                        });
-                            }
+                                        }
+                                    });
+
                         }
                     });
         }

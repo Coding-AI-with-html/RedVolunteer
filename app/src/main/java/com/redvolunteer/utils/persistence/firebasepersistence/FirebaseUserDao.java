@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Set;
 
 import io.reactivex.BackpressureStrategy;
@@ -142,8 +143,6 @@ public class FirebaseUserDao implements RemoteUserDao {
             @Override
             public void subscribe(@NonNull FlowableEmitter<List<String>> FLOWe) throws Exception {
 
-                FirebaseUser usrF = FirebaseAuth.getInstance().getCurrentUser();
-                String userID = usrF.getUid();
                 dataRef.child(CurrentUserID);
                 dataRef.child(BLOCKED_USER_LIST_FIELD);
                 dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -151,11 +150,10 @@ public class FirebaseUserDao implements RemoteUserDao {
                     public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
                         List<String> userIds = new ArrayList<>();
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            String userId = ds.getValue(String.class);
-                            Log.d(TAG, "onDataChange: " + userId);
-                            userIds.add(userId);
-                        }
+                        Map<String, Object> map1 = (Map<String, Object>) snapshot.getValue();
+                            Log.d(TAG, "onDataChange: " + map1);
+                            //userIds.add(userId);
+
                         FLOWe.onNext(userIds);
 
                     }
