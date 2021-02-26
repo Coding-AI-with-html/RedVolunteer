@@ -143,26 +143,31 @@ public class FirebaseUserDao implements RemoteUserDao {
             @Override
             public void subscribe(@NonNull FlowableEmitter<List<String>> FLOWe) throws Exception {
 
-                dataRef.child(CurrentUserID);
-                dataRef.child(BLOCKED_USER_LIST_FIELD);
-                dataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+                dataRef
+                        .orderByKey()
+                        .equalTo(CurrentUserID)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
-                        List<String> userIds = new ArrayList<>();
-                        Map<String, Object> map1 = (Map<String, Object>) snapshot.getValue();
-                            Log.d(TAG, "onDataChange: " + map1);
-                            //userIds.add(userId);
+                                List<String> usrIDs = new ArrayList<>();
 
-                        FLOWe.onNext(userIds);
+                                String retrieved;
+                                try {
 
-                    }
+                                    DataSnapshot userWrap = snapshot.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).getChildren().iterator().next();
+                                    retrieved = userWrap.getValue(String.class);
+                                } catch (NoSuchElementException e){
+                                    retrieved = new String();
+                                }
+                                Log.d(TAG, "onDataChangess: " + retrieved);
+                            }
 
-                    @Override
-                    public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                            @Override
+                            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
 
-                    }
-                });
+                            }
+                        });
             }
         },BackpressureStrategy.BUFFER);
     }

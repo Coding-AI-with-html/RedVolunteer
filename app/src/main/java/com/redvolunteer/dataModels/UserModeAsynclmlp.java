@@ -107,7 +107,23 @@ public class UserModeAsynclmlp implements UserModel {
     @Override
     public Flowable<List<User>> retrieveCurrentUSerBlockedUser(String CurrentUserID) {
 
-        return Flowable.create(new BlockedUserDetails(CurrentUserID), BackpressureStrategy.BUFFER);
+        return Flowable.create(new FlowableOnSubscribe<List<User>>() {
+            @Override
+            public void subscribe(@NonNull FlowableEmitter<List<User>> FLowE) throws Exception {
+                String userID = localUserDao.load().getId();
+                remoteUserStore
+                        .LoadBlockedList(userID).subscribe(new Consumer<List<String>>() {
+                    @Override
+                    public void accept(List<String> strings) throws Exception {
+
+                        for(String id: strings){
+                            Log.d(TAG, "acceptss: " + id);
+                        }
+                    }
+                });
+
+            }
+        }, BackpressureStrategy.BUFFER);
     }
 
 
@@ -125,62 +141,6 @@ public class UserModeAsynclmlp implements UserModel {
         this.localUserDao = localUserDao;
         this.loginHandler = loginHandler;
         this.remoteUserStore = remoteUserStore;
-    }
-
-    private class BlockedUserDetails implements FlowableOnSubscribe<List<User>>{
-
-        private String  CurrUserID;
-        public BlockedUserDetails(String currentUserID) {
-            this.CurrUserID = currentUserID;
-        }
-
-        @Override
-        public void subscribe(@NonNull FlowableEmitter<List<User>> FlowEm) throws Exception {
-
-            String userID = localUserDao.load().getId();
-            remoteUserStore
-                    .LoadUserForMessages()
-                    .subscribe(new Consumer<List<User>>() {
-                        @Override
-                        public void accept(List<User> users) throws Exception {
-
-                            List<String> userIds  = new ArrayList<>();
-                            remoteUserStore
-                                    .LoadBlockedList(CurrUserID)
-                                    .subscribe(new Consumer<List<String>>() {
-                                        @Override
-                                        public void accept(List<String> ids) throws Exception {
-                                            if(ids.size() != 0){
-
-                                                for(User usr: users){
-
-                                                    for(String id: ids){
-                                                        if(id.equals(usr.getId())){
-                                                            userIds.add(id);
-                                                        }
-                                                    }
-                                                }
-                                                List<User> userList = users;
-                                                remoteUserStore
-                                                        .loadByIds(userIds).subscribe(new Consumer<Map<String, User>>() {
-                                                    @Override
-                                                    public void accept(Map<String, User> stringUserMap) throws Exception {
-
-                                                        for(User userr: userList){
-
-                                                            userr.setBlockedUser(stringUserMap.get(userr.getId()));
-                                                            Log.d(TAG, "acceptsss: " + userr);
-                                                        }
-                                                    }
-                                                });
-
-                                            }
-                                        }
-                                    });
-
-                        }
-                    });
-        }
     }
 
 }
