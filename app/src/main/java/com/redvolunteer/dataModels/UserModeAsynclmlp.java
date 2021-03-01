@@ -111,21 +111,57 @@ public class UserModeAsynclmlp implements UserModel {
             @Override
             public void subscribe(@NonNull FlowableEmitter<List<User>> FLowE) throws Exception {
                 String userID = localUserDao.load().getId();
+
                 remoteUserStore
                         .LoadBlockedList(userID).subscribe(new Consumer<List<String>>() {
                     @Override
                     public void accept(List<String> strings) throws Exception {
 
-                        for(String id: strings){
-                            Log.d(TAG, "acceptss: " + id);
+                        if(strings.size()!=0){
+
+                            for(String idBlocked: strings){
+                                remoteUserStore
+                                        .LoadUserForMessages().subscribe(new Consumer<List<User>>() {
+                                    @Override
+                                    public void accept(List<User> users) throws Exception {
+
+                                        List<User> finalList = filterBlockedUserList(users, idBlocked);
+
+                                        remoteUserStore
+                                                .loadByIds(strings).subscribe(new Consumer<Map<String, User>>() {
+                                            @Override
+                                            public void accept(Map<String, User> stringUserMap) throws Exception {
+
+                                                for(User usr: finalList){
+                                                    usr.setBlockedUser(stringUserMap.get(usr.getId()));
+                                                }
+                                                FLowE.onNext(finalList);
+                                            }
+                                        });
+
+                                    }
+                                });
+                            }
                         }
+
                     }
                 });
+
 
             }
         }, BackpressureStrategy.BUFFER);
     }
 
+    private List<User> filterBlockedUserList(List<User> userList, String BlockedID){
+
+        List<User> filteredList = new ArrayList<>();
+
+        for(User user: userList){
+            if(BlockedID.equals(user.getId()))
+                filteredList.add(user);
+        }
+        return filteredList;
+    }
 
     @Override
     public Flowable<User> retrievedUserById(String userID) {

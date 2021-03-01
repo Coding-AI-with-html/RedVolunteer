@@ -25,7 +25,7 @@ public class BlockedUserListActivity  extends AppCompatActivity {
     private UserViewModel mMainViewModel;
 
     private Subscription Usersubscription;
-
+    private User mShowingBlockedUser;
     CircularImageView mProfilePhoto;
     TextView mUserName;
 
@@ -46,16 +46,14 @@ public class BlockedUserListActivity  extends AppCompatActivity {
                 public void onSubscribe(Subscription subscription) {
 
                     subscription.request(1L);
-                    if(Usersubscription !=null){
-                        Usersubscription.cancel();
-                    }
+
                     Usersubscription  = subscription;
                 }
 
                 @Override
                 public void onNext(List<User> users) {
 
-                    Log.d(TAG, "onNextss: " + users);
+
                 }
 
                 @Override

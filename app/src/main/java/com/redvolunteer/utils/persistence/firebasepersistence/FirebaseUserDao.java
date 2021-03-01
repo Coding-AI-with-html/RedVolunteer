@@ -99,7 +99,7 @@ public class FirebaseUserDao implements RemoteUserDao {
         String userID = userToStore.getId();
 
         //save the request to store
-       userID = this.dataRef.child(userID).getKey();
+        userID = this.dataRef.child(userID).getKey();
         //save in database;
         this.dataRef.child(userID).setValue(userToStore);
     }
@@ -107,34 +107,34 @@ public class FirebaseUserDao implements RemoteUserDao {
     @Override
     public Flowable<List<User>> LoadUserForMessages() {
         return Flowable.create(new FlowableOnSubscribe<List<User>>() {
-                    @Override
-                    public void subscribe(@NonNull FlowableEmitter<List<User>> FlowE) throws Exception {
+            @Override
+            public void subscribe(@NonNull FlowableEmitter<List<User>> FlowE) throws Exception {
 
-                        dataRef
-                                .orderByChild("id")
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+                dataRef
+                        .orderByChild("id")
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
-                                        List<User> mUserList = new ArrayList<>();
+                                List<User> mUserList = new ArrayList<>();
 
-                                        for(DataSnapshot ds: snapshot.getChildren()){
+                                for(DataSnapshot ds: snapshot.getChildren()){
 
-                                            User wrapper = ds.getValue(User.class);
-                                            mUserList.add(wrapper);
-                                        }
-                                        FlowE.onNext(mUserList);
+                                    User wrapper = ds.getValue(User.class);
+                                    mUserList.add(wrapper);
+                                }
+                                FlowE.onNext(mUserList);
 
-                                    }
+                            }
 
-                                    @Override
-                                    public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-                                        //requiered but not needed
-                                    }
-                                });
+                            @Override
+                            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                                //requiered but not needed
+                            }
+                        });
 
-                    }
-                }, BackpressureStrategy.BUFFER);
+            }
+        }, BackpressureStrategy.BUFFER);
     }
 
     @Override
@@ -144,7 +144,7 @@ public class FirebaseUserDao implements RemoteUserDao {
             public void subscribe(@NonNull FlowableEmitter<List<String>> FLOWe) throws Exception {
 
                 dataRef
-                        .orderByKey()
+                        .orderByChild("id")
                         .equalTo(CurrentUserID)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -152,15 +152,13 @@ public class FirebaseUserDao implements RemoteUserDao {
 
                                 List<String> usrIDs = new ArrayList<>();
 
-                                String retrieved;
-                                try {
+                                for(DataSnapshot ds: snapshot.getChildren()){
+                                    String uid = ds.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).getValue().toString();
+                                    Log.d(TAG, "onDataChangess: " + uid );
+                                    usrIDs.add(uid);
 
-                                    DataSnapshot userWrap = snapshot.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).getChildren().iterator().next();
-                                    retrieved = userWrap.getValue(String.class);
-                                } catch (NoSuchElementException e){
-                                    retrieved = new String();
                                 }
-                                Log.d(TAG, "onDataChangess: " + retrieved);
+                                FLOWe.onNext(usrIDs);
                             }
 
                             @Override
@@ -183,45 +181,45 @@ public class FirebaseUserDao implements RemoteUserDao {
 
         private String userID;
 
-    @Override
-    public void subscribe(@NonNull FlowableEmitter<User> FlowEmiter) throws Exception {
+        @Override
+        public void subscribe(@NonNull FlowableEmitter<User> FlowEmiter) throws Exception {
 
-        dataRef
-                .orderByKey()
-                .equalTo(userID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+            dataRef
+                    .orderByKey()
+                    .equalTo(userID)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
-                        User retrieved;
-                        try {
+                            User retrieved;
+                            try {
 
-                            DataSnapshot userWrap = snapshot.getChildren().iterator().next();
-                            retrieved = userWrap.getValue(User.class);
-                        } catch (NoSuchElementException e){
-                            retrieved = new User();
+                                DataSnapshot userWrap = snapshot.getChildren().iterator().next();
+                                retrieved = userWrap.getValue(User.class);
+                            } catch (NoSuchElementException e){
+                                retrieved = new User();
+                            }
+                            /**
+                             * send request user retrieved
+                             */
+                            FlowEmiter.onNext(retrieved);
                         }
-                        /**
-                         * send request user retrieved
-                         */
-                        FlowEmiter.onNext(retrieved);
-                    }
 
-                    @Override
-                    public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
-                        //requered, but not needed
-                    }
-                });
-    }
+                        @Override
+                        public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+                            //requered, but not needed
+                        }
+                    });
+        }
 
-    /**
-     * Creation of the callback retrieve
-     * @param userID
-     */
-    UserLoaderProvider(String userID){
-        this.userID = userID;
+        /**
+         * Creation of the callback retrieve
+         * @param userID
+         */
+        UserLoaderProvider(String userID){
+            this.userID = userID;
+        }
     }
-}
 
 
 

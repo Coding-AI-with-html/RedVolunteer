@@ -182,7 +182,7 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_profile_not_pressed" />
+                android:src="@drawable/ic_profile_icon_2" />
 
             <TextView
                 android:id="@+id/settings_text"
@@ -208,7 +208,7 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_profile" />
+                android:src="@drawable/ic_profile_pressed_2" />
 
             <TextView
                 android:layout_width="wrap_content"
