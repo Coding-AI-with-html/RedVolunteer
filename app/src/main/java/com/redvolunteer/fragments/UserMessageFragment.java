@@ -163,7 +163,6 @@ public class UserMessageFragment extends Fragment {
                         StopWhaitSpinner();
                         InitiliazeMessageView(chats);
 
-                        //Log.d(TAG, "onNext: " + chats);
                     }
 
                     @Override
