@@ -24,49 +24,6 @@
             />
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_below="@id/topBarMessg"
-        android:id="@+id/user_blocked_list"
-        android:layout_marginTop="-2dp"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
-        android:background="@drawable/bottom_bar_shape">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:orientation="horizontal"
-            android:background="@drawable/border_request_list">
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/blocked_user_photo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="@dimen/main_default_margin"
-                android:layout_marginStart="@dimen/main_default_margin"
-                android:layout_marginTop="10dp"
-                app:civ_border_width="0dp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/main_default_margin"
-                android:layout_marginStart="@dimen/main_default_margin"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/blocked_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/mainview_bold_headline"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/no_bloc_user_text"
@@ -83,9 +40,8 @@
             android:textAlignment="center" />
     </LinearLayout>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="-20dp"
-        android:visibility="gone"
         android:id="@+id/blocked_user_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

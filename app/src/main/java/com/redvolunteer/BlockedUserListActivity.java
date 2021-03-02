@@ -1,8 +1,10 @@
 package com.redvolunteer;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,8 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.adapters.UserAdapter;
@@ -34,7 +39,7 @@ public class BlockedUserListActivity  extends AppCompatActivity {
 
     private Subscription Usersubscription;
     private User mShowingBlockedUser;
-    CircularImageView mProfilePhoto;
+    ImageView mProfilePhoto;
     TextView mUserName;
 
 
@@ -42,7 +47,8 @@ public class BlockedUserListActivity  extends AppCompatActivity {
 
     private UserAdapter mUSerAdapter;
 
-    ListView mBlockedUserList;
+    RecyclerView mBlockedUserList;
+    List<User> blockedUsers;
 
     private LinearLayout mNoBlockedUser;
 
@@ -59,7 +65,6 @@ public class BlockedUserListActivity  extends AppCompatActivity {
         setContentView(R.layout.blockes_user_list_activity);
 
         if(NetworkCheker.getInstance().isNetworkAvailable(this)){
-            ShowWhaitSpinner();
             mMainViewModel.loadCurrUserBlockedUserList(UserID).subscribe(new Subscriber<List<User>>() {
                 @Override
                 public void onSubscribe(Subscription subscription) {
@@ -71,8 +76,7 @@ public class BlockedUserListActivity  extends AppCompatActivity {
 
                 @Override
                 public void onNext(List<User> users) {
-                    StopWhaitSpinner();
-                    setLayout();
+                    setLayout(users);
                 }
 
                 @Override
@@ -89,40 +93,25 @@ public class BlockedUserListActivity  extends AppCompatActivity {
     }
 
 
-    private void setLayout(){
+
+    private void setLayout(List<User> mUsers){
         mNoBlockedUser = (LinearLayout) findViewById(R.id.no_bloc_user_text);
-        mProfilePhoto = (CircularImageView) findViewById(R.id.blocked_user_photo);
-        mUserName = (TextView) findViewById(R.id.blocked_user_name);
-        mBlockedUserList = (ListView) findViewById(R.id.blocked_user_list);
+        mBlockedUserList = (RecyclerView) findViewById(R.id.blocked_user_list);
 
-        mProfilePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+       blockedUsers = mUsers;
+        mBlockedUserList.setHasFixedSize(true);
+        mBlockedUserList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-                Intent intentToProfileDetails = new Intent(getApplicationContext(), UserDetailsActivity.class);
-                intentToProfileDetails.putExtra(ExtraLabels.USER_ID, mShowingBlockedUser.getId());
-                startActivity(intentToProfileDetails);
-
-
-            }
-        });
-
+      mUSerAdapter = new UserAdapter(getApplicationContext(), blockedUsers);
+      mBlockedUserList.setAdapter(mUSerAdapter);
 
     }
 
 
-    /**
-     * Show's whait spinner
-     */
-    private void ShowWhaitSpinner() {
 
-        this.popupDialogProgress = ProgressDialog.show(getApplicationContext(), null, getString(R.string.loading_popup_message_spinner), true);
-    }
 
-    private void StopWhaitSpinner(){
-        if(this.popupDialogProgress != null) {
-            this.popupDialogProgress.dismiss();
-        }
 
-    }
+
+
+
 }
