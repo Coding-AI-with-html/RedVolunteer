@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikhaellopez.circularimageview.CircularImageView;
+import com.redvolunteer.adapters.BlockedUserAdapter;
 import com.redvolunteer.adapters.UserAdapter;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
@@ -45,7 +46,7 @@ public class BlockedUserListActivity  extends AppCompatActivity {
 
     private ProgressDialog popupDialogProgress;
 
-    private UserAdapter mUSerAdapter;
+    private BlockedUserAdapter mUSerAdapter;
 
     RecyclerView mBlockedUserList;
     List<User> blockedUsers;
@@ -102,7 +103,7 @@ public class BlockedUserListActivity  extends AppCompatActivity {
         mBlockedUserList.setHasFixedSize(true);
         mBlockedUserList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-      mUSerAdapter = new UserAdapter(getApplicationContext(), blockedUsers);
+      mUSerAdapter = new BlockedUserAdapter(getApplicationContext(), blockedUsers);
       mBlockedUserList.setAdapter(mUSerAdapter);
 
     }
