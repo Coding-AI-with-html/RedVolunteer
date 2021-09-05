@@ -1,7 +1,9 @@
 package com.redvolunteer;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -106,6 +108,39 @@ public class BlockedUserListActivity  extends AppCompatActivity {
       mUSerAdapter = new BlockedUserAdapter(getApplicationContext(), blockedUsers);
       mBlockedUserList.setAdapter(mUSerAdapter);
 
+    }
+
+
+    public void showBlockConfirmationUserDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        String title = getString(R.string.unblock_user_confirmation);
+        String message = getString(R.string.ask_unblock_user);
+        String positive = getString(R.string.yes_delete_request);
+        String negative = getString(R.string.no_delete_request);
+
+        builder.setTitle(title);
+        builder.setMessage(message);
+
+        builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //mUserViewModel.blockUser(mCurUser, mRetrievedUserCreator.getId());
+                Intent goToMain = new Intent(BlockedUserListActivity.this, MainActivity.class);
+                startActivity(goToMain);
+            }
+        });
+        builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent goToMain = new Intent(BlockedUserListActivity.this, MainActivity.class);
+                startActivity(goToMain);
+            }
+        });
+
+        builder.show();
     }
 
 

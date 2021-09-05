@@ -1,4 +1,4 @@
-package com.redvolunteer.utils;
+package com.redvolunteer.utils.persistence;
 
 import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.RequestHelp;

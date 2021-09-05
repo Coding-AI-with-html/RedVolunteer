@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.RedVolunteer" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.RedVolunteer" parent="Theme.MaterialComponents">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/mainlyColor</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>

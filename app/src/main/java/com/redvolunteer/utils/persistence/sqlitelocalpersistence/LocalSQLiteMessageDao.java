@@ -8,9 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 
 import com.redvolunteer.pojo.Chat;
-import com.redvolunteer.pojo.RequestHelp;
-import com.redvolunteer.pojo.RequestLocation;
-import com.redvolunteer.utils.LocalMessageDao;
+import com.redvolunteer.utils.persistence.LocalMessageDao;
 
 import java.util.ArrayList;
 import java.util.List;

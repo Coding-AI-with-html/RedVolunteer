@@ -108,6 +108,7 @@ public class ProfileFragment extends Fragment {
     private TextView mBirthDate;
     private EditText userBio;
     private ImageView mEditButton;
+    private ImageView mEditButtonPressed;
     private  ImageView mEditBirthDate;
     private LinearLayout mActionModifyButton;
     private ImageView mEditPhotoIndicator;
@@ -149,6 +150,7 @@ public class ProfileFragment extends Fragment {
         mEditButton = (ImageView) view.findViewById(R.id.edit_profile_button);
         mEditBirthDate = (ImageView) view.findViewById(R.id.modify_birthdate_btn);
         mEditPhotoIndicator = (ImageView) view.findViewById(R.id.image_modify_indicator);
+        mEditButtonPressed = (ImageView) view.findViewById(R.id.edit_profile_button_pressed);
 
         mActionModifyButton = (LinearLayout) view.findViewById(R.id.profile_modify_actions);
         Button mAcceptModify = (Button) view.findViewById(R.id.profile_accept_modification_btn);
@@ -164,6 +166,7 @@ public class ProfileFragment extends Fragment {
                 mActionModifyButton.setVisibility(View.VISIBLE);
                 mEditButton.setVisibility(View.VISIBLE);
                 mEditPhotoIndicator.setVisibility(View.VISIBLE);
+                mEditButtonPressed.setVisibility(View.VISIBLE);
 
 
                 //copy the old info to perform rollback
@@ -266,11 +269,12 @@ public class ProfileFragment extends Fragment {
      */
 
     private void resetInvisibleModificationComponents(){
-
+    
         mEditBirthDate.setVisibility(View.GONE);
         mActionModifyButton.setVisibility(View.GONE);
         mEditButton.setVisibility(View.VISIBLE);
         mEditPhotoIndicator.setVisibility(View.GONE);
+        mEditButtonPressed.setVisibility(View.GONE);
         userBio.setEnabled(false);
     }
 

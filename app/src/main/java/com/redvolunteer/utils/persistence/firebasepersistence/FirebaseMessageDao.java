@@ -75,7 +75,7 @@ public class FirebaseMessageDao implements RemoteMessageDao {
             @Override
             public void subscribe(@io.reactivex.annotations.NonNull FlowableEmitter<List<Chat>> FlowEmitter) throws Exception {
 
-
+                List<Chat> retrievedChat = new ArrayList<>();
                 mChatStore
                         .orderByChild("sender")
                         .equalTo(userID)
@@ -85,7 +85,7 @@ public class FirebaseMessageDao implements RemoteMessageDao {
 
                                 if(snapshot.exists()){
 
-                                    List<Chat> retrievedChat = new ArrayList<>();
+
                                     for(DataSnapshot ds: snapshot.getChildren()){
                                         Chat wrapper = ds.getValue(Chat.class);
                                         retrievedChat.add(wrapper);
@@ -101,7 +101,6 @@ public class FirebaseMessageDao implements RemoteMessageDao {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                                    List<Chat> retrievedChat = new ArrayList<>();
                                                     for(DataSnapshot ds: snapshot.getChildren()){
                                                         Chat wrapper = ds.getValue(Chat.class);
                                                         retrievedChat.add(wrapper);

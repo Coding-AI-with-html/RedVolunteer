@@ -19,11 +19,17 @@
             android:background="@color/mainlyColor"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/AppTheme">
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/arrow_back"
+                android:layout_marginRight="10dp"
+                android:id="@+id/go_back_message"/>
 
             <com.mikhaellopez.circularimageview.CircularImageView
                 android:id="@+id/profile_photo_msg_user"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_width="35dp"
+                android:layout_height="35dp" />
 
             <TextView
                 android:id="@+id/name_user"
@@ -64,35 +70,36 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_viewer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recycler_viewer"
-        android:layout_below="@id/bar_layout"
-        android:layout_above="@id/bottom_thing"/>
+        android:layout_above="@id/bottom_thing"
+        android:layout_below="@id/bar_layout" />
 
     <RelativeLayout
         android:id="@+id/bottom_thing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:layout_alignParentBottom="true"
         android:background="@color/mainColorRed"
-        android:layout_alignParentBottom="true">
+        android:padding="5dp">
 
         <EditText
+            android:id="@+id/text_send_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/text_send_field"
             android:layout_centerVertical="true"
-            android:hint="Jusu zinute"
+            android:layout_toLeftOf="@id/btn_send_msg"
             android:background="@android:color/transparent"
-            android:layout_toLeftOf="@id/btn_send_msg"/>
+            android:hint="Jusu zinute" />
+
         <ImageButton
+            android:id="@+id/btn_send_msg"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@drawable/ic_send_message"
             android:layout_alignParentEnd="true"
-            android:id="@+id/btn_send_msg"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_send_message" />
     </RelativeLayout>
     <RelativeLayout
         android:visibility="gone"

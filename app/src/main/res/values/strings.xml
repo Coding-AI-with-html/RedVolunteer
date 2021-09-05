@@ -12,9 +12,11 @@
     <string name="no_request_around_label">Atsiprašome, bet pasirodo nėra nei vieno pagalbos prasymo aplink!</string>
     <string name="no_messages"> Jus dar neturite zinuciu! </string>
     <string name="block_user">Blokuoti vartotoja</string>
-    <string name="blocked_user_messages"> Jus esate uzblokuotas sio vartotojo, todel negalite rasyti, del daugiau informacijos susiekite NeVieniPagalba@gmail.com</string>
+    <string name="blocked_user_messages"> Jus negalite atsakyti į šį pokalbį, del daugiau informacijos susisiekite NeVieniPagalba@gmail.com</string>
     <string name="block_user_confirmation"> Vartotojo uzblokavimas</string>
-    <string name="ask_block_user">Ar tikrai norite uzblokuoti vartotoja? Po sio veiksnio negalesite nei rasyti, nei gauti zinuciu</string>
+    <string name="unblock_user_confirmation"> Vartotojo atblokavimas</string>
+    <string name="ask_block_user">Ar tikrai norite uzblokuoti vartotoja? Po sio veiksmo negalesite nei rasyti, nei gauti zinuciu</string>
+    <string name="ask_unblock_user"> Ar tikrai norite atblokuoti vartotoja? Po sio veiksmo galesite vel rasyti bei gauti zinutes is sio vartotojo</string>
     <string name="error_message">Negalima rašyti tuščios žinutės!</string>
     <string name="add_request_suggestion_label">Spauskite + kad pridėti</string>
     <string name="your_requests_title">Jusu prašymo užklausos</string>

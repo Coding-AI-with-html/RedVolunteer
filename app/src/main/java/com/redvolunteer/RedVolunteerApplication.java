@@ -9,7 +9,7 @@ import com.redvolunteer.dataModels.HelpRequestModellmpl;
 import com.redvolunteer.dataModels.MessageModel;
 import com.redvolunteer.dataModels.MessageModellimp;
 import com.redvolunteer.dataModels.UserModeAsynclmlp;
-import com.redvolunteer.utils.LocalMessageDao;
+import com.redvolunteer.utils.persistence.LocalMessageDao;
 import com.redvolunteer.utils.auth.Auth20FirebaseHandlerlmpl;
 import com.redvolunteer.utils.auth.Auth20Handler;
 import com.redvolunteer.utils.persistence.LocalRequestDao;

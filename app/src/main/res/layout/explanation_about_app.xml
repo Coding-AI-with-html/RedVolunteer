@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_login_icon" />
     <TextView
-        android:paddingTop="2dp"
+        android:paddingTop="10dp"
         android:id="@+id/topText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -47,16 +47,16 @@
 
 
     <TextView
-        android:padding="5dp"
         android:id="@+id/winstonName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="138dp"
+        android:layout_height="40dp"
         android:layout_marginTop="110dp"
+        android:fontFamily="@font/aclonica"
+        android:padding="5dp"
         android:text="@string/winston_churchill_words"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold|italic"
-        android:fontFamily="@font/aclonica"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,9 +147,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@color/mainColorRed"
         android:scaleType="center"
-        android:src="@drawable/ic_arrow_back"
+        android:src="@drawable/arrow_back"
         app:borderWidth="0dp"
         app:elevation="1dp"
         app:fabCustomSize="40dp"

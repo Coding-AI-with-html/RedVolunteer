@@ -3,12 +3,11 @@ package com.redvolunteer.dataModels;
 import android.util.Log;
 
 import com.redvolunteer.pojo.Chat;
-import com.redvolunteer.utils.LocalMessageDao;
+import com.redvolunteer.utils.persistence.LocalMessageDao;
 import com.redvolunteer.utils.persistence.RemoteMessageDao;
 import com.redvolunteer.utils.persistence.RemoteRequestDao;
 import com.redvolunteer.utils.persistence.RemoteUserDao;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -110,6 +109,13 @@ public class MessageModellimp implements MessageModel {
         remoteMessageDao.saveChat(chatToStore);
     }
 
+ private class fillMessageDetails implements FlowableOnSubscribe<List<Chat>> {
 
+
+     @Override
+     public void subscribe(@androidx.annotation.NonNull FlowableEmitter<List<Chat>> e) throws Exception {
+
+     }
+ }
 
 }

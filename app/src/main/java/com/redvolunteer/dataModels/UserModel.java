@@ -51,6 +51,9 @@ public interface UserModel {
     Flowable<List<User>> retrieveCurrentUSerBlockedUser(String CurrentUserID);
 
 
+    Flowable<List<String>> retrieveOtherUserBlockedList(String OtherUserID);
+
+
 
 
 

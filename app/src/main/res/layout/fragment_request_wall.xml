@@ -9,41 +9,47 @@
 
     <!--Toolbar -->
     <RelativeLayout
-    android:id="@+id/helpRequestList_top_bar"
-    android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:layout_alignParentTop="true"
-    android:gravity="top"
-    android:background="@drawable/ic_wavetop">
-
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="30dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="Visos uzklausos"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:fontFamily="@font/aclonica"/>
+        android:id="@+id/helpRequestList_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="top"
+        android:background="@color/mainColorRed"
+        android:orientation="horizontal">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_request_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_request"
-            android:scaleType="center"
-            app:fabSize="normal"
-            app:borderWidth="0dp"
             android:backgroundTint="@color/mainColorRed"
-            android:layout_centerHorizontal="true"/>
+            android:scaleType="center"
+            android:src="@drawable/ic_add_request"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="169dp"
+            android:layout_marginRight="55dp"
+            android:fontFamily="@font/satisfy"
+            android:text="NeVieni"
+            android:textColor="@color/white"
+            android:textSize="40sp" />
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/no_available_request_text"

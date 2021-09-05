@@ -50,15 +50,20 @@ public class BlockedUserAdapter extends RecyclerView.Adapter<BlockedUserAdapter.
         } else {
             Glide.with(mContext).load(user.getPhoto()).into(holder.profile_photo_blocked);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+        View.OnClickListener showUserClicked = new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick (View view){
                 Intent showUserDetails = new Intent(mContext, UserDetailsActivity.class);
                 showUserDetails.putExtra(ExtraLabels.USER_ID, user.getId());
 
+                showUserDetails.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(showUserDetails);
+
             }
-        });
+        };
+        holder.Blockedusername.setOnClickListener(showUserClicked);
+        holder.profile_photo_blocked.setOnClickListener(showUserClicked);
     }
 
     @Override

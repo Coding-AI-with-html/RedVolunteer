@@ -50,6 +50,9 @@ public class UserViewModel {
     public Flowable<List<User>> loadCurrUserBlockedUserList(String CurrentUserID){
        return mUserModel.retrieveCurrentUSerBlockedUser(CurrentUserID);
     }
+    public Flowable<List<String>> LoadOtherUserBlockedList(String OtherUserID){
+        return mUserModel.retrieveOtherUserBlockedList(OtherUserID);
+    }
 
 
 

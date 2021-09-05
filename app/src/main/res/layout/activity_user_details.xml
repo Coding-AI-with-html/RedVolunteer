@@ -16,22 +16,22 @@
 
         <ImageView
             android:id="@+id/user_details_backbutton"
-            android:layout_gravity="center"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
+            android:layout_gravity="center"
 
+            android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_arrow"
-            android:layout_marginStart="20dp" />
+            android:src="@drawable/ic_arrow" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NeVieni Vartotojas"
-            android:textSize="20sp"
-            android:textColor="@color/white"
             android:layout_centerInParent="true"
+            android:text="NeVieni Vartotojas"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             tools:ignore="RelativeOverlap" />
 
         <ImageView

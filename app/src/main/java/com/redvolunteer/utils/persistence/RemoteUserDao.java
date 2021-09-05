@@ -39,4 +39,6 @@ public interface RemoteUserDao {
      * Load's list of users who CurrentUser Blocked
      */
     Flowable<List<String>> LoadBlockedList(String CurrentUserID);
+
+    Flowable<List<String>> LoadOtherUserBlockedList(String OtherUserID);
 }

@@ -135,6 +135,7 @@ public class UserModeAsynclmlp implements UserModel {
                                                 for(User usr: finalList){
                                                     usr.setBlockedUser(stringUserMap.get(usr.getId()));
                                                 }
+                                                Log.d(TAG, "accepting:  " + finalList);
                                                 FLowE.onNext(finalList);
                                             }
                                         });
@@ -150,6 +151,27 @@ public class UserModeAsynclmlp implements UserModel {
 
             }
         }, BackpressureStrategy.BUFFER);
+    }
+
+    @Override
+    public Flowable<List<String>> retrieveOtherUserBlockedList(String OtherUserID) {
+        return Flowable.create(new FlowableOnSubscribe<List<String>>() {
+            @Override
+            public void subscribe(@androidx.annotation.NonNull FlowableEmitter<List<String>> FLowe) throws Exception {
+
+                remoteUserStore
+                        .LoadOtherUserBlockedList(OtherUserID).subscribe(new Consumer<List<String>>() {
+                    @Override
+                    public void accept(List<String> strings) throws Exception {
+
+                        if(strings.size()!=0){
+                            Log.d(TAG, "acceptBlockOther: " + strings);
+                            FLowe.onNext(strings);
+                        }
+                    }
+                });
+            }
+        },BackpressureStrategy.BUFFER);
     }
 
     private List<User> filterBlockedUserList(List<User> userList, String BlockedID){

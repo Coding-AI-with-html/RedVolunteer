@@ -2,6 +2,8 @@ package com.redvolunteer.utils.persistence.firebasepersistence;
 
 import android.util.Log;
 
+import androidx.constraintlayout.helper.widget.Flow;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -153,9 +155,12 @@ public class FirebaseUserDao implements RemoteUserDao {
                                 List<String> usrIDs = new ArrayList<>();
 
                                 for(DataSnapshot ds: snapshot.getChildren()){
-                                    String uid = ds.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).getValue().toString();
-                                    Log.d(TAG, "onDataChangess: " + uid );
-                                    usrIDs.add(uid);
+
+                                    if(ds.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).exists()){
+                                        String uid = ds.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).getValue().toString();
+                                        Log.d(TAG, "onDataChangessBlock: " + uid );
+                                        usrIDs.add(uid);
+                                    }
 
                                 }
                                 FLOWe.onNext(usrIDs);
@@ -169,6 +174,41 @@ public class FirebaseUserDao implements RemoteUserDao {
             }
         },BackpressureStrategy.BUFFER);
     }
+
+    @Override
+    public Flowable<List<String>> LoadOtherUserBlockedList(String OtherUserID) {
+        return Flowable.create(new FlowableOnSubscribe<List<String>>() {
+            @Override
+            public void subscribe(@androidx.annotation.NonNull FlowableEmitter<List<String>> e) throws Exception {
+
+
+                dataRef
+                        .orderByChild("id")
+                        .equalTo(OtherUserID)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+
+                                List<String> blockIDs = new ArrayList<>();
+                                for(DataSnapshot data: snapshot.getChildren()){
+                                    if(data.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).exists()){
+                                        String uid = data.child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).getValue().toString();
+                                        Log.d(TAG, "onDataChangessBlock: " + uid );
+                                        blockIDs.add(uid);
+                                    }
+                                }
+                                e.onNext(blockIDs);
+                            }
+
+                            @Override
+                            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+                            }
+                        });
+            }
+        }, BackpressureStrategy.BUFFER);
+    }
+
 
     public FirebaseUserDao(FirebaseDatabase firebaseDatabase, String userStoreName){
 

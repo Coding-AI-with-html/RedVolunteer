@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mikhaellopez.circularimageview.CircularImageView;
 import com.redvolunteer.adapters.MessageAdapter;
+import com.redvolunteer.fragments.UserMessageFragment;
 import com.redvolunteer.pojo.Chat;
 import com.redvolunteer.pojo.User;
 import com.redvolunteer.utils.NetworkCheker;
@@ -68,6 +71,9 @@ public class MessageActivity extends AppCompatActivity {
     CircularImageView prof_image;
     TextView HelpUserName;
     ImageView blockUserFromMessage;
+    ImageView goBackButton;
+
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
 
 
     MessageAdapter messageAdapter;
@@ -76,9 +82,14 @@ public class MessageActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     private User mCurUser;
     private User mRetrievedUserCreator;
-    private Subscription retrievedUserSubscription;;
+    private Subscription retrievedUserSubscription;
+    private Subscription mBlockedUserSub;
+    private RelativeLayout mBlockedUser;
+    private RelativeLayout mTextField;
 
     private ProgressDialog popuDialogProg;
+
+    ValueEventListener seenListener;
 
     /**
      *
@@ -87,16 +98,16 @@ public class MessageActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        mChating = new ArrayList<>();
         super.onCreate(savedInstanceState);
         this.mUserViewModel = ((RedVolunteerApplication)getApplication()).getUserViewModel();
         mMainViewModel = ((RedVolunteerApplication) getApplication()).getMessageViewModel();
         mCurUser = mUserViewModel.retrieveCachedUser();
         CurrentUserID = mCurUser.getId();
-        ShowWhaitSpinner();
+        this.popuDialogProg = ProgressDialog.show(this, null, getString(R.string.loading_popup_message_spinner), true);
         Intent receivedIntent = this.getIntent();
         final String userID = receivedIntent.getStringExtra(ExtraLabels.USER_ID);
         if(NetworkCheker.getInstance().isNetworkAvailable(this)) {
+
             mUserViewModel.retrieveUserByID(userID).subscribe(new FlowableSubscriber<User>() {
                 @Override
                 public void onSubscribe(@NonNull Subscription subscription) {
@@ -110,6 +121,7 @@ public class MessageActivity extends AppCompatActivity {
                 public void onNext(User user) {
                     mRetrievedUserCreator = user;
                     setLayout();
+                    fillActivity(user);
                 }
 
                 @Override
@@ -125,7 +137,34 @@ public class MessageActivity extends AppCompatActivity {
             });
 
 
-        } else {
+
+            mUserViewModel.LoadOtherUserBlockedList(userID).subscribe(new Subscriber<List<String>>() {
+                @Override
+                public void onSubscribe(Subscription subscription) {
+                    subscription.request(1L);
+                    mBlockedUserSub = subscription;
+                }
+
+                @Override
+                public void onNext(List<String> strings) {
+                    checkIfUserBlockedCurUser(strings);
+                    Log.d(TAG, "onNexting: " + strings);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
+        }
+
+        else {
             showNoInternetionConnectionPopup();
         }
 
@@ -133,24 +172,41 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+    private void fillActivity(final User retrievedUser) {
 
 
-    private void setLayout(){
+        mChating = new ArrayList<>();
 
-        stopSpinner();
-        setContentView(R.layout.activity_message_with_x);
-        blockUserFromMessage = findViewById(R.id.block_user_message);
-        prof_image = findViewById(R.id.profile_photo_msg_user);
-        HelpUserName = findViewById(R.id.name_user);
-        send_message = findViewById(R.id.btn_send_msg);
-        message_field = findViewById(R.id.text_send_field);
-        recyclerView = findViewById(R.id.recycler_viewer);
-        recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        linearLayoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        HelpUserName.setText(retrievedUser.getName());
 
-        String userID = mRetrievedUserCreator.getId();
+        if(retrievedUser.getPhoto().equals("default_photo")){
+            prof_image.setImageResource(R.drawable.ic_default_profile);
+        } else {
+            Glide.with(MessageActivity.this).load(retrievedUser.getPhoto()).into(prof_image);
+        }
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
+                mChating.clear();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    Chat chatting = ds.getValue(Chat.class);
+
+                    if(chatting.getReceiver().equals(mCurUser.getId()) && chatting.getSender().equals(retrievedUser.getId()) ||
+                            chatting.getReceiver().equals(retrievedUser.getId()) && chatting.getSender().equals(mCurUser.getId())){
+                        mChating.add(chatting);
+                    }
+
+                }
+                messageAdapter = new MessageAdapter(MessageActivity.this, mChating, retrievedUser.getPhoto());
+                recyclerView.setAdapter(messageAdapter);
+            }
+
+            @Override
+            public void onCancelled(@androidx.annotation.NonNull DatabaseError error) {
+
+            }
+        });
+
         send_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +215,7 @@ public class MessageActivity extends AppCompatActivity {
                 if(!msg.equals("")){
                     cht.setMessage(msg);
                     cht.setSender(CurrentUserID);
-                    cht.setReceiver(userID);
+                    cht.setReceiver(retrievedUser.getId());
                     mMainViewModel.StoreChat(cht);
                 } else {
                     Toast.makeText(MessageActivity.this, getString(R.string.error_message), Toast.LENGTH_SHORT).show();
@@ -168,15 +224,34 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        HelpUserName.setText(mRetrievedUserCreator.getName());
 
-        if(mRetrievedUserCreator.getPhoto().equals("default_photo")){
-            prof_image.setImageResource(R.drawable.ic_default_profile);
-        } else {
-            Glide.with(MessageActivity.this).load(mRetrievedUserCreator.getPhoto()).into(prof_image);
-        }
+    }
 
-        readMessages(CurrentUserID, userID, mRetrievedUserCreator.getPhoto());
+
+    private void setLayout(){
+
+        stopSpinner();
+        setContentView(R.layout.activity_message_with_x);
+
+        this.bindComponents();
+
+    }
+
+    private void bindComponents(){
+
+        this.blockUserFromMessage = findViewById(R.id.block_user_message);
+        this.mTextField = findViewById(R.id.bottom_thing);
+        this.mBlockedUser = findViewById(R.id.blocked_user_layout);
+        this.prof_image = findViewById(R.id.profile_photo_msg_user);
+        this.HelpUserName = findViewById(R.id.name_user);
+        this.send_message = findViewById(R.id.btn_send_msg);
+        this.message_field = findViewById(R.id.text_send_field);
+        this.recyclerView = findViewById(R.id.recycler_viewer);
+        this.goBackButton = findViewById(R.id.go_back_message);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         blockUserFromMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,24 +259,25 @@ public class MessageActivity extends AppCompatActivity {
                 showBlockConfirmationUserDialog();
             }
         });
-
+        goBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+                finish();
+            }
+        });
     }
 
 
-    private void readMessages(final String myID,final  String userID, final String photo){
+    private void checkIfUserBlockedCurUser(List<String> mBlockedList){
 
-        mMainViewModel.getMessagesByUSerID().subscribe(new Consumer<Chat>() {
-            @Override
-            public void accept(Chat chat) throws Exception {
-                if(chat.getReceiver().equals(myID) && chat.getSender().equals(userID) ||
-                        chat.getReceiver().equals(userID) && chat.getSender().equals(myID)){
-                    mChating.add(chat);
-                }
-            }
-        });
+  for(String IDBlockList: mBlockedList){
+       if(mCurUser.getId().equals(IDBlockList)){
 
-        messageAdapter = new MessageAdapter(MessageActivity.this, mChating, photo);
-        recyclerView.setAdapter(messageAdapter);
+          mTextField.setVisibility(View.GONE);
+         mBlockedUser.setVisibility(View.VISIBLE);
+      }
+  }
     }
 
 
