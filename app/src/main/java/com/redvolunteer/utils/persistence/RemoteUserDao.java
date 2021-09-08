@@ -25,6 +25,8 @@ public interface RemoteUserDao {
 
 
     void blockUser(User userID, String BlockUserID);
+
+    void unBlockUser(User usrId, String UnBlockingUserID);
     /**
      * Store a user in to he persistence store
      */

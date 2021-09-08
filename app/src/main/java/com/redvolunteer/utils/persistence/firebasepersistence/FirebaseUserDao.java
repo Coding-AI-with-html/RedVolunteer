@@ -94,6 +94,16 @@ public class FirebaseUserDao implements RemoteUserDao {
         }
     }
 
+    @Override
+    public void unBlockUser(User usrId, String UnBlockingUserID) {
+
+        String CurrID = usrId.getId();
+
+        if(UnBlockingUserID != null){
+            this.dataRef.child(CurrID).child(BLOCKED_USER_LIST_FIELD).orderByChild(BLOCKED_ID_FIELD).equalTo(UnBlockingUserID).getRef().removeValue();
+        }
+    }
+
 
     @Override
     public void save(User userToStore) {

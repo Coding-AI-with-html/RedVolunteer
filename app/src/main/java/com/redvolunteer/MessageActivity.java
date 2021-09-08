@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,12 +67,14 @@ public class MessageActivity extends AppCompatActivity {
     private Subscription MessageRetrievedSubscription;
 
     String CurrentUserID;
-    ImageButton send_message;
+    FloatingActionButton send_message;
     EditText message_field;
     CircularImageView prof_image;
     TextView HelpUserName;
     ImageView blockUserFromMessage;
     ImageView goBackButton;
+    TextView unBlockButton;
+    TextView SomethingWrongButton;
 
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
 
@@ -84,8 +87,10 @@ public class MessageActivity extends AppCompatActivity {
     private User mRetrievedUserCreator;
     private Subscription retrievedUserSubscription;
     private Subscription mBlockedUserSub;
+    private Subscription mUnblockUserSub;
     private RelativeLayout mBlockedUser;
     private RelativeLayout mTextField;
+    private RelativeLayout mUnblockUser;
 
     private ProgressDialog popuDialogProg;
 
@@ -149,6 +154,30 @@ public class MessageActivity extends AppCompatActivity {
                 public void onNext(List<String> strings) {
                     checkIfUserBlockedCurUser(strings);
                     Log.d(TAG, "onNexting: " + strings);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
+            mUserViewModel.loadCurrUserBlockedUserList(CurrentUserID).subscribe(new Subscriber<List<User>>() {
+                @Override
+                public void onSubscribe(Subscription s) {
+                    s.request(1L);
+                    mUnblockUserSub = s;
+                }
+
+                @Override
+                public void onNext(List<User> users) {
+                    checkIfUserBlockedByCurrentUSer(users);
+
                 }
 
                 @Override
@@ -242,12 +271,15 @@ public class MessageActivity extends AppCompatActivity {
         this.blockUserFromMessage = findViewById(R.id.block_user_message);
         this.mTextField = findViewById(R.id.bottom_thing);
         this.mBlockedUser = findViewById(R.id.blocked_user_layout);
+        this.mUnblockUser = findViewById(R.id.unblocked_user_layout);
         this.prof_image = findViewById(R.id.profile_photo_msg_user);
         this.HelpUserName = findViewById(R.id.name_user);
         this.send_message = findViewById(R.id.btn_send_msg);
         this.message_field = findViewById(R.id.text_send_field);
         this.recyclerView = findViewById(R.id.recycler_viewer);
         this.goBackButton = findViewById(R.id.go_back_message);
+        this.unBlockButton = findViewById(R.id.unblock_button);
+        this.SomethingWrongButton = findViewById(R.id.something_wrong_button);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
@@ -266,8 +298,26 @@ public class MessageActivity extends AppCompatActivity {
                 finish();
             }
         });
+        unBlockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUnblockConfirmationUserDialog();
+            }
+        });
     }
 
+
+    private void checkIfUserBlockedByCurrentUSer(List<User> user){
+
+        for(User usering: user){
+
+            if(usering.getId().equals(mRetrievedUserCreator.getId())){
+
+                mTextField.setVisibility(View.GONE);
+                mUnblockUser.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     private void checkIfUserBlockedCurUser(List<String> mBlockedList){
 
@@ -294,6 +344,39 @@ public class MessageActivity extends AppCompatActivity {
             popuDialogProg.dismiss();
         popuDialogProg = null;
 
+    }
+    public void showUnblockConfirmationUserDialog(){
+
+
+        AlertDialog.Builder blder = new AlertDialog.Builder(this);
+
+        String titl = getString(R.string.unblock_user_confirmation);
+        String messag = getString(R.string.ask_unblock_user);
+        String positiv = getString(R.string.yes_delete_request);
+        String negativ = getString(R.string.no_delete_request);
+
+        blder.setTitle(titl);
+        blder.setMessage(messag);
+
+        blder.setPositiveButton(positiv, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int wicth) {
+
+                mUserViewModel.unblockUser(mCurUser, mRetrievedUserCreator.getId());
+                Intent goToMainActiv = new Intent(MessageActivity.this, MainActivity.class);
+                startActivity(goToMainActiv);
+            }
+        });
+
+        blder.setNegativeButton(negativ, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                dialogInterface.dismiss();
+            }
+        });
+
+        blder.show();
     }
 
 

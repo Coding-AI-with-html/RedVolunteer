@@ -48,6 +48,8 @@ public interface UserModel {
 
     void blockUserByID(User CurrUser, String userID);
 
+    void unblockUserByID(User CurrUser, String USerID);
+
     Flowable<List<User>> retrieveCurrentUSerBlockedUser(String CurrentUserID);
 
 

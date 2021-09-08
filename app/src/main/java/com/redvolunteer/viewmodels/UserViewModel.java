@@ -46,6 +46,9 @@ public class UserViewModel {
     public void blockUser(User CurrentUSer, String BlockuserID){
         mUserModel.blockUserByID(CurrentUSer, BlockuserID);
     }
+    public void unblockUser(User CurrentUser, String UnblockingUserID){
+        mUserModel.unblockUserByID(CurrentUser, UnblockingUserID);
+    }
 
     public Flowable<List<User>> loadCurrUserBlockedUserList(String CurrentUserID){
        return mUserModel.retrieveCurrentUSerBlockedUser(CurrentUserID);

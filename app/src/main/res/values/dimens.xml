@@ -6,4 +6,8 @@
     <dimen name="mainview_bold_headline">13sp</dimen>
     <dimen name="main_view_regular_headline">11sp</dimen>
     <dimen name="mainview_bold_title">19sp</dimen>
+    <dimen name="_32sp">32sp</dimen>
+    <dimen name="_16sp">16sp</dimen>
+    <dimen name="_12sp">12sp</dimen>
+    <dimen name="_8sp">8sp</dimen>
 </resources>

@@ -47,6 +47,7 @@ public class UserModeAsynclmlp implements UserModel {
      * Dao to operates on the Users stored on the remote database
      */
     private final RemoteUserDao remoteUserStore;
+
     private UserModel mUserModel;
 
 
@@ -102,6 +103,12 @@ public class UserModeAsynclmlp implements UserModel {
     public void blockUserByID(User CurrUser, String userID) {
 
         remoteUserStore.blockUser(CurrUser, userID);
+    }
+
+    @Override
+    public void unblockUserByID(User CurrUser, String USerID) {
+
+        remoteUserStore.unBlockUser(CurrUser, USerID);
     }
 
     @Override

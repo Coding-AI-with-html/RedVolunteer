@@ -29,19 +29,19 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/myrequest_new_request_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="1dp"
             android:layout_marginRight="1dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_request"
-            android:scaleType="center"
-            app:fabSize="normal"
-            app:borderWidth="0dp"
             android:backgroundTint="@color/mainColorRed"
-            android:layout_centerHorizontal="true"/>
+            android:scaleType="center"
+            android:src="@drawable/ic_add_request"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
 
     </RelativeLayout>
 
