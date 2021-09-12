@@ -89,7 +89,7 @@ public class FirebaseUserDao implements RemoteUserDao {
 
         String userID = CurrentUser.getId();
 
-        if(BlockUserID == null) {
+        if(BlockUserID != null) {
             this.dataRef.child(userID).child(BLOCKED_USER_LIST_FIELD).child(BLOCKED_ID_FIELD).setValue(BlockUserID);
         }
     }

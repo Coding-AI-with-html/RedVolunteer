@@ -71,6 +71,7 @@
     <string name="yes_delete_request">Taip</string>
     <string name="no_delete_request">Ne</string>
     <string name="location_permission_notallowed_toast">Hey, mes gerbiame jusu privatumą, todėl pasirinksime numatytą lokaciją kuri yra Kaunas</string>
+    <string name="blocked_acitity_name">Sarašas, kuriuos vartotojus esate užblokave</string>
 
     <string name="facebook_app_id">2412401272386027</string>
     <string name="fb_login_protocol_scheme">fb2412401272386027</string>

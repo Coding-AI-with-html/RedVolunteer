@@ -42,29 +42,6 @@
                 android:textStyle="bold" />
 
             <!-- Layout for blocking user  -->
-            <LinearLayout
-                android:layout_marginEnd="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:orientation="vertical"
-                >
-                <ImageView
-                    android:layout_gravity="center"
-                android:id="@+id/block_user_message"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:src="@drawable/ic_block_user"
-
-                />
-                <TextView
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/block_user"
-                    android:textSize="10sp"
-                    android:textColor="@color/white"/>
-            </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -75,11 +52,13 @@
         android:layout_above="@id/bottom_thing"
         android:layout_marginBottom="16sp"
         android:background="@drawable/chatting_activity_main_view"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_viewer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_thing"
+        android:layout_marginBottom="20dp"
         android:layout_below="@id/bar_layout" />
 
     <RelativeLayout
@@ -107,6 +86,7 @@
             android:paddingEnd="@dimen/_16sp"
             android:textColor="@color/black"
             android:textColorHint="@color/grey" />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_send_msg"
             android:layout_width="wrap_content"
@@ -119,6 +99,7 @@
             android:foregroundTint="@color/white"
             android:foregroundGravity="center"
             android:layout_marginEnd="1dp"
+            app:borderWidth="0dp"
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
             android:backgroundTint="@color/mainColorRed"

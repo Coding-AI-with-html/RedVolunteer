@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -66,6 +69,7 @@ public class MessageActivity extends AppCompatActivity {
 
     private Subscription MessageRetrievedSubscription;
 
+    private Toolbar toolbar;
     String CurrentUserID;
     FloatingActionButton send_message;
     EditText message_field;
@@ -262,13 +266,49 @@ public class MessageActivity extends AppCompatActivity {
         stopSpinner();
         setContentView(R.layout.activity_message_with_x);
 
+        toolbar = findViewById(R.id.topBarMessages);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         this.bindComponents();
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.app_bar_block:
+                showBlockConfirmationUserDialog();
+                return true;
+            case R.id.app_bar_delete:
+                showDeleteChatConfirmDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showDeleteChatConfirmDialog() {
+
+        Toast.makeText(getApplicationContext(), "hey, deletatin messages darling", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menInf = getMenuInflater();
+
+        menInf.inflate(R.menu.menu_message_activity, menu);
+
+        return true;
 
     }
 
     private void bindComponents(){
 
-        this.blockUserFromMessage = findViewById(R.id.block_user_message);
         this.mTextField = findViewById(R.id.bottom_thing);
         this.mBlockedUser = findViewById(R.id.blocked_user_layout);
         this.mUnblockUser = findViewById(R.id.unblocked_user_layout);
@@ -285,12 +325,7 @@ public class MessageActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        blockUserFromMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBlockConfirmationUserDialog();
-            }
-        });
+
         goBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -404,8 +439,8 @@ public class MessageActivity extends AppCompatActivity {
         builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent goToMain = new Intent(MessageActivity.this, MainActivity.class);
-                startActivity(goToMain);
+                finish();
+                startActivity(getIntent());
             }
         });
 

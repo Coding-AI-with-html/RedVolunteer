@@ -261,7 +261,7 @@ public class Login extends AppCompatActivity {
         }
         else {
             stopSpinner();
-            Toast.makeText(this, R.string.facebook_login_error_string, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.google_login_error_popup, Toast.LENGTH_LONG).show();
         }
     }
 

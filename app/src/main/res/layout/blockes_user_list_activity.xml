@@ -17,9 +17,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:fontFamily="@font/aclonica"
-            android:text="Sarasas kuriuos esate uzblokave"
+            android:text="@string/blocked_acitity_name"
             android:textAlignment="center"
             android:textSize="20sp" />
     </RelativeLayout>
